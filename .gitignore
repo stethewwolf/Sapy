@@ -85,5 +85,34 @@ ENV/
 # Spyder project settings
 .spyderproject
 
+# ---> LibreOffice
+# LibreOffice locks
+.~lock.*#
+
+# ---> MicrosoftOffice
+*.tmp
+
+# Word temporary
+~$*.doc*
+
+# Excel temporary
+~$*.xls*
+
+# Excel Backup File
+*.xlk
+
+*.csv
+*.xls
+.data.json
+
 # Rope project settings
 .ropeproject
+
+# idea
+.idea
+
+# sample data folder
+sample_data
+
+# test folder
+tests
