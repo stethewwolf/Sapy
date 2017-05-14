@@ -25,16 +25,19 @@
 #     SOFTWARE.
 
 import argparse
+from icli import Icli
 
 _DEBUG_ = True
 
 class Master ( object ) :
     
-    def __init__ ( self, name = None, version = None, description = None ) :
+    def __init__ ( self, name = None, version = None, description = None, data=None ) :
         if _DEBUG_ :
             print ("__ init Master __ ")
 
+        self.data=data
         self.parser = argparse.ArgumentParser( prog = name, version = version, description = description)
+        self.icli = Icli( data )
 
         # setting parameter 
         ## cli - command line interface 
@@ -59,7 +62,7 @@ class Master ( object ) :
         if self.arguments.cli :
             print (" passed --cli : not yet implemented")
         if self.arguments.icli :
-            print (" passed --icli : not yet implemented")
+            self.icli.run()
         if self.arguments.gui :
             print (" passed --gui : not yet implemented")
 
@@ -116,7 +119,7 @@ class Master ( object ) :
 #    endDate = datetime.date.today() + datetime.timedelta(days=30)
 #
 #    real_baseBalance = moms["real_moms"].balanceAtDay(datetime.date.min,startDate)
-    realData.append(real_baseBalance)
+#   realData.append(real_baseBalance)
 #    expc_baseBalance = moms["expected_moms"].balanceAtDay(datetime.date.min,startDate)
 #    expectedData.append(expc_baseBalance)
 #

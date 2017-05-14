@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#
+#   File : sapy.py
+#
 # MIT License
 # 
 # Copyright (c) 2017 Stefano Prina <stethewwolf@gmail.com>
@@ -21,139 +24,61 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-from sapi_lib.lom import *
-from sapi_lib.mom import *
-import logging
-import os
-import json
-import argparse
-import datetime
-import csv
-import matplotlib.pyplot as plt
+import logging,os,json
+from sapy_lib.arg_parser import Master
 
-## init data structure
-logging.info("init datastructure data")
-moms = { "expected_moms" : lom(),
-    "real_moms" : lom()
-    }
+_DATAFILE_ ="sample_data/data.json"
+_DEBUG_ = True
+_VERSION_ = 0.0
+_DESCRIPTION_ = """
+Simple program to manage and analize money movement 
+"""
+_NAME_ = "sapy"
 
-## importing data
-logging.info("loading data")
-if os.path.isfile(".data.json") :
-    fp = open(".data.json","r")
-    tmpData = json.load(fp)
-    moms["expected_moms"].fromJsonable(tmpData["expected_moms"])
-    moms["real_moms"].fromJsonable(tmpData["real_moms"])
+def load_saved_data (  ) :
+    if _DEBUG_ :
+        print ("__ sapy __: load_saved_data : \n" + os.path.abspath( _DATAFILE_ ))
 
-## parsing arguments
-parser = argparse.ArgumentParser(prog='sapi')
-parser.add_argument('-a', metavar="val", type=float, nargs='+', help='add movement of money , refered to today')
-parser.add_argument('-c', metavar="cause", help='specify cause')
-parser.add_argument('--real', dest='lom',  action='store_const', const=moms['real_moms'], default=moms['real_moms'], help='add a real movement [default]')
-parser.add_argument('--expc', dest='lom',  action='store_const', const=moms['expected_moms'], default=moms['real_moms'], help='add a expc movement [default=real]')
-parser.add_argument('-l',action='store_true', help='list moms')
-parser.add_argument('-p',action='store_true', help='insert period')
-parser.add_argument('-i', metavar="file_name", help='import from file_name')
-parser.add_argument('-sd', metavar="dd-mm-yyyy", help='day start dd-mm-yyyy')
-parser.add_argument('-ed', metavar="dd-mm-yyyy", help='day end dd-mm-yyyy')
-parser.add_argument('-b', action='store_true', help='print balance')
+    if os.path.isfile( os.path.abspath( _DATAFILE_ ) ) :
+        datafile = open( os.path.abspath( _DATAFILE_ ), "r")
+        data = json.load( datafile )
+        datafile.close()
+        return data
+    elif _DEBUG_ :
+        print (" no file " +  os.path.abspath(_DATAFILE_))
 
-args = parser.parse_args()
-print args
-if args.a  and not args.p:
-    print "one"
-    newmom = mom()
-    if args.a >= 0 :
-        newmom.Price(args.a[0])
-        newmom.Direction(1)
     else :
-        newmom.Price(-1*args.a)
-        newmom.Direction(-1)
-    newmom.Date(datetime.date.today())
-    args.lom.insert(newmom)
-    args.a = None
+        logging.error( "no file %s available", _DATAFILE_ )
+    pass
 
-if args.l :
-    today = datetime.date.today()
-    minusDelta = datetime.timedelta(days=-15)
-    plusDelta = datetime.timedelta(days=30)
-    print("start from : "+str(today)+" to : "+str(today+minusDelta+plusDelta))
-    for entry in args.lom.getInPeriod(today+minusDelta, plusDelta ) :
-        print( entry.toString() )
+def save_data ( data ) :
+    if _DEBUG_ :
+        print ("__ sapy __: save_data : " + json.dumps(data, ensure_ascii=True ) )
 
-    print "balance : "+str(args.lom.balance)
-
-if args.b :
-    realData = []
-    expectedData = []
-    startDate = datetime.date.today() - datetime.timedelta(days=30)
-    endDate = datetime.date.today() + datetime.timedelta(days=30)
-
-    real_baseBalance = moms["real_moms"].balanceAtDay(datetime.date.min,startDate)
-    realData.append(real_baseBalance)
-    expc_baseBalance = moms["expected_moms"].balanceAtDay(datetime.date.min,startDate)
-    expectedData.append(expc_baseBalance)
-
-    while startDate <= endDate :
-        real_baseBalance = moms["real_moms"].balanceAtDay(startDate,startDate+datetime.timedelta(days=1),real_baseBalance)
-        expc_baseBalance = moms["expected_moms"].balanceAtDay(startDate,startDate+datetime.timedelta(days=1),expc_baseBalance)
-        realData.append(real_baseBalance)
-        expectedData.append(expc_baseBalance)
-
-        startDate += datetime.timedelta(days=1)
-
-    plt.plot(expectedData)
-    plt.plot(realData)
-    plt.axvline(x=30,color='k', linestyle='--')
-    plt.show()
-
-if args.i and os.path.isfile(args.i):
-    fp=open(args.i,"r")
-    reader = csv.reader(fp)
-    for row in reader :
-        tmp = row[2].replace(".","")
-        tmp = tmp.replace(",",".")
-        try :
-            price = float(tmp)
-            dir=-1
-            if price >= 0 :
-                dir = 1
-
-            newmom = mom(dir*price,dir,row[1])
-            date_array = row[0].split("/")
-            date = datetime.date(int(date_array[2]),int(date_array[1]),int(date_array[0]))
-            newmom.Date(date)
-            try:
-                args.lom.insert(newmom)
-            except :
-                print("cat append mom to")
-        except :
-            print(str(type(row[2])) + " | " +row[2]+" is not floatable")
-
-if args.a and args.p and args.sd and args.ed :
-    sd = datetime.date(int(args.sd.split("-")[2]),int(args.sd.split("-")[1]),int(args.sd.split("-")[0]))
-    ed = datetime.date(int(args.ed.split("-")[2]),int(args.ed.split("-")[1]),int(args.ed.split("-")[0]))
-
-    while (( ed - sd ) >= datetime.timedelta(days=0)  ) :
-        newmom = mom()
-        if args.a >= 0 :
-            newmom.Price(args.a[0])
-            newmom.Direction(1)
-        else :
-            newmom.Price(-1*args.a)
-            newmom.Direction(-1)
-
-        newmom.Date(sd)
-        args.lom.insert(newmom)
-        print newmom.toString()
-        print sd
-        sd += datetime.timedelta(days=1)
+    datafile = open( os.path.abspath( _DATAFILE_ ) , "w+")
+    json.dump( data, datafile )
+    datafile.close()
+    pass
 
 
-#saving data
-fp = open(".data.json","w")
-tmpDAta = { "expected_moms" : moms["expected_moms"].toJsonable(),
-    "real_moms" : moms["real_moms"].toJsonable()
-    }
-json.dump(tmpDAta,fp)
-fp.close()
+def main ( ):
+    if _DEBUG_ :
+        print ("__ main __ ")
+
+    data = load_saved_data ( )
+
+    master = Master( _NAME_, _VERSION_, _DESCRIPTION_, data )
+    
+    master.parse()
+
+    master.run()
+    
+    save_data( master.data )
+
+    return
+
+if _DEBUG_ :
+    print "__ sapy __ "
+    
+main()
+
