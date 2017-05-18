@@ -24,13 +24,19 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-_DEBUG_ = True
+_DEBUG_ = False
 
 def list ( data, cmd ) :
-    if cmd[0] == "loms" :
+    if cmd[0] == "help"  or cmd == "list" :
+        print ("""
+        usage :
+            list loms
+            list moms <lom>
+        """)
+    elif cmd[0] == "loms" :
         for key in data.list_loms() :
             print ( key )
-    if cmd[0] == "moms" :
+    elif cmd[0] == "moms" :
         if cmd[1] in data.list_loms() :
             for key in  data.list_moms(cmd[1]):
                 print key
@@ -39,10 +45,18 @@ def list ( data, cmd ) :
     return True
 
 def add ( data, cmd ) :
-    if cmd[0] == "loms" :
+    if cmd[0] == "help"  or cmd == "add":
+        print ( """
+        usage :
+            add lom
+            add mom <lom>
+
+            data will be asked step by step
+        """)
+    if cmd[0] == "lom" :
         name = raw_input("insert name : ")
         data.new_lom(name)
-    if cmd[0] == "moms" :
+    if cmd[0] == "mom" :
         print (" not yet implemented ")
     return True
 
@@ -98,7 +112,9 @@ class Icli ( object ) :
 
     def run ( self ) :
         flag = True
+        print ("available command")
         print self.commands.keys()
+        print ("type <command> help to get more info")
 
         while flag :
             cmd = raw_input(" sapy => ").split()

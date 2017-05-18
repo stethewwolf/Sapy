@@ -36,18 +36,6 @@ Simple program to manage and analize money movement
 """
 _NAME_ = "sapy"
 
-
-def save_data ( data ) :
-    if _DEBUG_ :
-        print ("__ sapy __: save_data : " )
-        print ( data.to_jsonable() )
-
-    datafile = open( os.path.abspath( _DATAFILE_ ) , "w+")
-    #json.dump( data, datafile )
-    datafile.close()
-    pass
-
-
 def main ( ):
     if _DEBUG_ :
         print ("__ main __ ")
