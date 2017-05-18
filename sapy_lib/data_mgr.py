@@ -2,10 +2,13 @@
 
 from lom import *
 from mom import *
+import json,os
 
 _DEBUG_ = True
 
 class Data_mgr ( object ) :
+    if _DEBUG_ :
+        print ("__ Data mgr __ : init")
     def __init__ ( self  , datafile ) :
         self.loms = list()
         self.datafile = datafile
@@ -43,15 +46,16 @@ class Data_mgr ( object ) :
 
     def load(self):
         if _DEBUG_ :
-            print ("__ sapy __: load_saved_data : \n" + os.path.abspath( self.datafile ))
+            print ("__ Data Mgr __: load_saved_data : \n" + os.path.abspath( self.datafile ))
 
         if os.path.isfile( os.path.abspath( self.datafile ) ) :
             datafile = open( os.path.abspath( self.datafile ), "r")
             rawdata = json.load( datafile )
             datafile.close()
-            data = Data_mgr ()
-            data.from_jsonable( rawdata )
-            return data
+            for tmp_data in rawdata :
+                tmp_lom = lom()
+                tmp_lom.fromJsonable( tmp_data )
+                self.loms.append(tmp_lom)
 
         elif _DEBUG_ :
             print (" no file " +  os.path.abspath( self.datafile ))
@@ -59,7 +63,14 @@ class Data_mgr ( object ) :
         else :
             print ( "no file %s available", self.datafile )
 
-        return None
 
     def dump(self):
+        rawdata = []
+        for tmp_lom in self.loms :
+            rawdata.append( tmp_lom.to_jsonable())
+
+        if os.path.isfile( os.path.abspath( self.datafile ) ) :
+            datafile = open( os.path.abspath( self.datafile ), "w")
+            json.dump(rawdata,datafile)
+            datafile.close()
         pass

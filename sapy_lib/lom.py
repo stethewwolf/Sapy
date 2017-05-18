@@ -35,7 +35,7 @@ class lom (object): # list of movements
         except :
             print("impssible delete " + mom)
 
-    def toJsonable ( self ) :
+    def to_jsonable ( self ) :
         lomJsonable = {
             'name' : self.name,
             'movements' : [],

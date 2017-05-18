@@ -36,23 +36,6 @@ Simple program to manage and analize money movement
 """
 _NAME_ = "sapy"
 
-def load_saved_data (  ) :
-    if _DEBUG_ :
-        print ("__ sapy __: load_saved_data : \n" + os.path.abspath( _DATAFILE_ ))
-
-    if os.path.isfile( os.path.abspath( _DATAFILE_ ) ) :
-        datafile = open( os.path.abspath( _DATAFILE_ ), "r")
-        rawdata = json.load( datafile )
-        datafile.close()
-        data = Data_mgr ()
-        data.from_jsonable( rawdata )
-        return data
-    elif _DEBUG_ :
-        print (" no file " +  os.path.abspath(_DATAFILE_))
-
-    else :
-        logging.error( "no file %s available", _DATAFILE_ )
-    return None
 
 def save_data ( data ) :
     if _DEBUG_ :
@@ -70,14 +53,14 @@ def main ( ):
         print ("__ main __ ")
 
     data = Data_mgr ( _DATAFILE_ )
-
+    data.load()
     master = Master( _NAME_, _VERSION_, _DESCRIPTION_, data )
     
     master.parse()
 
     master.run()
-    
-    save_data( master.data )
+
+    data.dump()
 
     return
 
