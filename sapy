@@ -26,6 +26,7 @@
 
 import logging,os,json
 from sapy_lib.arg_parser import Master
+from sapy_lib.data_mgr import Data_mgr
 
 _DATAFILE_ ="sample_data/data.json"
 _DEBUG_ = True
@@ -41,22 +42,25 @@ def load_saved_data (  ) :
 
     if os.path.isfile( os.path.abspath( _DATAFILE_ ) ) :
         datafile = open( os.path.abspath( _DATAFILE_ ), "r")
-        data = json.load( datafile )
+        rawdata = json.load( datafile )
         datafile.close()
+        data = Data_mgr ()
+        data.from_jsonable( rawdata )
         return data
     elif _DEBUG_ :
         print (" no file " +  os.path.abspath(_DATAFILE_))
 
     else :
         logging.error( "no file %s available", _DATAFILE_ )
-    pass
+    return None
 
 def save_data ( data ) :
     if _DEBUG_ :
-        print ("__ sapy __: save_data : " + json.dumps(data, ensure_ascii=True ) )
+        print ("__ sapy __: save_data : " )
+        print ( data.to_jsonable() )
 
     datafile = open( os.path.abspath( _DATAFILE_ ) , "w+")
-    json.dump( data, datafile )
+    #json.dump( data, datafile )
     datafile.close()
     pass
 
@@ -65,7 +69,7 @@ def main ( ):
     if _DEBUG_ :
         print ("__ main __ ")
 
-    data = load_saved_data ( )
+    data = Data_mgr ( _DATAFILE_ )
 
     master = Master( _NAME_, _VERSION_, _DESCRIPTION_, data )
     
