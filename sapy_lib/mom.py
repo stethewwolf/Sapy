@@ -1,96 +1,151 @@
 #!/bin/environment python
 import datetime
 
-class mom (object): # movment of money
+
+class Mom(object):  # movement of money
     import datetime
 
-    def __init__ (
+    def __init__(
         self,
-        price = 0,
-        direction = 1,
-        cause = "not specified",
-        agent = "not specified",
-        payee = "not specified",
-        date = datetime.date.today()
-        ):
-        self.price = price
-        self.direction = direction
-        self.cause = cause # description of money movement
-        self.agent = agent # specify who move money
-        self.payee = payee  # specify who recived money
-        self.date = date
+        price=0,
+        direction=1,
+        mom_id=-1,
+        cause="not specified",
+        agent="not specified",
+        payee="not specified",
+        date=datetime.date.today()
+    ):
+        self.Price = price
+        self.Direction = direction
+        self.Mom_id = mom_id
+        self.Cause = cause  # description of money movement
+        self.Agent = agent  # specify who move money
+        self.Payee = payee  # specify who received money
+        self.Date = date
 
-    def Price( self, price = None ) :
-        if price :
-            self.price = price
-        else :
-            return self.price
-        return True
+    def price(self, price=None):
+        if price:
+            self.Price = price
+        return self.Price
 
-    def Direction ( self , direction = None ) :
-        if direction :
-            self.direction=direction
-        else :
-            return self.direction
-        return True
+    def direction(self, direction=None):
+        if direction:
+            self.Direction = direction
+        return self.Direction
 
-    def Cause ( self , cause = None ) :
-        if cause :
-            self.cause=cause
-        else :
-            return self.cause
-        return True
+    def cause(self, cause=None):
+        if cause:
+            self.Cause = cause
+        return self.Cause
 
-    def Agent ( self, agent = None ) :
-        if agent :
-            self.agent = agent
-        else :
-            return self.agent
-        return True
+    def agent(self, agent=None):
+        if agent:
+            self.Agent = agent
+        return self.Agent
 
-    def Payee (self, payee = None ) :
-        if payee :
-            self.payee = payee
-        else :
-            return self.payee
-        return True
+    def payee(self, payee=None):
+        if payee:
+            self.Payee = payee
+        return self.Payee
 
-    def Date( self, date = None ) :
-        if date :
-            self.date = date
-        else :
-            return self.date
-        return True
+    def date(self, date=None):
+        if date:
+            self.Date = date
+        return self.Date
 
-    def toString ( self , separator = " " ) :
-        return str(self.direction)+separator+str(self.price)+separator+self.cause+separator+self.agent+separator+self.payee+separator+self.date.isoformat()
+    def mom_id(self, mom_id=None):
+        if mom_id:
+            self.Mom_id = mom_id
+        return self.Mom_id
 
-    def toJsonable ( self ) :
-        tmpData = {
-            'price' : self.price ,
-            'direction' : self.direction ,
-            'cause' : self.cause ,
-            'agent' : self.agent ,
-            'payee' : self.payee ,
-            'date' : {
-                'year' : self.date.year ,
-                'month' : self.date.month ,
-                'day' :  self.date.day ,
-            } ,
+    def to_string(self, separator=" "):
+        result = ""
+        result += str(self.Direction)+separator
+        result += str(self.Price)+separator
+        result += self.Cause+separator
+        result += self.Agent+separator
+        result += self.Payee+separator
+        result += self.Date.isoformat()
+        return result
+
+    def to_jsonable(self):
+        tmp_data = {
+            'price': self.Price,
+            'direction': self.Direction,
+            'cause': self.Cause,
+            'agent': self.Agent,
+            'payee': self.Payee,
+            'date': {
+                'year': self.Date.year,
+                'month': self.Date.month,
+                'day':  self.Date.day,
+            },
         }
-        return tmpData
+        return tmp_data
 
-    def fromJsonable (self , JString ) :
-        self.price = JString['price']
-        self.direction = JString['direction']
-        self.cause = JString['cause']
-        self.agent = JString['agent']
-        self.payee = JString['payee']
-        self.date = datetime.date(JString['date']['year'],JString['date']['month'],JString['date']['day'])
+    def from_jsonable(self, jstring):
+        self.Price = jstring['price']
+        self.Direction = jstring['direction']
+        self.Cause = jstring['cause']
+        self.Agent = jstring['agent']
+        self.Payee = jstring['payee']
+        self.Date = datetime.date(jstring['date']['year'], jstring['date']['month'], jstring['date']['day'])
         pass
 
-    def Id ( self ) :
-        return self.id
-
-    def compare (self):
+    def compare(self, lom):
         pass
+
+# RUNS TESTS
+if __name__ == "__main__":
+    print ("testing mom")
+
+    # mom1
+    mom1_price = 59
+    mom1_direction = 1
+    mom1_id = 15
+    mom1_cause = "test mom1"
+    mom1_agent = "test mom1"
+    mom1_payee = "test mom1"
+    mom1_date = datetime.date.today()
+
+    mom1 = Mom(
+        price=mom1_price,
+        direction=mom1_direction,
+        mom_id=mom1_id,
+        cause=mom1_cause,
+        agent=mom1_agent,
+        payee=mom1_payee,
+        date=mom1_date
+    )
+    print mom1.to_jsonable()
+
+    if mom1.price() != mom1_price:
+        print(" prices : do not match ")
+    else :
+        print(" prices : ok ")
+
+    if mom1.direction() != mom1_direction:
+        print(" directions : do not match ")
+    else :
+        print(" directions : ok ")
+
+    if mom1.cause() != mom1_cause:
+        print(" causes : do not match ")
+    else:
+        print(" causes : ok ")
+
+    if mom1.agent() != mom1_agent:
+        print(" agents : do not match ")
+    else:
+        print(" agents : ok ")
+
+    if mom1.payee() != mom1_payee:
+        print(" payees : do not match ")
+    else:
+        print(" payees : ok ")
+
+    if mom1.date() != mom1_date:
+        print(" dates : do not match ")
+    else:
+        print(" dates : ok ")
+
