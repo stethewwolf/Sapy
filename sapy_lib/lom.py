@@ -133,3 +133,4 @@ class Lom(object):  # list of movements
 # RUNS TESTS
 if __name__ == "__main__":
     print ("testing loms")
+    # TODO: write some tests
