@@ -25,7 +25,7 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-import datetime,json
+import datetime
 
 
 class Mom(object):  # movement of money
@@ -41,6 +41,7 @@ class Mom(object):  # movement of money
         payee="not specified",
         date=datetime.date.today()
     ):
+        # type: (int, int, int, str, str, str, date) -> Mom
         self.Price = price
         self.Direction = direction
         self.Mom_id = mom_id
@@ -94,7 +95,7 @@ class Mom(object):  # movement of money
         result += self.Date.isoformat()
         return result
 
-    def to_jsonable(self):
+    def to_json(self):
         tmp_data = {
             'price': self.Price,
             'direction': self.Direction,
@@ -110,7 +111,7 @@ class Mom(object):  # movement of money
         }
         return tmp_data
 
-    def from_jsonable(self, jstring):
+    def from_json(self, jstring):
         self.Price = jstring['price']
         self.Direction = jstring['direction']
         self.Mom_id = jstring['mom_id']
@@ -145,16 +146,16 @@ if __name__ == "__main__":
         payee=mom1_payee,
         date=mom1_date
     )
-    print mom1.to_jsonable()
+    print mom1.to_json()
 
     if mom1.price() != mom1_price:
         print(" prices : do not match ")
-    else :
+    else:
         print(" prices : ok ")
 
     if mom1.direction() != mom1_direction:
         print(" directions : do not match ")
-    else :
+    else:
         print(" directions : ok ")
 
     if mom1.cause() != mom1_cause:
@@ -178,24 +179,22 @@ if __name__ == "__main__":
         print(" dates : ok ")
 
     mom2 = Mom()
-    mom2_jstring ={
+    mom2_json = {
         'direction': -1,
         'price': 34,
-         'agent': 'test mom2',
-         'payee': 'test mom2',
-         'date': {
-             'month': 4,
-             'day': 17,
-             'year': 2017
-         },
-         'cause': 'test mom2',
-         'mom_id': 2
+        'agent': 'test mom2',
+        'payee': 'test mom2',
+        'date': {
+            'month': 4,
+            'day': 17,
+            'year': 2017
+        },
+        'cause': 'test mom2',
+        'mom_id': 2
     }
 
-    mom2.from_jsonable(mom2_jstring)
-    if mom2.to_jsonable() == mom2_jstring:
+    mom2.from_json(mom2_json)
+    if mom2.to_json() == mom2_json:
         print ("conversion from/to json working")
     else:
         print ("conversion from/to json do not work")
-
-

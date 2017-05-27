@@ -26,7 +26,6 @@
 #     SOFTWARE.
 
 from mom import Mom
-import datetime
 
 
 class Lom(object):  # list of movements
@@ -64,8 +63,8 @@ class Lom(object):  # list of movements
             # TODO: add exception class
             print("impossible delete " + m.to_string())
 
-    def to_jsonable(self):
-        lom_jsonable = {
+    def to_json(self):
+        lom_json = {
             'name': self.Name,
             'movements': [],
             'balance': self.Balance,
@@ -74,20 +73,20 @@ class Lom(object):  # list of movements
         }
 
         for mom in self.Movements:
-            jmom = mom.to_jsonable()
-            lom_jsonable['movements'].append(jmom)
+            jmom = mom.to_json()
+            lom_json['movements'].append(jmom)
 
-        return lom_jsonable
+        return lom_json
 
-    def from_jsonable(self, jsonable):
-        self.Name = jsonable['name']
+    def from_json(self, json):
+        self.Name = json['name']
 
         tmp_pos_sum = 0
         tmp_neg_sum = 0
 
-        for jmom in jsonable['movements']:
+        for jmom in json['movements']:
             new_mom = Mom()
-            new_mom.from_jsonable(jmom)
+            new_mom.from_json(jmom)
 
             if new_mom.direction() >= 0:
                 tmp_pos_sum += new_mom.price()
@@ -98,17 +97,17 @@ class Lom(object):  # list of movements
 
         self.Movements.sort(key=lambda x: x.date, reverse=False)
 
-        if tmp_pos_sum != jsonable['pos_sum']:
+        if tmp_pos_sum != json['pos_sum']:
             print("something went wrong whit pos_sum, using fresh calculated one")
             self.Pos_sum = tmp_pos_sum
         else:
-            self.Pos_sum = jsonable['neg_sum']
+            self.Pos_sum = json['neg_sum']
 
-        if tmp_neg_sum != jsonable['neg_sum']:
+        if tmp_neg_sum != json['neg_sum']:
             print("something went wrong whit neg_sum, using fresh calculated one")
             self.Neg_sum = tmp_neg_sum
         else:
-            self.Neg_sum = jsonable['neg_sum']
+            self.Neg_sum = json['neg_sum']
 
     def find_on_date(self, date):
         return [m for m in self.Movements if m.date == date]
