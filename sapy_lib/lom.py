@@ -1,100 +1,109 @@
 #!/bin/environment python
-from mom import *
+from mom import Mom
+import datetime
 
-class lom (object): # list of movements
-    import datetime
-    import mom
 
-    def __init__ (
+class Lom(object):  # list of movements
+
+    def __init__(
         self,
-        name = "list of movements",
-        ):
-        self.name = name
-        self.movements = [] # array ordinato per data
-        self.balance = 0
-        self.pos_sum = 0
-        self.neg_sum = 0
+        name="list of movements",
+    ):
+        self.Name = name
+        self.Movements = []  # array ordered by date
+        self.Balance = 0
+        self.Pos_sum = 0
+        self.Neg_sum = 0
 
-    def insert (self, m) :
-        self.movements.append(m)
-        self.movements.sort(key=lambda x : x.date, reverse=False )
-        self.balance = self.balance + m.direction*m.price
-        if m.direction >= 0 :
-            self.pos_sum += m.price
-        else :
-            self.neg_sum += m.price
+    def insert(self, m):
+        # TODO: check m is mom type
+        self.Movements.append(m)
+        self.Movements.sort(key=lambda x: x.date, reverse=False)
+        self.Balance = self.Balance + m.direction()*m.price()
+        if m.direction() >= 0:
+            self.Pos_sum += m.price()
+        else:
+            self.Neg_sum += m.price()
 
-    def remove ( self , m) :
+    def remove(self, m):
+        # TODO: check m is mom type
         try:
-            self.movements.remove(mom)
-            self.balance -= m.direction*m.price
-            if m.direction >= 0 :
-                self.pos_sum -= m.price
-            else :
-                self.neg_sum -= m.price
-        except :
-            print("impssible delete " + mom)
+            self.Movements.remove(m)
+            self.Balance -= m.direction()*m.price()
+            if m.direction() >= 0:
+                self.Pos_sum -= m.price()
+            else:
+                self.Neg_sum -= m.price()
+        except:
+            # TODO: add exception class
+            print("impossible delete " + m.to_string())
 
-    def to_jsonable ( self ) :
-        lomJsonable = {
-            'name' : self.name,
-            'movements' : [],
-            'balance' : self.balance,
-            'pos_sum' : self.pos_sum,
-            'neg_sum' : self.neg_sum,
+    def to_jsonable(self):
+        lom_jsonable = {
+            'name': self.Name,
+            'movements': [],
+            'balance': self.Balance,
+            'pos_sum': self.Pos_sum,
+            'neg_sum': self.Neg_sum,
         }
 
-        for mom in self.movements :
-            jmom = mom.toJsonable()
-            lomJsonable['movements'].append(jmom)
+        for mom in self.Movements:
+            jmom = mom.to_jsonable()
+            lom_jsonable['movements'].append(jmom)
 
-        return lomJsonable
+        return lom_jsonable
 
-    def fromJsonable( self, jsonable ) :
-        self.name=jsonable['name']
+    def from_jsonable(self, jsonable):
+        self.Name = jsonable['name']
 
         tmp_pos_sum = 0
         tmp_neg_sum = 0
 
-        for jmom in jsonable['movements'] :
-            newMom = mom()
-            newMom.fromJsonable(jmom)
+        for jmom in jsonable['movements']:
+            new_mom = Mom()
+            new_mom.from_jsonable(jmom)
 
-            if newMom.direction >= 0 :
-                tmp_pos_sum += newMom.price
-            else :
-                tmp_neg_sum += newMom.price
+            if new_mom.direction() >= 0:
+                tmp_pos_sum += new_mom.price()
+            else:
+                tmp_neg_sum += new_mom.price()
 
-            self.movements.append(newMom)
+            self.Movements.append(new_mom)
 
-        self.movements.sort(key=lambda x : x.date, reverse=False )
+        self.Movements.sort(key=lambda x: x.date, reverse=False)
 
-        if tmp_pos_sum != jsonable['pos_sum'] :
+        if tmp_pos_sum != jsonable['pos_sum']:
             print("something went wrong whit pos_sum, using fresh calculated one")
-            self.pos_sum = tmp_pos_sum
-        else :
-            self.pos_sum = jsonable['neg_sum']
+            self.Pos_sum = tmp_pos_sum
+        else:
+            self.Pos_sum = jsonable['neg_sum']
 
-        if tmp_neg_sum != jsonable['neg_sum'] :
+        if tmp_neg_sum != jsonable['neg_sum']:
             print("something went wrong whit neg_sum, using fresh calculated one")
-            self.neg_sum = tmp_neg_sum
-        else :
-            self.neg_sum = jsonable['neg_sum']
+            self.Neg_sum = tmp_neg_sum
+        else:
+            self.Neg_sum = jsonable['neg_sum']
 
-    def findOnDate ( self, date ) :
-        return [ m for m in self.movements if m.date == date ]
+    def find_on_date(self, date):
+        return [m for m in self.Movements if m.date == date]
 
-    def getInPeriod ( self, startDate, timeDelta ) :
-        return [ m for m in self.movements if ( (m.date >= startDate ) and ( m.date <= startDate+timeDelta ) )]
+    def get_in_period(self, start_date, time_delta):
+        return [m for m in self.Movements if ((m.date >= start_date) and (m.date <= start_date+time_delta))]
 
-    def balanceAtDay ( self, startDate, endDate, baseBalance=0 ):
+    def balance_at_day(self, start_date, end_date, base_balance=0):
         balance = 0
-        if baseBalance != 0 :
-            balance = baseBalance
+        if base_balance != 0:
+            balance = base_balance
 
-        for m in self.movements :
-            if m.date < endDate and m.date >= startDate:
-                #print m.direction*m.price
-                balance += m.direction*m.price
+        for m in self.Movements:
+            if m.date() < end_date:
+                if m.date() >= start_date:
+                    # print m.direction*m.price
+                    balance += m.direction()*m.price()
 
         return balance
+
+
+# RUNS TESTS
+if __name__ == "__main__":
+    print ("testing loms")
