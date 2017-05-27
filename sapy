@@ -26,7 +26,7 @@
 
 import logging,os,json
 from sapy_lib.arg_parser import Master
-from sapy_lib.data_mgr import Data_mgr
+from sapy_lib.datamgr import DataMgr
 
 _DATAFILE_ ="sample_data/data.json"
 _DEBUG_ = True
@@ -40,7 +40,7 @@ def main ( ):
     if _DEBUG_ :
         print ("__ main __ ")
 
-    data = Data_mgr ( _DATAFILE_ )
+    data = DataMgr(_DATAFILE_)
     data.load()
     master = Master( _NAME_, _VERSION_, _DESCRIPTION_, data )
     

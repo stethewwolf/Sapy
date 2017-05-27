@@ -43,7 +43,8 @@ class DataMgr(object):
 
     def new_lom(self, name):
         tmp = Lom()
-        tmp.name = name
+        if name :
+            tmp.Name = name
         self.Lom_list.append(tmp)
 
     def remove(self):
@@ -65,10 +66,10 @@ class DataMgr(object):
         return tmp
 
     def list_lom(self):
-        return [l.name for l in self.Lom_list]
+        return [l.Name for l in self.Lom_list]
 
     def list_moms(self, lom):
-        return [l for l in self.Lom_list if l.Name == lom][0].movements
+        return [l for l in self.Lom_list if l.Name == lom][0].Movements
         # return  self.Lom_list[lom].movements
 
     def load(self):

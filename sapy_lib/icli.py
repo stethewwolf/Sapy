@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #
 #   File : icli.py
+#   Author : stefano prina
 #
 # MIT License
 #
@@ -26,53 +27,59 @@
 
 _DEBUG_ = False
 
-def list ( data, cmd ) :
-    if cmd[0] == "help"  or cmd == "list" :
+
+def list(data, cmd):
+    if cmd[0] == "help" or cmd == "list":
         print ("""
         usage :
             list loms
             list moms <lom>
         """)
-    elif cmd[0] == "loms" :
-        for key in data.list_loms() :
-            print ( key )
-    elif cmd[0] == "moms" :
-        if cmd[1] in data.list_loms() :
-            for key in  data.list_moms(cmd[1]):
+    elif cmd[0] == "loms":
+        for key in data.list_lom():
+            print (key)
+    elif cmd[0] == "moms":
+        if cmd[1] in data.list_lom():
+            for key in data.list_moms(cmd[1]):
                 print key
-        else :
-            print ( cmd[1] + " not found ")
+        else:
+            print (cmd[1] + " not found ")
     return True
 
-def add ( data, cmd ) :
-    if cmd[0] == "help"  or cmd == "add":
-        print ( """
+
+def add(data, cmd):
+    if cmd[0] == "help" or cmd == "add":
+        print ("""
         usage :
             add lom
             add mom <lom>
 
             data will be asked step by step
         """)
-    if cmd[0] == "lom" :
+    if cmd[0] == "lom":
         name = raw_input("insert name : ")
         data.new_lom(name)
-    if cmd[0] == "mom" :
+    if cmd[0] == "mom":
         print (" not yet implemented ")
     return True
 
-def load ( data, cmd  ) :
+
+def load(data, cmd):
     print (" not yet implemented ")
     return True
 
-def remove ( data, cmd  ) :
+
+def remove(data, cmd):
     print (" not yet implemented ")
     return True
 
-def display ( data, cmd  ) :
+
+def display(data, cmd):
     print (" not yet implemented ")
     return True
 
-def help ( data, cmd  ) :
+
+def help(data, cmd):
     print """
         Available command :
             help : display this message
@@ -85,46 +92,48 @@ def help ( data, cmd  ) :
     """
     return True
 
-def quit ( data, cmd ) :
-    if _DEBUG_ :
+
+def quit(data, cmd):
+    if _DEBUG_:
         print ("__ Icli __ : running quit ")
     return False
 
-class Icli ( object ) :
-    def __init__( self, data ):
-        if _DEBUG_ :
+
+class Icli(object):
+    def __init__(self, data):
+        if _DEBUG_:
             print ("__ Icli __ : init ")
 
         self.commands = {
-            'list' : list, #Command("list", list, "show moms"),
-            'add' : add, #Command("add", add, "add moms"),
-            'load' : load, #Command("load", load, "load moms"),
-            'quit' : quit, #Command("quit", quit, "exit from program"),
-            'help' : help, #Command("help", help, "print help"),
-            'display' : display,
-            'remove' : remove #Command("remove", remove, "remove moms"commands)
+            'list': list,  # Command("list", list, "show moms"),
+            'add': add,  # Command("add", add, "add moms"),
+            'load': load,  # Command("load", load, "load moms"),
+            'quit': quit,  # Command("quit", quit, "exit from program"),
+            'help': help,  # Command("help", help, "print help"),
+            'display': display,
+            'remove': remove  # Command("remove", remove, "remove moms"commands)
         };
-        if _DEBUG_ :
+        if _DEBUG_:
             print ("__ Icli __ : commands ")
             print (self.commands)
 
         self.data = data
 
-    def run ( self ) :
+    def run(self):
         flag = True
         print ("available command")
         print self.commands.keys()
         print ("type <command> help to get more info")
 
-        while flag :
+        while flag:
             cmd = raw_input(" sapy => ").split()
-            if cmd[0] in self.commands.keys() :
-                if _DEBUG_ :
-                    print (cmd[0]+" : this is  a valid command")
-                if len ( cmd ) > 1 :
-                    flag = self.commands[cmd[0]](self.data,cmd[1:])
-                else :
-                    flag = self.commands[cmd[0]](self.data,cmd[0])
+            if cmd[0] in self.commands.keys():
+                if _DEBUG_:
+                    print (cmd[0] + " : this is  a valid command")
+                if len(cmd) > 1:
+                    flag = self.commands[cmd[0]](self.data, cmd[1:])
+                else:
+                    flag = self.commands[cmd[0]](self.data, cmd[0])
             else:
-                print (cmd[0]+" : this is not a valid command")
+                print (cmd[0] + " : this is not a valid command")
         pass
