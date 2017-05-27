@@ -1,5 +1,5 @@
 #!/bin/environment python
-import datetime
+import datetime,json
 
 
 class Mom(object):  # movement of money
@@ -76,16 +76,18 @@ class Mom(object):  # movement of money
             'agent': self.Agent,
             'payee': self.Payee,
             'date': {
-                'year': self.Date.year,
                 'month': self.Date.month,
                 'day':  self.Date.day,
+                'year': self.Date.year,
             },
+            'mom_id': self.Mom_id
         }
         return tmp_data
 
     def from_jsonable(self, jstring):
         self.Price = jstring['price']
         self.Direction = jstring['direction']
+        self.Mom_id = jstring['mom_id']
         self.Cause = jstring['cause']
         self.Agent = jstring['agent']
         self.Payee = jstring['payee']
@@ -148,4 +150,26 @@ if __name__ == "__main__":
         print(" dates : do not match ")
     else:
         print(" dates : ok ")
+
+    mom2 = Mom()
+    mom2_jstring ={
+        'direction': -1,
+        'price': 34,
+         'agent': 'test mom2',
+         'payee': 'test mom2',
+         'date': {
+             'month': 4,
+             'day': 17,
+             'year': 2017
+         },
+         'cause': 'test mom2',
+         'mom_id': 2
+    }
+
+    mom2.from_jsonable(mom2_jstring)
+    if mom2.to_jsonable() == mom2_jstring:
+        print ("conversion from/to json working")
+    else:
+        print ("conversion from/to json do not work")
+
 
