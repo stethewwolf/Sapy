@@ -25,10 +25,14 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
+import datetime
+from mom import Mom
+
 _DEBUG_ = False
 
 
-def list(data, cmd):
+def list_cmd(data, cmd):
+    # TODO: check cmd[0]
     if cmd[0] == "help" or cmd == "list":
         print ("""
         usage :
@@ -39,15 +43,19 @@ def list(data, cmd):
         for key in data.list_lom():
             print (key)
     elif cmd[0] == "moms":
+        # TODO: ask for day , default today
+        # TODO: ask for number of day , default 1 day
         if cmd[1] in data.list_lom():
             for key in data.list_moms(cmd[1]):
                 print key
         else:
             print (cmd[1] + " not found ")
+
     return True
 
 
-def add(data, cmd):
+def add_cmd(data, cmd):
+    # TODO: check cmd[0]
     if cmd[0] == "help" or cmd == "add":
         print ("""
         usage :
@@ -61,25 +69,56 @@ def add(data, cmd):
         data.new_lom(name)
     if cmd[0] == "mom":
         print (" not yet implemented ")
+        price = raw_input("     insert price : ")
+        direction = raw_input("     insert direction : ")
+        cause = raw_input("     insert cause")
+        agent = raw_input("     insert agent")
+        payee = raw_input("     insert payee")
+        day = raw_input("     insert day [dd] : ")
+        month = raw_input("     insert month [mm] : ")
+        year = raw_input("     insert year [yyyy] : ")
+        # TODO: check date imput values
+        date = None
+        if year and month and day:
+            date = datetime.date(year,month,day)
+        # TODO : choise time
+        mom = Mom()
+        if price:
+            mom.price(float(price))
+        if direction:
+            mom.direction(int(direction))
+        if cause:
+            mom.cause(cause)
+        if agent:
+            mom.agent(agent)
+        if payee:
+            mom.payee(payee)
+        if date:
+            mom.date(date)
+        # TODO: ask for multiple insertions
+        if cmd[1]:
+            data.new_mom(cmd[1],mom)
+        else:
+            return False
     return True
 
 
-def load(data, cmd):
+def load_cmd(data, cmd):
     print (" not yet implemented ")
     return True
 
 
-def remove(data, cmd):
+def remove_cmd(data, cmd):
     print (" not yet implemented ")
     return True
 
 
-def display(data, cmd):
+def display_cmd(data, cmd):
     print (" not yet implemented ")
     return True
 
 
-def help(data, cmd):
+def help_cmd(data, cmd):
     print """
         Available command :
             help : display this message
@@ -93,7 +132,7 @@ def help(data, cmd):
     return True
 
 
-def quit(data, cmd):
+def quit_cmd(data, cmd):
     if _DEBUG_:
         print ("__ Icli __ : running quit ")
     return False
@@ -105,14 +144,14 @@ class Icli(object):
             print ("__ Icli __ : init ")
 
         self.commands = {
-            'list': list,  # Command("list", list, "show moms"),
-            'add': add,  # Command("add", add, "add moms"),
-            'load': load,  # Command("load", load, "load moms"),
-            'quit': quit,  # Command("quit", quit, "exit from program"),
-            'help': help,  # Command("help", help, "print help"),
-            'display': display,
-            'remove': remove  # Command("remove", remove, "remove moms"commands)
-        };
+            'list': list_cmd,  # Command("list", list, "show moms"),
+            'add': add_cmd,  # Command("add", add, "add moms"),
+            'load': load_cmd,  # Command("load", load, "load moms"),
+            'quit': quit_cmd,  # Command("quit", quit, "exit from program"),
+            'help': help_cmd,  # Command("help", help, "print help"),
+            'display': display_cmd,
+            'remove': remove_cmd  # Command("remove", remove, "remove moms"commands)
+        }
         if _DEBUG_:
             print ("__ Icli __ : commands ")
             print (self.commands)
@@ -126,6 +165,7 @@ class Icli(object):
         print ("type <command> help to get more info")
 
         while flag:
+            # TODO: check if cmd string is empty
             cmd = raw_input(" sapy => ").split()
             if cmd[0] in self.commands.keys():
                 if _DEBUG_:

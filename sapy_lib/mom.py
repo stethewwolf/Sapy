@@ -117,13 +117,13 @@ class Mom(object):  # movement of money
             'cause': self.Cause,
             'agent': self.Agent,
             'payee': self.Payee,
+            #'time': self.Time,
             'date': {
                 'month': self.Date.month,
                 'day':  self.Date.day,
                 'year': self.Date.year,
             },
-            'mom_id': self.Mom_id,
-            'time': self.Time
+            'mom_id': self.Mom_id
         }
         return tmp_data
 
@@ -134,7 +134,7 @@ class Mom(object):  # movement of money
         self.Cause = jstring['cause']
         self.Agent = jstring['agent']
         self.Payee = jstring['payee']
-        self.Time = jstring['time']
+        #self.Time = jstring['time']
         self.Date = datetime.date(jstring['date']['year'], jstring['date']['month'], jstring['date']['day'])
         pass
 

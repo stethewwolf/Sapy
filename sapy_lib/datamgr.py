@@ -45,9 +45,23 @@ class DataMgr(object):
         tmp = Lom()
         if name :
             tmp.Name = name
-        self.Lom_list.append(tmp)
+            self.Lom_list.append(tmp)
+            return True
+        return False
 
-    def remove(self):
+    def new_mom(self, lom_name, mom):
+        # TODO: check if mom is Mom type
+        # TODO: check if lom_name is str type
+        if lom_name and mom :
+            [l for l in self.Lom_list if l.Name == lom_name][0].Movements.append(mom)
+            return True
+        return False
+
+    def remove_lom(self):
+        # TODO : write function
+        pass
+
+    def remove_mom(self, lom):
         # TODO : write function
         pass
 
@@ -98,6 +112,7 @@ class DataMgr(object):
 
         if os.path.isfile(os.path.abspath(self.Datafile)):
             datafile = open(os.path.abspath(self.Datafile), "w")
+            # TODO: enable dup indention
             json.dump(rawdata, datafile)
             datafile.close()
         pass

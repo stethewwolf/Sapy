@@ -29,67 +29,65 @@ from icli import Icli
 
 _DEBUG_ = True
 
-class Master ( object ) :
-    
-    def __init__ ( self, name = None, version = None, description = None, data=None ) :
-        if _DEBUG_ :
+
+class Master(object):
+    def __init__(self, name=None, version=None, description=None, data=None):
+        if _DEBUG_:
             print ("__ init Master __ ")
 
-        self.data=data
-        self.parser = argparse.ArgumentParser( prog = name, version = version, description = description)
-        self.icli = Icli( data )
+        self.data = data
+        self.parser = argparse.ArgumentParser(prog=name, version=version, description=description)
+        self.icli = Icli(data)
 
         # setting parameter 
         ## cli - command line interface 
-        self.parser.add_argument('--cli',action='store_true', help='list moms')
+        self.parser.add_argument('--cli', action='store_true', help='list moms')
 
         ## icli - interactive command line interface
-        self.parser.add_argument('--icli',action='store_true', help='list moms')
+        self.parser.add_argument('--icli', action='store_true', help='list moms')
 
         ## gui - graphical user interface
-        self.parser.add_argument('--gui',action='store_true', help='list moms')
+        self.parser.add_argument('--gui', action='store_true', help='list moms')
 
-    def parse ( self ) :
-        if _DEBUG_ :
+    def parse(self):
+        if _DEBUG_:
             print ("__ parse Master __ ")
 
         self.arguments = self.parser.parse_args()
 
-    def run ( self ) :
-        if _DEBUG_ :
+    def run(self):
+        if _DEBUG_:
             print ("__ run Master __")
 
-        if self.arguments.cli :
+        if self.arguments.cli:
             print (" passed --cli : not yet implemented")
-        if self.arguments.icli :
+        if self.arguments.icli:
             self.icli.run()
-        if self.arguments.gui :
+        if self.arguments.gui:
             print (" passed --gui : not yet implemented")
 
-
-        
-#from sapi_lib.lom import lo
-#from sapi_lib.mom import *
+# from sapi_lib.lom import lo
+# from sapi_lib.mom import *
 
 # import csv,logging,os,json,argparse,datetime,
 # import matplotlib.pyplot as plt
 
 
 ### parsing arguments
-#parser.add_argument('-a', metavar="val", type=float, nargs='+', help='add movement of money , refered to today')
-#parser.add_argument('-c', metavar="cause", help='specify cause')
-#parser.add_argument('--real', dest='lom',  action='store_const', const=moms['real_moms'], default=moms['real_moms'], help='add a real movement [default]')
-#parser.add_argument('--expc', dest='lom',  action='store_const', const=moms['expected_moms'], default=moms['real_moms'], help='add a expc movement [default=real]')
-#parser.add_argument('-l',action='store_true', help='list moms')
-#parser.add_argument('-p',action='store_true', help='insert period')
-#parser.add_argument('-i', metavar="file_name", help='import from file_name')
-#parser.add_argument('-sd', metavar="dd-mm-yyyy", help='day start dd-mm-yyyy')
-#parser.add_argument('-ed', metavar="dd-mm-yyyy", help='day end dd-mm-yyyy')
-#parser.add_argument('-b', action='store_true', help='print balance')
+# parser.add_argument('-a', metavar="val", type=float, nargs='+', help='add movement of money , refered to today')
+# parser.add_argument('-c', metavar="cause", help='specify cause')
+# parser.add_argument('--real', dest='lom',  action='store_const', const=moms['real_moms'], default=moms['real_moms'], help='add a real movement [default]')
+# parser.add_argument('--expc', dest='lom',  action='store_const', const=moms['expected_moms'], default=moms['real_moms'], help='add a expc movement [default=real]')
+# parser.add_argument('-l',action='store_true', help='list moms')
+# parser.add_argument('-p',action='store_true', help='insert period')
+# parser.add_argument('-i', metavar="file_name", help='import from file_name')
+# parser.add_argument('-sd', metavar="dd-mm-yyyy", help='day start dd-mm-yyyy')
+# parser.add_argument('-ed', metavar="dd-mm-yyyy", help='day end dd-mm-yyyy')
+# parser.add_argument('-b', action='store_true', help='print balance')
 #
-#args = parser.parse_args()
-#print args
-#if args.a  and not args.p:
+# args = parser.parse_args()
+# print args
+# if args.a  and not args.p:
 #    print "one"
 #    newmom = mom()
 #    if args.a >= 0 :
@@ -102,7 +100,7 @@ class Master ( object ) :
 #    args.lom.insert(newmom)
 #    args.a = None
 #
-#if args.l :
+# if args.l :
 #    today = datetime.date.today()
 #    minusDelta = datetime.timedelta(days=-15)
 #    plusDelta = datetime.timedelta(days=30)
@@ -112,7 +110,7 @@ class Master ( object ) :
 #
 #    print "balance : "+str(args.lom.balance)
 #
-#if args.b :
+# if args.b :
 #    realData = []
 #    expectedData = []
 #    startDate = datetime.date.today() - datetime.timedelta(days=30)
@@ -136,7 +134,7 @@ class Master ( object ) :
 #    plt.axvline(x=30,color='k', linestyle='--')
 #    plt.show()
 #
-#if args.i and os.path.isfile(args.i):
+# if args.i and os.path.isfile(args.i):
 #    fp=open(args.i,"r")
 #    reader = csv.reader(fp)
 #    for row in reader :
@@ -159,7 +157,7 @@ class Master ( object ) :
 #        except :
 #            print(str(type(row[2])) + " | " +row[2]+" is not floatable")
 #
-#if args.a and args.p and args.sd and args.ed :
+# if args.a and args.p and args.sd and args.ed :
 #    sd = datetime.date(int(args.sd.split("-")[2]),int(args.sd.split("-")[1]),int(args.sd.split("-")[0]))
 #    ed = datetime.date(int(args.ed.split("-")[2]),int(args.ed.split("-")[1]),int(args.ed.split("-")[0]))
 #
@@ -178,4 +176,3 @@ class Master ( object ) :
 #        print sd
 #        sd += datetime.timedelta(days=1)
 #
-
