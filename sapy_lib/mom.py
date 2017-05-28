@@ -39,9 +39,10 @@ class Mom(object):  # movement of money
         cause="not specified",
         agent="not specified",
         payee="not specified",
-        date=datetime.date.today()
+        date=datetime.date.today(),
+        time=datetime.datetime.now().time()
     ):
-        # type: (int, int, int, str, str, str, date) -> Mom
+        # type: (int, int, int, str, str, str, date, time) -> Mom
         self.Price = price
         self.Direction = direction
         self.Mom_id = mom_id
@@ -49,38 +50,52 @@ class Mom(object):  # movement of money
         self.Agent = agent  # specify who move money
         self.Payee = payee  # specify who received money
         self.Date = date
+        self.Time = time
+
+    def time(self, time=None):
+        # TODO : check var type
+        if time:
+            self.Time = time
+        return self.Time
 
     def price(self, price=None):
+        # TODO : check var type
         if price:
             self.Price = price
         return self.Price
 
     def direction(self, direction=None):
+        # TODO : check var type
         if direction:
             self.Direction = direction
         return self.Direction
 
     def cause(self, cause=None):
+        # TODO : check var type
         if cause:
             self.Cause = cause
         return self.Cause
 
     def agent(self, agent=None):
+        # TODO : check var type
         if agent:
             self.Agent = agent
         return self.Agent
 
     def payee(self, payee=None):
+        # TODO : check var type
         if payee:
             self.Payee = payee
         return self.Payee
 
     def date(self, date=None):
+        # TODO : check var type
         if date:
             self.Date = date
         return self.Date
 
     def mom_id(self, mom_id=None):
+        # TODO : check var type
         if mom_id:
             self.Mom_id = mom_id
         return self.Mom_id
