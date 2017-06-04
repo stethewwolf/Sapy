@@ -61,7 +61,13 @@ class Mom(object):  # movement of money
     def price(self, price=None):
         # TODO : check var type
         if price:
-            self.Price = price
+            if price >= 0:
+                self.Price = price
+                self.Direction=1
+            else:
+                self.Price = -1 * price
+                self.Direction=-1
+
         return self.Price
 
     def direction(self, direction=None):
@@ -117,7 +123,10 @@ class Mom(object):  # movement of money
             'cause': self.Cause,
             'agent': self.Agent,
             'payee': self.Payee,
-            #'time': self.Time,
+            'time': {
+                'hour':self.Time.hour,
+                'second':self.Time.second
+            },
             'date': {
                 'month': self.Date.month,
                 'day':  self.Date.day,
@@ -134,7 +143,7 @@ class Mom(object):  # movement of money
         self.Cause = jstring['cause']
         self.Agent = jstring['agent']
         self.Payee = jstring['payee']
-        #self.Time = jstring['time']
+        self.Time = datetime.time(jstring['time']['hour'], jstring['time']['second'])
         self.Date = datetime.date(jstring['date']['year'], jstring['date']['month'], jstring['date']['day'])
         pass
 
@@ -153,6 +162,7 @@ if __name__ == "__main__":
     mom1_agent = "test mom1"
     mom1_payee = "test mom1"
     mom1_date = datetime.date.today()
+    mom1_time = datetime.time()
 
     mom1 = Mom(
         price=mom1_price,

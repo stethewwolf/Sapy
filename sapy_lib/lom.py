@@ -39,9 +39,11 @@ class Lom(object):  # list of movements
         self.Balance = 0
         self.Pos_sum = 0
         self.Neg_sum = 0
+        # TODO: add support for ids
 
     def insert(self, m):
         # TODO: check m is mom type
+        # TODO : manage mom id
         self.Movements.append(m)
         self.Movements.sort(key=lambda x: x.date, reverse=False)
         self.Balance = self.Balance + m.direction()*m.price()
@@ -52,6 +54,7 @@ class Lom(object):  # list of movements
 
     def remove(self, m):
         # TODO: check m is mom type
+        # TODO : manage mom id
         try:
             self.Movements.remove(m)
             self.Balance -= m.direction()*m.price()
@@ -114,6 +117,9 @@ class Lom(object):  # list of movements
 
     def get_in_period(self, start_date, time_delta):
         return [m for m in self.Movements if ((m.date >= start_date) and (m.date <= start_date+time_delta))]
+
+    def get_by_id(self, id):
+        return [m for m in self.Movements if m.Mom_id == id]
 
     def balance_at_day(self, start_date, end_date, base_balance=0):
         balance = 0

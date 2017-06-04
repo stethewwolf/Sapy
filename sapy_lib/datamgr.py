@@ -27,6 +27,8 @@
 
 import json
 import os
+import datetime
+import copy
 
 from lom import Lom
 
@@ -49,11 +51,28 @@ class DataMgr(object):
             return True
         return False
 
-    def new_mom(self, lom_name, mom):
+    def add_mom(self, lom_name, mom):
         # TODO: check if mom is Mom type
         # TODO: check if lom_name is str type
         if lom_name and mom :
             [l for l in self.Lom_list if l.Name == lom_name][0].Movements.append(mom)
+            return True
+        return False
+
+    def add_n_mom(self, lom_name, mom, n, datedelta=datetime.timedelta(days=1), timedelta=datetime.timedelta(hours=0)):
+        # TODO: check if mom is Mom type
+        # TODO: check if lom_name is str type
+        # TODO: check if n is int type
+        # TODO: check if timedelta is time type
+        i = 0
+        if lom_name and mom and n != 0 :
+            self.add_mom(lom_name, mom)
+            while i < int(n):
+                mom = copy.deepcopy(mom)
+                mom.Date+=datedelta
+                mom.Time=((datetime.datetime.combine(datetime.date(1,1,1),mom.Time) + timedelta).time())
+                self.add_mom(lom_name, mom)
+                i+=1
             return True
         return False
 
@@ -108,6 +127,7 @@ class DataMgr(object):
     def dump(self):
         rawdata = []
         for tmp_lom in self.Lom_list:
+            print tmp_lom
             rawdata.append(tmp_lom.to_json())
 
         if os.path.isfile(os.path.abspath(self.Datafile)):

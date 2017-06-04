@@ -45,9 +45,10 @@ def list_cmd(data, cmd):
     elif cmd[0] == "moms":
         # TODO: ask for day , default today
         # TODO: ask for number of day , default 1 day
+        # TODO: check fot cmd[1]
         if cmd[1] in data.list_lom():
             for key in data.list_moms(cmd[1]):
-                print key
+                print key.to_string()
         else:
             print (cmd[1] + " not found ")
 
@@ -70,13 +71,14 @@ def add_cmd(data, cmd):
     if cmd[0] == "mom":
         print (" not yet implemented ")
         price = raw_input("     insert price : ")
-        direction = raw_input("     insert direction : ")
         cause = raw_input("     insert cause")
         agent = raw_input("     insert agent")
         payee = raw_input("     insert payee")
         day = raw_input("     insert day [dd] : ")
         month = raw_input("     insert month [mm] : ")
         year = raw_input("     insert year [yyyy] : ")
+        if len(cmd) == 3:
+            number = cmd[2]
         # TODO: check date imput values
         date = None
         if year and month and day:
@@ -85,8 +87,6 @@ def add_cmd(data, cmd):
         mom = Mom()
         if price:
             mom.price(float(price))
-        if direction:
-            mom.direction(int(direction))
         if cause:
             mom.cause(cause)
         if agent:
@@ -97,7 +97,10 @@ def add_cmd(data, cmd):
             mom.date(date)
         # TODO: ask for multiple insertions
         if cmd[1]:
-            data.new_mom(cmd[1],mom)
+            if len(cmd) == 3:
+                data.add_n_mom(lom_name=cmd[1],mom=mom,n=number)
+            else:
+                data.add_mom(lom_name=cmd[1],mom=mom)
         else:
             return False
     return True
