@@ -39,11 +39,21 @@ class Lom(object):  # list of movements
         self.Balance = 0
         self.Pos_sum = 0
         self.Neg_sum = 0
-        # TODO: add support for ids
+        self.Lom_id = 1
+        self.Last_mom_id = -1
+
+    def lom_id(self, id=None):
+        if id:
+            self.Lom_id = id
+        return self.Lom_id
 
     def insert(self, m):
         # TODO: check m is mom type
-        # TODO : manage mom id
+        # manage ids
+        self.Last_mom_id += 1
+        m.mom_id(self.Last_mom_id)
+
+        # insert mom in the list
         self.Movements.append(m)
         self.Movements.sort(key=lambda x: x.date, reverse=False)
         self.Balance = self.Balance + m.direction()*m.price()
@@ -54,7 +64,6 @@ class Lom(object):  # list of movements
 
     def remove(self, m):
         # TODO: check m is mom type
-        # TODO : manage mom id
         try:
             self.Movements.remove(m)
             self.Balance -= m.direction()*m.price()
@@ -73,6 +82,8 @@ class Lom(object):  # list of movements
             'balance': self.Balance,
             'pos_sum': self.Pos_sum,
             'neg_sum': self.Neg_sum,
+            'lom_id': self.Lom_id,
+            'last_mom_id': self.Last_mom_id,
         }
 
         for mom in self.Movements:
