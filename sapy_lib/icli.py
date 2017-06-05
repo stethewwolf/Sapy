@@ -107,7 +107,14 @@ def add_cmd(data, cmd):
 
 
 def load_cmd(data, cmd):
-    print (" not yet implemented ")
+    extension = raw_input("     insert format [json, csv] : ")
+    if extension == "json":
+        print (" not yet implemented ")
+    elif extension == "csv":
+        print (" not yet implemented ")
+    else:
+        print ("unknown extension specified")
+
     return True
 
 
