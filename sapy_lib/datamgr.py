@@ -42,11 +42,14 @@ class DataMgr(object):
     def __init__(self, datafile):
         self.Lom_list = list()
         self.Datafile = datafile
+        self.Last_lom_id = -1
 
     def new_lom(self, name):
         tmp = Lom()
         if name :
             tmp.Name = name
+            self.Last_lom_id += 1
+            tmp.lom_id(self.Last_lom_id)
             self.Lom_list.append(tmp)
             return True
         return False
@@ -117,6 +120,9 @@ class DataMgr(object):
                 tmp_lom = Lom()
                 tmp_lom.from_json(tmp_data)
                 self.Lom_list.append(tmp_lom)
+        # set the last lom id
+            if [lom.lom_id() for lom in self.Lom_list]:
+                self.Last_lom_id = max([lom.lom_id() for lom in self.Lom_list])
 
         elif _DEBUG_:
             print (" no file " + str(os.path.abspath(self.Datafile)))
@@ -135,4 +141,4 @@ class DataMgr(object):
             # TODO: enable dup indention
             json.dump(rawdata, datafile)
             datafile.close()
-        pass
+
