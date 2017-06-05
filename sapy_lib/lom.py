@@ -41,6 +41,12 @@ class Lom(object):  # list of movements
         self.Neg_sum = 0
         self.Lom_id = 1
         self.Last_mom_id = -1
+        self.Visible = False
+
+    def visible(self, visible=False):
+        if id:
+            self.Visible = visible
+        return self.Visible
 
     def lom_id(self, id=None):
         if id:
@@ -84,6 +90,7 @@ class Lom(object):  # list of movements
             'neg_sum': self.Neg_sum,
             'lom_id': self.Lom_id,
             'last_mom_id': self.Last_mom_id,
+            'visible': self.Visible,
         }
 
         for mom in self.Movements:
@@ -94,6 +101,9 @@ class Lom(object):  # list of movements
 
     def from_json(self, json):
         self.Name = json['name']
+        self.Lom_id = json['lom_id']
+        self.Last_mom_id = json['last_mom_id']
+        self.Visible = json['visible']
 
         tmp_pos_sum = 0
         tmp_neg_sum = 0
