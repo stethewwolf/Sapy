@@ -28,9 +28,10 @@
 import json
 import os
 import datetime
-import copy
+import copy,csv
 
 from lom import Lom
+from mom import Mom
 
 _DEBUG_ = True
 
@@ -142,3 +143,16 @@ class DataMgr(object):
             json.dump(rawdata, datafile)
             datafile.close()
 
+    def load_csv (self, filename, lom_name):
+        if os.path.isfile(os.path.abspath(filename)):
+            fp = open(filename,"r")
+            reader = csv.reader(fp)
+            for row in reader :
+                mom = Mom()
+                mom.date(datetime.date(int(row[0].split("/")[2]),int(row[0].split("/")[1]),int(row[0].split("/")[0])))
+                mom.cause(row[1])
+                mom.price(float(row[2].replace(",",".")))
+                self.add_mom(lom_name, mom)
+            return True
+
+        return True

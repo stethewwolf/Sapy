@@ -25,7 +25,7 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-import datetime
+import datetime, os, csv
 from mom import Mom
 
 _DEBUG_ = False
@@ -107,10 +107,24 @@ def add_cmd(data, cmd):
 
 
 def load_cmd(data, cmd):
+    if cmd == "load" or len( cmd ) <= 0 :
+        print ("missing lom name")
+        return True
+    if not (cmd[0] in data.list_lom()):
+        print ("lom does not exist")
+        return True
+
     extension = raw_input("     insert format [json, csv] : ")
-    if extension == "json":
-        print (" not yet implemented ")
-    elif extension == "csv":
+    if extension == "csv":
+        filename = raw_input(" insert file name : ")
+        if os.path.isfile(os.path.abspath(filename)):
+            data.load_csv(filename,cmd[0])
+
+
+    elif extension == "json":
+        filename = raw_input(" insert file name : ")
+        if os.path.isfile(os.path.abspath(filename)):
+            fp = open(filename,"r")
         print (" not yet implemented ")
     else:
         print ("unknown extension specified")
