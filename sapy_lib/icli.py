@@ -25,6 +25,7 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
+import matplotlib.pyplot as plt
 import datetime, os, csv
 from mom import Mom
 
@@ -138,6 +139,53 @@ def remove_cmd(data, cmd):
 
 
 def display_cmd(data, cmd):
+    lom_name1 = raw_input("     insert lom name1 : ")
+    if not (lom_name1 in data.list_lom()):
+        print ("lom does not exist")
+        return True
+
+    lom_name2 = raw_input("     insert lom name2 : ")
+    if not (lom_name2 in data.list_lom()):
+        print ("lom does not exist")
+        return True
+
+    if lom_name1:
+        lom1 = data.get_lom(lom_name1)
+    if lom_name1:
+        lom2 = data.get_lom(lom_name2)
+
+    data_1 = []
+    data_2 = []
+    # TODO: ask for central day
+    startDate = datetime.date.today() - datetime.timedelta(days=30)
+    endDate = datetime.date.today() + datetime.timedelta(days=30)
+
+    if lom1:
+        base_1 = lom1.balance_at_day(datetime.date.min,startDate)
+        data_1.append(base_1)
+
+    if lom2:
+        base_2 = lom2.balance_at_day(datetime.date.min,startDate)
+        data_2.append(base_2)
+
+    while startDate <= endDate :
+        if lom1:
+            balance_1 = lom1.balance_at_day(startDate,startDate+datetime.timedelta(days=1),base_1)
+            data_1.append(balance_1)
+        if lom2:
+            balance_2 = lom2.balance_at_day(startDate,startDate+datetime.timedelta(days=1),base_2)
+            data_2.append(balance_2)
+
+        startDate += datetime.timedelta(days=1)
+
+    if data_1:
+        plt.plot(data_1)
+
+    if data_2:
+        plt.plot(data_2)
+
+    plt.axvline(x=30,color='k', linestyle='--')
+    plt.show()
     print (" not yet implemented ")
     return True
 
