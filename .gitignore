@@ -111,9 +111,6 @@ ENV/
 # idea
 .idea
 
-# sample data folder
-sample_data
-
 # test folder
 #tests
 
