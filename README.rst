@@ -14,9 +14,15 @@ Help
 
     Available command :
         help : display this message
+
         quit : exit program
+
         list : list moms or loms
+
         add : add moms
+
         display : display a graph
+
         remove : remove moms
+
         load : load data from file
