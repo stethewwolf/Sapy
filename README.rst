@@ -1,7 +1,9 @@
 SAPY
 ===============================================================================
 
-Sapy is sowftware usefulll to manage software properties
+
+The purpose of this softeware is to allow a quick view of your personal budget.
+Is designed to allow the creation of various lists of money moves and to compare them graphically.
 
 
 Structure
@@ -10,3 +12,11 @@ Structure
 Help
 -------------------------------------------------------------------------------
 
+    Available command :
+        help : display this message
+        quit : exit program
+        list : list moms or loms
+        add : add moms
+        display : display a graph
+        remove : remove moms
+        load : load data from file
