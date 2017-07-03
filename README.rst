@@ -12,17 +12,21 @@ Structure
 Help
 -------------------------------------------------------------------------------
 
-    Available command :
-        help : display this message
+by now, only the interactive command line interface is available, it should run :
 
-        quit : exit program
+    ./sapy --icli
 
-        list : list moms or loms
+Available command :
+    help : display this message
 
-        add : add moms
+    quit : exit program
 
-        display : display a graph
+    list : list moms or loms
 
-        remove : remove moms
+    add : add moms
 
-        load : load data from file
+    display : display a graph
+
+    remove : remove moms
+
+    load : load data from file
