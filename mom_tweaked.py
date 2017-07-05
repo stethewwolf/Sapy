@@ -9,10 +9,10 @@ class MoM():
         self.cause=None
         self.Agent=None
         self.Payee=None
-        self.Stamp=Stamp
-        self.Parameter={}
+        self.Stamp=Stamp # OK but in second time
+        self.Parameter={}  # OK
 
-    def data_movement(self):
+    def data_movement(self):  # OK
 
         if 'id' in self.Parameter:
             self.Parameter.setdefault('id',[]).append(self.id)
