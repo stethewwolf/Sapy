@@ -139,7 +139,7 @@ class DataMgr(object):
 
         if os.path.isfile(os.path.abspath(self.Datafile)):
             datafile = open(os.path.abspath(self.Datafile), "w")
-            # TODO: enable dup indention
+            # TODO: enable dump indention
             json.dump(rawdata, datafile)
             datafile.close()
 
@@ -156,3 +156,6 @@ class DataMgr(object):
             return True
 
         return True
+
+    def get_lom(self,lom_name):
+        return [l for l in self.Lom_list if l.Name == lom_name][0]
