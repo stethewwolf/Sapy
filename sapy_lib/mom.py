@@ -53,13 +53,18 @@ class Mom(object):  # movement of money
         self.Time = time
 
     def time(self, time=None):
-        # TODO : check var type
+        if time is not None and (not isinstance(time, datetime.time)):
+            print ("type error")
+            return
+
         if time:
             self.Time = time
         return self.Time
 
     def price(self, price=None):
-        # TODO : check var type
+        if price is not None and (not isinstance(price, float)):
+            print ("type error")
+            return
         if price:
             if price >= 0:
                 self.Price = price
@@ -71,37 +76,50 @@ class Mom(object):  # movement of money
         return self.Price
 
     def direction(self, direction=None):
-        # TODO : check var type
+        if direction is not None and (not isinstance(direction, int)):
+            print ("type error")
+            return
+
         if direction:
             self.Direction = direction
         return self.Direction
 
     def cause(self, cause=None):
-        # TODO : check var type
+        if cause is not None and (not isinstance(cause, None)):
+            print ("type error")
+            return
         if cause:
             self.Cause = cause
         return self.Cause
 
     def agent(self, agent=None):
-        # TODO : check var type
+        if agent is not None and (not isinstance(agent,str)):
+            print ("type error")
+            return
         if agent:
             self.Agent = agent
         return self.Agent
 
     def payee(self, payee=None):
-        # TODO : check var type
+        if payee is not None and (not isinstance(payee, str)):
+            print ("type error")
+            return
         if payee:
             self.Payee = payee
         return self.Payee
 
     def date(self, date=None):
-        # TODO : check var type
+        if date is not None and (not isinstance(date, datetime.date)):
+            print ("type error")
+            return
         if date:
             self.Date = date
         return self.Date
 
     def mom_id(self, mom_id=None):
-        # TODO : check var type
+        if mom_id is not None and (not isinstance(mom_id, int)):
+            print ("type error")
+            return
         if mom_id:
             self.Mom_id = mom_id
         return self.Mom_id
@@ -137,6 +155,9 @@ class Mom(object):  # movement of money
         return tmp_data
 
     def from_json(self, jstring):
+        if jstring is not None and ( not isinstance(jstring, str)):
+            print ("type error")
+            return
         self.Price = jstring['price']
         self.Direction = jstring['direction']
         self.Mom_id = jstring['mom_id']
