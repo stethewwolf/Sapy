@@ -26,6 +26,7 @@
 #     SOFTWARE.
 
 from mom import Mom
+import datetime
 
 
 class Lom(object):  # list of movements
@@ -43,18 +44,28 @@ class Lom(object):  # list of movements
         self.Last_mom_id = -1
         self.Visible = False
 
-    def visible(self, visible=False):
+    def visible(self, visible=True):
+        if not isinstance(visible, bool):
+            print ("type error")
+            pass
+
         if id:
             self.Visible = visible
         return self.Visible
 
-    def lom_id(self, id=None):
+    def lom_id(self, lom_id=None):
+        if id is not None and (not isinstance(id, int)):
+            print ("type error")
+            return -1
         if id:
-            self.Lom_id = id
+            self.Lom_id = lom_id
         return self.Lom_id
 
     def insert(self, m):
-        # TODO: check m is mom type
+        if m is not None and (not isinstance(m, Mom)):
+            print "type error"
+            return
+
         # manage ids
         self.Last_mom_id += 1
         m.mom_id(self.Last_mom_id)
@@ -69,7 +80,9 @@ class Lom(object):  # list of movements
             self.Neg_sum += m.price()
 
     def remove(self, m):
-        # TODO: check m is mom type
+        if not isinstance(m, Mom):
+            print "error"
+            pass
         try:
             self.Movements.remove(m)
             self.Balance -= m.direction()*m.price()
@@ -100,6 +113,9 @@ class Lom(object):  # list of movements
         return lom_json
 
     def from_json(self, json):
+        if json is not None and (not isinstance(json, str)):
+            print ("type error")
+            return
         self.Name = json['name']
         self.Lom_id = json['lom_id']
         self.Last_mom_id = json['last_mom_id']
@@ -134,15 +150,36 @@ class Lom(object):  # list of movements
             self.Neg_sum = json['neg_sum']
 
     def find_on_date(self, date):
+        if not isinstance(date, datetime.date):
+            print ("type error")
+            return
         return [m for m in self.Movements if m.date == date]
 
     def get_in_period(self, start_date, time_delta):
+        if not isinstance(start_date, datetime.date):
+            print("type error")
+            return
+        if not isinstance(time_delta, datetime.timedelta):
+            print("type error")
+            return
         return [m for m in self.Movements if ((m.date >= start_date) and (m.date <= start_date+time_delta))]
 
-    def get_by_id(self, id):
-        return [m for m in self.Movements if m.Mom_id == id]
+    def get_by_id(self, mom_id):
+        if not isinstance(mom_id, int):
+            print ("type error")
+            return
+        return [m for m in self.Movements if m.Mom_id == mom_id]
 
     def balance_at_day(self, start_date, end_date, base_balance=0):
+        if not isinstance(start_date, datetime.date):
+            print("type error")
+            return
+        if not isinstance(end_date, datetime.date):
+            print("type error")
+            return
+        if not isinstance(base_balance, float):
+            print ("type error")
+            return
         balance = 0
         if base_balance != 0:
             balance = base_balance
@@ -155,6 +192,17 @@ class Lom(object):  # list of movements
 
         return balance
 
+    def balance_per_day(self, start_date, end_date, base_balance=0):
+        if not isinstance(start_date, datetime.date):
+            print("type error")
+            return
+        if not isinstance(end_date, datetime.date):
+            print("type error")
+            return
+        if not isinstance(base_balance, float):
+            print ("type error")
+            return
+        pass
 
 # RUNS TESTS
 if __name__ == "__main__":
