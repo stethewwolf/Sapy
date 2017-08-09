@@ -39,8 +39,7 @@ class Mom(object):  # movement of money
         cause="not specified",
         agent="not specified",
         payee="not specified",
-        date=datetime.date.today(),
-        time=datetime.datetime.now().time()
+        time=datetime.datetime.now()
     ):
         # type: (int, int, int, str, str, str, date, time) -> Mom
         self.Price = price
@@ -49,11 +48,10 @@ class Mom(object):  # movement of money
         self.Cause = cause  # description of money movement
         self.Agent = agent  # specify who move money
         self.Payee = payee  # specify who received money
-        self.Date = date
         self.Time = time
 
     def time(self, time=None):
-        if time is not None and (not isinstance(time, datetime.time)):
+        if time is not None and (not isinstance(time, datetime.datetime)):
             print ("type error")
             return
 
@@ -108,14 +106,6 @@ class Mom(object):  # movement of money
             self.Payee = payee
         return self.Payee
 
-    def date(self, date=None):
-        if date is not None and (not isinstance(date, datetime.date)):
-            print ("type error")
-            return
-        if date:
-            self.Date = date
-        return self.Date
-
     def mom_id(self, mom_id=None):
         if mom_id is not None and (not isinstance(mom_id, int)):
             print ("type error")
@@ -142,21 +132,20 @@ class Mom(object):  # movement of money
             'agent': self.Agent,
             'payee': self.Payee,
             'time': {
-                'hour':self.Time.hour,
-                'second':self.Time.second
-            },
-            'date': {
-                'month': self.Date.month,
-                'day':  self.Date.day,
-                'year': self.Date.year,
+                'year': self.Time.year,
+                'month': self.Time.month,
+                'day':  self.Time.day,
+                'hours': self.Time.hour,
+                'minutes':self.Time.minute
             },
             'mom_id': self.Mom_id
         }
         return tmp_data
 
     def from_json(self, jstring):
-        if jstring is not None and ( not isinstance(jstring, str)):
-            print ("type error")
+        if not jstring:
+            # TODO: check if jstring is realy a str
+            print ("type error : jstring must be a string")
             return
         self.Price = jstring['price']
         self.Direction = jstring['direction']
@@ -164,8 +153,7 @@ class Mom(object):  # movement of money
         self.Cause = jstring['cause']
         self.Agent = jstring['agent']
         self.Payee = jstring['payee']
-        self.Time = datetime.time(jstring['time']['hour'], jstring['time']['second'])
-        self.Date = datetime.date(jstring['date']['year'], jstring['date']['month'], jstring['date']['day'])
+        self.Time = datetime.datetime(jstring['time']['year'], jstring['time']['month'], jstring['time']['day'],jstring['time']['hours'], jstring['time']['minutes'])
         pass
 
     def compare(self, lom):
@@ -182,8 +170,7 @@ if __name__ == "__main__":
     mom1_cause = "test mom1"
     mom1_agent = "test mom1"
     mom1_payee = "test mom1"
-    mom1_date = datetime.date.today()
-    mom1_time = datetime.time()
+    mom1_time = datetime.datetime.now()
 
     mom1 = Mom(
         price=mom1_price,
@@ -192,7 +179,7 @@ if __name__ == "__main__":
         cause=mom1_cause,
         agent=mom1_agent,
         payee=mom1_payee,
-        date=mom1_date
+        time=mom1_time
     )
     print mom1.to_json()
 
@@ -221,28 +208,37 @@ if __name__ == "__main__":
     else:
         print(" payees : ok ")
 
-    if mom1.date() != mom1_date:
-        print(" dates : do not match ")
+    if mom1.time() != mom1_time:
+        print(" time : do not match ")
     else:
-        print(" dates : ok ")
+        print(" time : ok ")
 
+    # test import/export from json
     mom2 = Mom()
+
     mom2_json = {
         'direction': -1,
         'price': 34,
         'agent': 'test mom2',
         'payee': 'test mom2',
-        'date': {
+        'time': {
+            'year': 2017,
             'month': 4,
             'day': 17,
-            'year': 2017
+            'hours': 16,
+            'minutes': 45
         },
         'cause': 'test mom2',
         'mom_id': 2
     }
 
+    print "pre"
     mom2.from_json(mom2_json)
+
+    print "post"
     if mom2.to_json() == mom2_json:
         print ("conversion from/to json working")
     else:
         print ("conversion from/to json do not work")
+        print mom2_json
+        print mom2.to_json()
