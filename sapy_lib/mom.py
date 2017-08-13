@@ -168,7 +168,21 @@ class Mom(object):  # movement of money
 # RUNS TESTS
 # todo: improve test : they must be more readable
 if __name__ == "__main__":
+
     print ("testing mom")
+    # to check
+    # time
+    # price
+    # direction
+    # cause
+    # agent
+    # payee
+    # mom id
+    # to string
+    # to json
+    # compare
+    # copy
+
 
     # mom1
     mom1_price = 59
