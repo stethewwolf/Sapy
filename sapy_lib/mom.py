@@ -25,7 +25,7 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-import datetime
+import datetime, copy
 
 
 class Mom(object):  # movement of money
@@ -121,7 +121,7 @@ class Mom(object):  # movement of money
         result += self.Cause+separator
         result += self.Agent+separator
         result += self.Payee+separator
-        result += self.Date.isoformat()
+        result += self.Time.isoformat()
         return result
 
     def to_json(self):
@@ -156,10 +156,17 @@ class Mom(object):  # movement of money
         self.Time = datetime.datetime(jstring['time']['year'], jstring['time']['month'], jstring['time']['day'],jstring['time']['hours'], jstring['time']['minutes'])
         pass
 
-    def compare(self, lom):
-        pass
+    def compare(self, mom):
+        if not (isinstance(mom,Mom)):
+            print "type error"
+            return None
+        return dict(price=self.Direction*self.Price - mom.Direction * mom.Price, mom_id=[self.Mom_id == mom.Mom_id], cause=[self.Cause == mom.Cause], agent=[self.Agent== mom.Agent], payee=[self.Payee == mom.Payee], time=self.Time-mom.Time)
+
+    def copy(self):
+        return  copy.deepcopy(self)
 
 # RUNS TESTS
+# todo: improve test : they must be more readable
 if __name__ == "__main__":
     print ("testing mom")
 
@@ -167,7 +174,7 @@ if __name__ == "__main__":
     mom1_price = 59
     mom1_direction = 1
     mom1_id = 15
-    mom1_cause = "test mom1"
+    mom1_cause = "test"
     mom1_agent = "test mom1"
     mom1_payee = "test mom1"
     mom1_time = datetime.datetime.now()
@@ -228,7 +235,7 @@ if __name__ == "__main__":
             'hours': 16,
             'minutes': 45
         },
-        'cause': 'test mom2',
+        'cause': 'test',
         'mom_id': 2
     }
 
@@ -242,3 +249,14 @@ if __name__ == "__main__":
         print ("conversion from/to json do not work")
         print mom2_json
         print mom2.to_json()
+
+    # check comparison
+    print mom2.to_string("!")
+    print mom1.to_string("|")
+    print mom2.to_json()
+    print mom1.to_json()
+    print mom2.compare(mom1)
+    print mom1.compare(mom2)
+
+    mom3 = mom1.copy()
+    print mom1.compare(mom3)
