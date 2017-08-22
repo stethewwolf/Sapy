@@ -42,7 +42,7 @@ class Mom(object):  # movement of money
         time=datetime.datetime.now()
     ):
         # type: (int, int, int, str, str, str, date, time) -> Mom
-        self.Price = price
+        self.Price = float(price)
         self.Direction = direction
         self.Mom_id = mom_id
         self.Cause = cause  # description of money movement
