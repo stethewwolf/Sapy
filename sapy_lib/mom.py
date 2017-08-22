@@ -52,7 +52,7 @@ class Mom(object):  # movement of money
 
     def time(self, time=None):
         if time is not None and (not isinstance(time, datetime.datetime)):
-            print ("type error")
+            print "type error"
             return
 
         if time:
@@ -61,21 +61,21 @@ class Mom(object):  # movement of money
 
     def price(self, price=None):
         if price is not None and (not isinstance(price, float)):
-            print ("type error")
+            print "type error"
             return
         if price:
             if price >= 0:
-                self.Price = price
-                self.Direction=1
+                self.Direction = 1
             else:
-                self.Price = -1 * price
-                self.Direction=-1
+                self.Direction = -1
+
+            self.Price = self.Direction * price
 
         return self.Price
 
     def direction(self, direction=None):
         if direction is not None and (not isinstance(direction, int)):
-            print ("type error")
+            print "type error"
             return
 
         if direction:
@@ -84,15 +84,15 @@ class Mom(object):  # movement of money
 
     def cause(self, cause=None):
         if cause is not None and (not isinstance(cause, None)):
-            print ("type error")
+            print "type error"
             return
         if cause:
             self.Cause = cause
         return self.Cause
 
     def agent(self, agent=None):
-        if agent is not None and (not isinstance(agent,str)):
-            print ("type error")
+        if agent is not None and (not isinstance(agent, str)):
+            print "type error"
             return
         if agent:
             self.Agent = agent
@@ -100,7 +100,7 @@ class Mom(object):  # movement of money
 
     def payee(self, payee=None):
         if payee is not None and (not isinstance(payee, str)):
-            print ("type error")
+            print "type error"
             return
         if payee:
             self.Payee = payee
@@ -144,8 +144,8 @@ class Mom(object):  # movement of money
 
     def from_json(self, jstring):
         if not jstring:
-            # TODO: check if jstring is realy a str
-            print ("type error : jstring must be a string")
+            #TODO: check if jstring is realy a str
+            print "type error : jstring must be a string"
             return
         self.Price = float(jstring['price'])
         self.Direction = jstring['direction']
@@ -153,8 +153,13 @@ class Mom(object):  # movement of money
         self.Cause = jstring['cause']
         self.Agent = jstring['agent']
         self.Payee = jstring['payee']
-        self.Time = datetime.datetime(jstring['time']['year'], jstring['time']['month'], jstring['time']['day'],jstring['time']['hours'], jstring['time']['minutes'])
-        pass
+        self.Time = datetime.datetime(
+            jstring['time']['year'],
+            jstring['time']['month'],
+            jstring['time']['day'],
+            jstring['time']['hours'],
+            jstring['time']['minutes']
+        )
 
     def compare(self, mom):
         if not (isinstance(mom,Mom)):
@@ -169,7 +174,7 @@ class Mom(object):  # movement of money
 # todo: improve test : they must be more readable
 if __name__ == "__main__":
 
-    print ("testing mom")
+    print "testing mom"
     # to check
     # time
     # price
@@ -205,34 +210,34 @@ if __name__ == "__main__":
     print mom1.to_json()
 
     if mom1.price() != mom1_price:
-        print(" prices : do not match ")
+        print " prices : do not match "
     else:
-        print(" prices : ok ")
+        print " prices : ok "
 
     if mom1.direction() != mom1_direction:
-        print(" directions : do not match ")
+        print " directions : do not match "
     else:
-        print(" directions : ok ")
+        print " directions : ok "
 
     if mom1.cause() != mom1_cause:
-        print(" causes : do not match ")
+        print " causes : do not match "
     else:
-        print(" causes : ok ")
+        print " causes : ok "
 
     if mom1.agent() != mom1_agent:
-        print(" agents : do not match ")
+        print " agents : do not match "
     else:
-        print(" agents : ok ")
+        print " agents : ok "
 
     if mom1.payee() != mom1_payee:
-        print(" payees : do not match ")
+        print " payees : do not match "
     else:
-        print(" payees : ok ")
+        print " payees : ok "
 
     if mom1.time() != mom1_time:
-        print(" time : do not match ")
+        print " time : do not match "
     else:
-        print(" time : ok ")
+        print " time : ok "
 
     # test import/export from json
     mom2 = Mom()
