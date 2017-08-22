@@ -162,10 +162,17 @@ class Mom(object):  # movement of money
         )
 
     def compare(self, mom):
-        if not (isinstance(mom,Mom)):
+        if not (isinstance(mom, Mom)):
             print "type error"
             return None
-        return dict(price=self.Direction*self.Price - mom.Direction * mom.Price, mom_id=[self.Mom_id == mom.Mom_id], cause=[self.Cause == mom.Cause], agent=[self.Agent== mom.Agent], payee=[self.Payee == mom.Payee], time=self.Time-mom.Time)
+        return dict(
+            price=self.Direction*self.Price - mom.Direction * mom.Price,
+            mom_id=[self.Mom_id == mom.Mom_id],
+            cause=[self.Cause == mom.Cause],
+            agent=[self.Agent== mom.Agent],
+            payee=[self.Payee == mom.Payee],
+            time=self.Time-mom.Time
+        )
 
     def copy(self):
         return  copy.deepcopy(self)
