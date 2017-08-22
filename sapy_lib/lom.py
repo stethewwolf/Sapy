@@ -54,12 +54,15 @@ class Lom(object):  # list of movements
         return self.Visible
 
     def lom_id(self, lom_id=None):
-        if id is not None and (not isinstance(id, int)):
+        if lom_id is not None and (not isinstance(lom_id, int)):
             print ("type error")
             return -1
-        if id:
+        if lom_id:
             self.Lom_id = lom_id
         return self.Lom_id
+
+    def get_num_omoms(self): # defined for debug purpose
+        return len(self.Movements)
 
     def insert(self, m):
         if m is not None and (not isinstance(m, Mom)):
@@ -72,7 +75,7 @@ class Lom(object):  # list of movements
 
         # insert mom in the list
         self.Movements.append(m)
-        self.Movements.sort(key=lambda x: x.date, reverse=False)
+        self.Movements.sort(key=lambda x: x.time, reverse=False)
         self.Balance = self.Balance + m.direction()*m.price()
         if m.direction() >= 0:
             self.Pos_sum += m.price()
@@ -113,8 +116,8 @@ class Lom(object):  # list of movements
         return lom_json
 
     def from_json(self, json):
-        if json is not None and (not isinstance(json, str)):
-            print ("type error")
+        if json is not None and (not isinstance(json, dict)):
+            print ("type error i want dict")
             return
         self.Name = json['name']
         self.Lom_id = json['lom_id']
@@ -208,3 +211,66 @@ class Lom(object):  # list of movements
 if __name__ == "__main__":
     print ("testing loms")
     # TODO: write some tests
+    # create 2 lom
+    lom1 = Lom("lom1")
+    # import 2 lom from json
+    json_lom2 = {
+        'visible': False,
+        'neg_sum': 0,
+        'name': 'lom2',
+        'last_mom_id': -1,
+        'pos_sum': 0,
+        'lom_id': 2,
+        'balance': 0,
+        'movements': []
+    }
+    json_lom3 = {
+        'visible': False,
+        'neg_sum': 0,
+        'name': 'lom2',
+        'last_mom_id': -1,
+        'pos_sum': 0,
+        'lom_id': 3,
+        'balance': 0,
+        'movements': []
+    }
+
+    lom2 = Lom()
+    lom3 = Lom()
+
+    # implict test of from_json() method
+    lom2.from_json(json_lom2)
+    lom3.from_json(json_lom3)
+
+    if lom2.lom_id() != json_lom2['lom_id']:
+        print("failed method lom_id()")
+        print lom2.lom_id()
+        print json_lom2['lom_id']
+    else:
+        print("method lom_id() ok")
+
+    # testing get_num_omoms
+    nomom = lom1.get_num_omoms()
+    if(nomom != 0):
+        print("failed method get_num_omoms")
+    else:
+        print("ok method get_num_omoms")
+
+    lom1.insert(
+        Mom(
+            price=float(10),
+            direction=-1,
+            mom_id=1,
+            cause="test mom A",
+            agent="agent mom A",
+            payee="payee mom A",
+            time=datetime.datetime.now()
+        )
+    )
+
+    if ( lom1.get_num_omoms() == 1):
+        print("ok method insert")
+    else:
+        print("failed method insert")
+
+
