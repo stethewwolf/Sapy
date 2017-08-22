@@ -147,7 +147,7 @@ class Mom(object):  # movement of money
             # TODO: check if jstring is realy a str
             print ("type error : jstring must be a string")
             return
-        self.Price = jstring['price']
+        self.Price = float(jstring['price'])
         self.Direction = jstring['direction']
         self.Mom_id = jstring['mom_id']
         self.Cause = jstring['cause']
