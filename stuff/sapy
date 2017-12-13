@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 #
-#   File : sapy
-#   Author : stefano prina 
+#   File : sapy.py
 #
 # MIT License
 # 
@@ -25,34 +24,36 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
+import logging,os,json
+from sapy_lib.arg_parser import Master
 from sapy_lib.datamgr import DataMgr
-from sapy_lib.gui import GuiCtr
 
-class Sapy(object):
-    def __init__(self):
-        self.__data_file ="sample_data/data.json"
-        self.__debug = False
-        self.__data = DataMgr(self.__data_file)
-        self.__gui = GuiCtr(self.__data)
-        self.__icli = None
-        self.__cli = None
+_DATAFILE_ ="sample_data/data.json"
+_DEBUG_ = True
+_VERSION_ = 0.0
+_DESCRIPTION_ = """
+Simple program to manage and analize money movement 
+"""
+_NAME_ = "sapy"
 
-    def run_cli(self):
-        pass
+def main ( ):
+    if _DEBUG_ :
+        print ("__ main __ ")
 
-    def run_icli(self):
-        pass
+    data = DataMgr(_DATAFILE_)
+    data.load()
+    master = Master( _NAME_, _VERSION_, _DESCRIPTION_, data )
+    
+    master.parse()
 
-    def run_gui(self):
-        self.__gui.run()
-        pass
+    master.run()
 
-    def save(self):
-        self.__data.to_file()
+    data.dump()
 
-if __name__ == "__main__":
-    sapy = Sapy()
- 
-    sapy.run_gui()
+    return
 
-    sapy.save()
+if _DEBUG_ :
+    print ("__ sapy __ ")
+    
+main()
+

@@ -25,7 +25,8 @@
 #     SOFTWARE.
 
 import argparse
-from icli import Icli
+from sapy_lib.icli import Icli
+from sapy_lib.gui import gui
 
 _DEBUG_ = True
 
@@ -36,8 +37,9 @@ class Master(object):
             print ("__ init Master __ ")
 
         self.data = data
-        self.parser = argparse.ArgumentParser(prog=name, version=version, description=description)
+        self.parser = argparse.ArgumentParser(prog=name,  description=description)
         self.icli = Icli(data)
+        self.gui = gui(self.data)
 
         # setting parameter 
         ## cli - command line interface 
@@ -64,7 +66,8 @@ class Master(object):
         if self.arguments.icli:
             self.icli.run()
         if self.arguments.gui:
-            print (" passed --gui : not yet implemented")
+            print (" passed --gui : working in progress")
+            self.gui.run()
 
 # from sapi_lib.lom import lo
 # from sapi_lib.mom import *

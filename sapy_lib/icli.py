@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 #   File : icli.py
 #   Author : stefano prina
@@ -27,7 +27,7 @@
 
 import matplotlib.pyplot as plt
 import datetime, os, csv
-from mom import Mom
+from sapy_lib.mom import Mom
 
 _DEBUG_ = False
 
@@ -49,7 +49,7 @@ def list_cmd(data, cmd):
         # TODO: check fot cmd[1]
         if cmd[1] in data.list_lom():
             for key in data.list_moms(cmd[1]):
-                print key.to_string()
+                print (key.to_string())
         else:
             print (cmd[1] + " not found ")
 
@@ -191,7 +191,7 @@ def display_cmd(data, cmd):
 
 
 def help_cmd(data, cmd):
-    print """
+    print ("""
         Available command :
             help : display this message
             quit : exit program
@@ -200,7 +200,7 @@ def help_cmd(data, cmd):
             display : display a graph
             remove : remove moms
             load : load data from file
-    """
+    """)
     return True
 
 
@@ -233,7 +233,7 @@ class Icli(object):
     def run(self):
         flag = True
         print ("available command")
-        print self.commands.keys()
+        print ( self.commands.keys() )
         print ("type <command> help to get more info")
 
         while flag:

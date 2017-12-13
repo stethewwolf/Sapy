@@ -74,10 +74,7 @@ class Mom(object):  # movement of money
 
             self.__price = self.__direction * price
 
-        return self.__price 
-
-    def get_value(self):
-        return self.__price * self.__direction
+        return self.__price
 
     def direction(self, direction=None):
         if direction is not None and (not isinstance(direction, int)):

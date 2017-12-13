@@ -25,7 +25,7 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-from sapy_lib.mom import Mom
+from mom import Mom
 import datetime
 
 
@@ -35,7 +35,7 @@ class Lom(object):  # list of movements
         name="list of movements",
     ):
         self.__name = name
-        self.movements = []  # array ordered by date
+        self.__movements = []  # array ordered by date
         self.__lom_id = -1
         self.__last_mom_id = -1
         self.__visible = False
@@ -45,7 +45,7 @@ class Lom(object):  # list of movements
             print ("type error")
             pass
 
-        if  name :
+        if not name :
             self.__name = name
 
         return self.__name
@@ -65,7 +65,7 @@ class Lom(object):  # list of movements
         return self.__visible
 
     def is_visible(self):
-        return self.__visible
+        return self.__visisble
 
     def lom_id(self, lom_id=None):
         if lom_id is not None and (not isinstance(lom_id, int)):
@@ -83,16 +83,15 @@ class Lom(object):  # list of movements
         self.__last_mom_id += 1
         m.mom_id(self.__last_mom_id)
         # insert mom in the list
-        self.movements.append(m)
-        self.movements.sort(key=lambda x: x.time(), reverse=False)
-        return m.mom_id()
+        self.__movements.append(m)
+        self.__movements.sort(key=lambda x: x.time(), reverse=False)
 
     def remove(self, m):
         if not isinstance(m, Mom):
             print ("error")
             pass
         try:
-            self.movements.remove(m)
+            self.__movements.remove(m)
         except:
             # TODO: add exception class
             print("impossible delete " + m.to_string())
@@ -100,9 +99,9 @@ class Lom(object):  # list of movements
     def to_dict(self):
         return {
             'name': self.__name,
-            'movements': [ mom.to_dict() for mom in self.movements ],
+            'movements': [ mom.to_dict() for mom in self.__movements ],
             'lom_id': self.__lom_id,
-            'last_mom_id': self.__last_mom_id,
+            'last_mom_id': self._last_mom_id,
             'visible': self.__visible,
         }
 
@@ -115,11 +114,8 @@ class Lom(object):  # list of movements
         self.__lom_id = source['lom_id']
         self.__last_mom_id = source['last_mom_id']
         self.__visible = source['visible']
+        self.__movements = [ Mom(mom_dict) for mom_dict in source['movements'] ]
 
-        for mom_dict in source['movements']:
-            mom_tmp = Mom()
-            mom_tmp.from_dict(mom_dict)
-            self.movements.append(mom_tmp)
 
         # TODO: enable sort by date
         #self.Movements.sort(key=lambda x: x.date, reverse=False)
@@ -132,13 +128,13 @@ class Lom(object):  # list of movements
         if not isinstance(time_delta, datetime.timedelta):
             print("type error")
             return
-        return [m for m in self.movements if ((m.date >= start_date) and (m.date <= start_date+time_delta))]
+        return [m for m in self.Movements if ((m.date >= start_date) and (m.date <= start_date+time_delta))]
 
     def get_mom_by_id(self, mom_id):
         if not isinstance(mom_id, int):
             print ("type error")
             return
-        return [m for m in self.movements if m.mom_id() == mom_id][0]
+        return [m for m in self.Movements if m.mom_id() == mom_id]
 
     def balance_per_day(self, start_date, end_date):
         if not isinstance(start_date, datetime.date):
