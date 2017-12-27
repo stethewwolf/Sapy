@@ -140,6 +140,13 @@ class Lom(object):  # list of movements
             return
         return [m for m in self.movements if m.mom_id() == mom_id][0]
 
+    def get_mom_by_time(self, time):
+        if not isinstance(time, datetime.datetime):
+            print ("type error")
+            return
+        return [m for m in self.movements if m.time().date() == time.date()]
+
+
     def balance_per_day(self, start_date, end_date):
         if not isinstance(start_date, datetime.date):
             print("type error")
@@ -147,18 +154,34 @@ class Lom(object):  # list of movements
         if not isinstance(end_date, datetime.date):
             print("type error")
             return
-        if not isinstance(base_balance, float):
-            print ("type error")
-            return
         
         balance = 0
 
-        for m in self.Movements:
-            if m.date() < end_date:
-                if m.date() >= start_date:
-                    balance += m.direction()*m.price()
+        # I calculate the basic budget 
+        for mom in self.movements:
+            if mom.time().date() < start_date.date() :
+                balance += mom.get_value()
 
-        return balance
+
+        balances = []
+        dates = []
+        # now I create a tuple with 2 vectors, one of dates and one of values
+        date_itr = start_date
+        while date_itr <= end_date:
+            for mom in self.get_mom_by_time(date_itr): # i select all mom in day
+                balance += mom.get_value() 
+
+            print("==============")
+            print(date_itr.date())
+            print(balance)
+            print("==============")
+            balances.append(balance)
+            dates.append(date_itr.date())
+
+            date_itr += datetime.timedelta(days=1)
+         
+
+        return (dates, balances)
 
 
 # RUNS TESTS

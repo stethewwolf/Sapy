@@ -33,10 +33,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from matplotlib.figure import Figure
-from numpy import arange, pi, random, linspace
-import matplotlib.cm as cm
+import matplotlib
 from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
-
 
 
 class LomTab(Gtk.Box):
@@ -199,19 +197,38 @@ class MainTab(Gtk.Box):
         hbox.pack_end(button, False, False, 10)
         vbox.pack_end(hbox, False, False, 10)
  
-        # left side
-        vbox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
-        self.pack_end(vbox, True, True, 10)
+        # right side
+        self.right_box = Gtk.Box(orientation = Gtk.Orientation.VERTICAL, spacing = 20)
+        self.pack_end(self.right_box, True, True, 10)
         
+        # bottom labels
+        #hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
+        #self.enda_date_lable = Gtk.Label(
+        #        self.controller.start_drawing_date)
+        #vbox.pack_end(hbox, False, False, 10)
+
         # bottom buttons
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
+
         button = Gtk.Button(label = "set start date")
-        #button.connect("clicked", self.controller.set_start_date)
+        button.connect("clicked", self.controller.set_start_drawing_date)
         hbox.pack_start(button, False, False, 10)
+        
+        button = Gtk.Button(label = "refresh plot")
+        button.connect("clicked", self.controller.plot)
+        hbox.pack_start(button, False, False, 10)
+
+
         button = Gtk.Button(label = "set end date")
-        #button.connect("clicked", self.controller.set_end_date)
+        button.connect("clicked", self.controller.set_end_drawing_date)
         hbox.pack_end(button, False, False, 10)
-        vbox.pack_end(hbox, False, False, 10)
+
+        self.right_box.pack_end(hbox, False, False, 10)
+
+
+    def plot(self):
+        canvas = FigureCanvas(self.controller.figure)  # a gtk.DrawingArea
+        self.right_box.pack_start(canvas, True, True, 10)
  
 class MainTabCtr(object):
     def __init__(
@@ -225,9 +242,10 @@ class MainTabCtr(object):
         self.insert_tab_func = insert_tab_func
         self.title = "Main Tab"
         self.lom_store = Gtk.ListStore(int, str, bool, bool)
-        self.view = MainTab(self)
         self.view_id = -1
         self.lom_list = data.get_loms()
+        self.start_drawing_date = datetime.datetime.now() - datetime.timedelta(days=15)
+        self.end_drawing_date = datetime.datetime.now() + datetime.timedelta(days=15)
 
         for lom in self.lom_list :
             self.lom_store.append([
@@ -236,6 +254,13 @@ class MainTabCtr(object):
                 lom.is_visible(),
                 False
                 ])
+        
+        # manage plot
+        # example at:
+        # https://matplotlib.org/examples/user_interfaces/embedding_in_gtk.html
+        #
+        self.view = MainTab(self)
+        self.plot()
 
     def toggle_visible_lom(self, widget, path):
         self.lom_store[path][2] = not self.lom_store[path][2]
@@ -283,6 +308,54 @@ class MainTabCtr(object):
                         self.lom_store.remove(treeiter)
 
             treeiter = nexiter
+
+    def plot(self, widget = None):
+        # http://gtk3-matplotlib-cookbook.readthedocs.io/en/latest/enteringdata.html
+        self.figure = Figure( figsize=(1, 4), dpi=100)
+        self.view.plot()
+        self.subplot = self.figure.add_subplot(111)
+        self.subplot.plot([],[])
+        
+        drawing_data = self.data.get_graph_data(self.start_drawing_date, self.end_drawing_date)
+        if drawing_data:
+            for lom in drawing_data:
+                dates = matplotlib.dates.date2num(lom[0])
+                self.subplot.scatter(dates, lom[1])
+
+        print (self.subplot)
+
+    def set_start_drawing_date(self, widget = None):
+        dialog = dialogs.CalendarDialogsCtr(None)
+        response = dialog.run()
+
+        if response  == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+            return
+
+        print(dialog.get_time())
+        self.start_drawing_date = datetime.datetime(
+                dialog.get_time()[0],
+                dialog.get_time()[1],
+                dialog.get_time()[2]
+                )
+        dialog.destroy()
+
+
+    def set_end_drawing_date(self, widget = None):
+        dialog = dialogs.CalendarDialogsCtr(None)
+        response = dialog.run()
+
+        if response  == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
+            return
+
+        self.end_drawing_date = datetime.datetime(
+                dialog.get_time()[0],
+                dialog.get_time()[1],
+                dialog.get_time()[2]
+                )
+        dialog.destroy()
+
 
 
 class Gui(Gtk.Window):

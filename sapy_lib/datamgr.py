@@ -184,3 +184,14 @@ class DataMgr(object):
     def get_loms(self):
         return self.__lom_list
 
+
+    def get_graph_data(self, start_date, end_date):
+        graph_data = list()
+        for lom in self.__lom_list:
+            if lom.is_visible():
+                graph_data.append(lom.balance_per_day(start_date, end_date))
+
+        return graph_data
+
+
+
