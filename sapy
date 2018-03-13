@@ -27,15 +27,21 @@
 
 from sapy_lib.datamgr import DataMgr
 from sapy_lib.gui import GuiCtr
+import pathlib, json, os
+
 
 class Sapy(object):
     def __init__(self):
-        self.__data_file ="sample_data/data.json"
-        self.__debug = False
-        self.__data = DataMgr(self.__data_file)
+        self.__app_folder = ""
+        self.__configuration_file = ""
+        self.__configuration = {}
+
+    def init(self):
+        self.__data = DataMgr(self.__configuration['json_data'])
         self.__gui = GuiCtr(self.__data)
         self.__icli = None
         self.__cli = None
+ 
 
     def run_cli(self):
         pass
@@ -50,9 +56,54 @@ class Sapy(object):
     def save(self):
         self.__data.to_file()
 
+    def check_base_files(self):
+        # gater user home folder
+        home = os.environ['HOME']
+
+        # check if user app folder exist
+        self.__app_folder = pathlib.Path(home + "/.sapy/")
+        if not self.__app_folder.is_dir(): 
+            pathlib.os.makedirs(self.__app_folder)
+
+        default_configuration = {
+            'debug' : False,
+            'data_folder' : home + '/.sapy/data',
+            'json_data' : home + '/.sapy/data/data.json'
+        }
+
+        # check if app configuration file is present
+        self.__configuration_file = pathlib.Path(home + '/.sapy/config.json')
+        if not self.__configuration_file.is_file():
+            with open(home + '/.sapy/config.json', 'w') as configuration_file:
+                json.dump(default_configuration, configuration_file, indent=True)
+            configuration_file.close()
+
+    def load_conf(self):
+        # load configuration file
+        if self.__configuration_file.is_file(): 
+            with open(self.__configuration_file, 'r') as configuration_file:
+                self.__configuration = json.load(configuration_file)
+                configuration_file.close()
+        
+        # check if configured files exist
+
+        data_folder = pathlib.Path(self.__configuration['data_folder'])
+        if not data_folder.is_dir():
+            os.mkdir(data_folder)
+        
+        json_data = pathlib.Path(self.__configuration['json_data'])
+        if not json_data.is_file():
+            with open(json_data, 'w') as data_file:
+                json.dump({}, data_file, indent=True)
+            data_file.close()
+
+
+
+
 if __name__ == "__main__":
     sapy = Sapy()
- 
+    sapy.check_base_files()
+    sapy.load_conf()
+    sapy.init()
     sapy.run_gui()
-
     sapy.save()
