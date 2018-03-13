@@ -74,7 +74,7 @@ class DataMgr(object):
             for row in reader :
                 mom = Mom()
                 mom.time(
-                        datetime.date(
+                        datetime.datetime(
                             int(row[0].split("/")[2]),
                             int(row[0].split("/")[1]),
                             int(row[0].split("/")[0])
@@ -93,7 +93,6 @@ class DataMgr(object):
             self.__lom_list = sorted(self.__lom_list, key=lambda lom: lom.lom_id())
         # set the last lom id
             self.__last_lom_id =  self.__lom_list[-1].lom_id()
- 
 
         elif _DEBUG_:
             print (" no file " + str(os.path.abspath(self.Datafile)))
@@ -110,15 +109,13 @@ class DataMgr(object):
         
         if file_path == None :
             datafile = open(os.path.abspath(self.__path_data_file), "w")
-            # TODO: enable dump indention
-            json.dump(rawdata, datafile)
+            json.dump(rawdata, datafile, indent=True)
             datafile.close()
             return
 
         if os.path.isfile(os.path.isfile(from_file)):
             datafile = open(os.path.abspath(from_file), "w")
-            # TODO: enable dump indention
-            json.dump(rawdata, datafile)
+            json.dump(rawdata, datafile, indent=True)
             datafile.close()
 
     def new_lom(self, name = None):
