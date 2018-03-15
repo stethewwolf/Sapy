@@ -36,27 +36,6 @@ class Sapy(object):
         self.__configuration_file = ""
         self.__configuration = {}
 
-    def init(self):
-        self.__data = DataMgr(self.__configuration['json_data'])
-        self.__gui = GuiCtr(self.__data)
-        self.__icli = None
-        self.__cli = None
- 
-
-    def run_cli(self):
-        pass
-
-    def run_icli(self):
-        pass
-
-    def run_gui(self):
-        self.__gui.run()
-        pass
-
-    def save(self):
-        self.__data.to_file()
-
-    def check_base_files(self):
         # gater user home folder
         home = os.environ['HOME']
 
@@ -78,7 +57,6 @@ class Sapy(object):
                 json.dump(default_configuration, configuration_file, indent=True)
             configuration_file.close()
 
-    def load_conf(self):
         # load configuration file
         if self.__configuration_file.is_file(): 
             with open(self.__configuration_file, 'r') as configuration_file:
@@ -97,13 +75,26 @@ class Sapy(object):
                 json.dump({}, data_file, indent=True)
             data_file.close()
 
+        self.__data = DataMgr(self.__configuration['json_data'])
+        self.__gui = GuiCtr(self.__data)
+        self.__icli = None
+        self.__cli = None
 
+    def run_cli(self):
+        pass
+
+    def run_icli(self):
+        pass
+
+    def run_gui(self):
+        self.__gui.run()
+        pass
+
+    def save(self):
+        self.__data.to_file()
 
 
 if __name__ == "__main__":
     sapy = Sapy()
-    sapy.check_base_files()
-    sapy.load_conf()
-    sapy.init()
     sapy.run_gui()
     sapy.save()
