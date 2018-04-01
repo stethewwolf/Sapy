@@ -48,9 +48,9 @@ class LomTab(Gtk.Box):
                 spacing=20
                 )
         self.set_border_width(10)
-        self.controller = controller
+        self.__controller = controller
 
-        self.__treeview = Gtk.TreeView(self.controller.mom_store)
+        self.__treeview = Gtk.TreeView(self.__controller.mom_store)
         column_id = Gtk.TreeViewColumn("ID", Gtk.CellRendererText(), text=0)
         self.__treeview.append_column(column_id)
         column_price = Gtk.TreeViewColumn("Price", Gtk.CellRendererText(), text=1)
@@ -60,7 +60,7 @@ class LomTab(Gtk.Box):
         column_time = Gtk.TreeViewColumn("Time", Gtk.CellRendererText(), text=3)
         self.__treeview.append_column(column_time)
         render_delete = Gtk.CellRendererToggle()
-        render_delete.connect("toggled",self.controller.toggle_delete_mom)
+        render_delete.connect("toggled",self.__controller.toggle_delete_mom)
         column_delete = Gtk.TreeViewColumn(
                 "Delete", 
                 render_delete, 
@@ -76,51 +76,56 @@ class LomTab(Gtk.Box):
 
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
         button = Gtk.Button(label="add")
-        button.connect("clicked",self.controller.create_mom)
+        button.connect("clicked",self.__controller.create_mom)
         hbox.add(button)
         button = Gtk.Button(label="remove")
-        button.connect("clicked",self.controller.delete_mom)
+        button.connect("clicked",self.__controller.delete_mom)
         hbox.add(button)
         self.pack_end(hbox, False, False, 10)
 
         button = Gtk.Button(label="import from csv")
-        button.connect("clicked",self.controller.import_func, self.controller.lom)
+        button.connect("clicked",self.__controller.parent.import_csv, self.__controller.lom)
         hbox.add(button)
         self.pack_end(hbox, False, False, 10)
 
 
-
 class LomTabCtr(object):
-    def __init__(self, lom, import_func):
-        self.import_func = import_func
-        self.lom = lom
+    def __init__(self, parent, lom_id):
+        self.parent = parent
+        self.lom_id = lom_id
+        self.lom = self.parent.data.get_lom(
+            self.lom_id,
+            self.parent.start_date, 
+            self.parent.end_date
+            )
+
         self.mom_store = Gtk.ListStore(int, float, str, str, bool)
         self.view = LomTab(self)
 
-        for mom in lom.movements :
-            self.mom_store.append([
-                mom.mom_id(),
-                mom.get_value(),
-                mom.cause(),
-                str(mom.time()),
-                False
-                ])
+        if self.lom :
+            for mom in self.lom.movements :
+                self.mom_store.append([
+                    mom.mom_id(),
+                    mom.get_value(),
+                    mom.cause(),
+                    str(mom.time()),
+                    False
+                    ])
 
     def create_mom(self, widget):
         dialog = dialogs.NewMomDialogCtr(self.view)
         response = dialog.run()
 
         if response == Gtk.ResponseType.CANCEL:
-            print("Reverted")
             dialog.destroy()
             return
-        elif response == Gtk.ResponseType.OK:
-            print("going on")
+        #elif response == Gtk.ResponseType.OK:
 
         mom = dialog.get_mom() 
         dialog.destroy()
 
         mom_id = self.lom.insert(mom)
+        self.parent.data.add_mom(self.lom,mom.to_dict())
         self.mom_store.append([
             mom_id,
             mom.get_value(),
@@ -139,11 +144,11 @@ class LomTabCtr(object):
                     self.mom_store[treeiter][0]
                     )
                 self.lom.remove(mom)
+                self.parent.data.remove_mom(self.lom,mom)
                 self.mom_store.remove(treeiter)
 
             treeiter = nexiter
             
-
     def toggle_delete_mom(self, widget, path):
         self.mom_store[path][4] = not self.mom_store[path][4]
 
@@ -154,7 +159,7 @@ class MainTab(Gtk.Box):
             controller
             ):
         Gtk.Box.__init__(self, orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
-        self.controller = controller
+        self.__controller = controller
         self.set_border_width(10)
 
         # left side
@@ -162,7 +167,7 @@ class MainTab(Gtk.Box):
         self.pack_start(vbox, False, False, 10)
         label = Gtk.Label("Lom list")
         vbox.pack_start(label, False, False, 10)
-        self.__treeview = Gtk.TreeView(self.controller.lom_store)
+        self.__treeview = Gtk.TreeView(self.__controller.lom_store)
 
         column_id = Gtk.TreeViewColumn("ID", Gtk.CellRendererText(), text = 0)
         self.__treeview.append_column(column_id)
@@ -170,7 +175,7 @@ class MainTab(Gtk.Box):
         self.__treeview.append_column(column_name)
         render_visible = Gtk.CellRendererToggle()
         render_visible.connect(
-                "toggled",self.controller.toggle_visible_lom)
+                "toggled",self.__controller.toggle_visible_lom)
         column_visible = Gtk.TreeViewColumn(
                 "Visible", 
                 render_visible, 
@@ -179,7 +184,7 @@ class MainTab(Gtk.Box):
         self.__treeview.append_column(column_visible)
         render_delete = Gtk.CellRendererToggle()
         render_delete.connect(
-                "toggled", self.controller.toggle_delete_lom)
+                "toggled", self.__controller.toggle_delete_lom)
         column_delete = Gtk.TreeViewColumn(
                 "Delete", 
                 render_delete, 
@@ -190,10 +195,10 @@ class MainTab(Gtk.Box):
 
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
         button = Gtk.Button(label = "add")
-        button.connect("clicked", self.controller.create_lom)
+        button.connect("clicked", self.__controller.create_lom)
         hbox.pack_start(button, False, False, 10)
         button = Gtk.Button(label = "remove")
-        button.connect("clicked", self.controller.delete_lom)
+        button.connect("clicked", self.__controller.delete_lom)
         hbox.pack_end(button, False, False, 10)
         vbox.pack_end(hbox, False, False, 10)
  
@@ -204,50 +209,44 @@ class MainTab(Gtk.Box):
         # bottom labels
         #hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
         #self.enda_date_lable = Gtk.Label(
-        #        self.controller.start_drawing_date)
+        #        self.__controller.start_drawing_date)
         #vbox.pack_end(hbox, False, False, 10)
 
         # bottom buttons
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL, spacing = 20)
 
         button = Gtk.Button(label = "set start date")
-        button.connect("clicked", self.controller.set_start_drawing_date)
+        button.connect("clicked", self.__controller.set_start_drawing_date)
         hbox.pack_start(button, False, False, 10)
         
         button = Gtk.Button(label = "refresh plot")
-        button.connect("clicked", self.controller.plot)
+        button.connect("clicked", self.__controller.plot)
         hbox.pack_start(button, False, False, 10)
 
 
         button = Gtk.Button(label = "set end date")
-        button.connect("clicked", self.controller.set_end_drawing_date)
+        button.connect("clicked", self.__controller.set_end_drawing_date)
         hbox.pack_end(button, False, False, 10)
 
         self.right_box.pack_end(hbox, False, False, 10)
 
-
     def plot(self):
-        canvas = FigureCanvas(self.controller.figure)  # a gtk.DrawingArea
+        canvas = FigureCanvas(self.__controller.figure)  # a gtk.DrawingArea
         self.right_box.pack_start(canvas, True, True, 10)
  
+
 class MainTabCtr(object):
     def __init__(
             self, 
-            data,
-            insert_tab_func,
-            delete_tab_func
+            parent = None,
             ):
-        self.data = data
-        self.delete_tab_func = delete_tab_func
-        self.insert_tab_func = insert_tab_func
+        self.parent = parent
         self.title = "Main Tab"
         self.lom_store = Gtk.ListStore(int, str, bool, bool)
         self.view_id = -1
-        self.lom_list = data.get_loms()
-        self.start_drawing_date = datetime.datetime.now() - datetime.timedelta(days=15)
-        self.end_drawing_date = datetime.datetime.now() + datetime.timedelta(days=15)
+        self.simple_lom_list = self.parent.data.get_simple_loms()
 
-        for lom in self.lom_list :
+        for lom in self.simple_lom_list :
             self.lom_store.append([
                 lom.lom_id(),
                 lom.name(),
@@ -282,7 +281,8 @@ class MainTabCtr(object):
             return
         
         lom = dialog.get_lom()
-        lom_id = self.data.insert_lom(lom)
+        lom_id = self.parent.data.insert_lom(lom)
+        self.simple_lom_list.append(lom)
 
         self.lom_store.append([
             lom_id,
@@ -290,10 +290,9 @@ class MainTabCtr(object):
             lom.is_visible(),
             False
             ])
-    
-        self.insert_tab_func(lom)
+        
+        self.parent.insert_tab(lom)
         dialog.destroy()
-
 
     def delete_lom(self, widget):
         treeiter = self.lom_store.get_iter_first()
@@ -301,11 +300,11 @@ class MainTabCtr(object):
             nexiter = self.lom_store.iter_next(treeiter)
 
             if self.lom_store[treeiter][3]:
-                for lom in self.lom_list:
+                for lom in self.simple_lom_list:
                     if lom.lom_id() == self.lom_store[treeiter][0]:
-                        self.lom_list.remove(lom)
-                        self.delete_tab_func(lom)
+                        self.parent.delete_tab(lom)
                         self.lom_store.remove(treeiter)
+                        self.parent.data.remove_lom(lom)
 
             treeiter = nexiter
 
@@ -316,13 +315,14 @@ class MainTabCtr(object):
         self.subplot = self.figure.add_subplot(111)
         self.subplot.plot([],[])
         
-        drawing_data = self.data.get_graph_data(self.start_drawing_date, self.end_drawing_date)
+        drawing_data = self.parent.data.get_graph_data(
+            self.parent.start_date, 
+            self.parent.end_date
+            )
         if drawing_data:
             for lom in drawing_data:
                 dates = matplotlib.dates.date2num(lom[0])
                 self.subplot.scatter(dates, lom[1])
-
-        print (self.subplot)
 
     def set_start_drawing_date(self, widget = None):
         dialog = dialogs.CalendarDialogsCtr(None)
@@ -332,14 +332,12 @@ class MainTabCtr(object):
             dialog.destroy()
             return
 
-        print(dialog.get_time())
         self.start_drawing_date = datetime.datetime(
                 dialog.get_time()[0],
                 dialog.get_time()[1],
                 dialog.get_time()[2]
                 )
         dialog.destroy()
-
 
     def set_end_drawing_date(self, widget = None):
         dialog = dialogs.CalendarDialogsCtr(None)
@@ -357,9 +355,9 @@ class MainTabCtr(object):
         dialog.destroy()
 
 
-
 class Gui(Gtk.Window):
-    def __init__(self):
+    def __init__(self, controller = None):
+        self.__controller = controller
         Gtk.Window.__init__(self, title="Sapy")
         self.connect("delete-event", Gtk.main_quit)
         self.set_border_width(3)
@@ -376,20 +374,20 @@ class Gui(Gtk.Window):
     def run(self):
         self.show_all()
 
+
 class GuiCtr(object):
-    def __init__(self, data):
-        self.__data = data
-        self.__view = Gui()
-        self.__main_tab = MainTabCtr( 
-                self.__data,
-                self.insert_tab,
-                self.delete_tab
-                )
+    def __init__(self, data, parent = None):
+        self.__parent = parent
+        self.data = data
+        self.start_date = datetime.datetime.now() - datetime.timedelta(days=15)
+        self.end_date = datetime.datetime.now() + datetime.timedelta(days=15)
+        self.__view = Gui(self)
+        self.__main_tab = MainTabCtr(self)
         self.__tab_list = []
         self.__view.append_tab(self.__main_tab.view,Gtk.Label(self.__main_tab.title))
 
-        for lom in self.__data.get_loms():
-            tab_tmp = LomTabCtr(lom, self.import_csv)
+        for lom in self.data.get_simple_loms():
+            tab_tmp = LomTabCtr(self, lom.lom_id())
             self.__tab_list.append(tab_tmp)
             tab_tmp.view_id = self.__view.append_tab(tab_tmp.view,Gtk.Label(lom.name()))
 
@@ -404,7 +402,7 @@ class GuiCtr(object):
                 self.__view.detach_tab(tab)
 
     def insert_tab(self, lom):
-        tab_tmp = LomTabCtr(lom, self.import_csv)
+        tab_tmp = LomTabCtr(self,lom.lom_id())
         self.__tab_list.append(tab_tmp)
         tab_tmp.view_id = self.__view.append_tab(tab_tmp.view,Gtk.Label(lom.name()))
         self.__view.show_all()
@@ -417,9 +415,21 @@ class GuiCtr(object):
             dialog.destroy()
             return
 
-        self.__data.from_csv(
+        self.data.from_csv(
             dialog.get_file_name(),
             lom
             )
+
+        for lom_tab in self.__tab_list:
+            if lom_tab.lom_id == lom.lom_id():
+                for mom in lom.get_moms():
+                    lom_tab.mom_store.append([
+                        mom.mom_id(),
+                        mom.get_value(),
+                        mom.cause(),
+                        str(mom.time()),
+                        False
+                    ])
+
 
         dialog.destroy()

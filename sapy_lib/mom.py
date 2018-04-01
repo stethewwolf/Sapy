@@ -148,19 +148,46 @@ class Mom(object):  # movement of money
         if source is not None and (not isinstance(source, dict)):
             print ("type error : source must be a dict")
             return
-        self.__price = float(source['price'])
-        self.__direction = source['direction']
-        self.__mom_id = source['mom_id']
-        self.__cause = source['cause']
-        self.__agent = source['agent']
-        self.__payee = source['payee']
-        self.__time = datetime.datetime(
-            source['time']['year'],
-            source['time']['month'],
-            source['time']['day'],
-            source['time']['hours'],
-            source['time']['minutes']
-        )
+
+        if 'price' in source:
+            self.__price = float(source['price'])
+
+        if 'direction' in source:
+            self.__direction = source['direction']
+
+        if 'mom_id' in source:
+            self.__mom_id = source['mom_id']
+
+        if 'cause' in source:
+            self.__cause = source['cause']
+
+        if 'agent' in source:
+            self.__agent = source['agent']
+
+        if 'payee' in source:
+            self.__payee = source['payee']
+
+        if 'time' in source:
+            if 'year' in source['time']         \
+                and 'month' in source['time']   \
+                and 'day' in source['time']     \
+                and 'hours' in source['time']   \
+                and 'minutes' in source['time']:
+                self.__time = datetime.datetime(
+                    int(source['time']['year']),
+                    int(source['time']['month']),
+                    int(source['time']['day']),
+                    int(source['time']['hours']),
+                    int(source['time']['minutes'])
+                )
+            elif 'year' in source['time']       \
+                and 'month' in source['time']   \
+                and 'day' in source['time']:
+                self.__time = datetime.datetime(
+                    int(source['time']['year']),
+                    int(source['time']['month']),
+                    int(source['time']['day']),
+                )
 
     def compare(self, mom):
         if not (isinstance(mom, Mom)):

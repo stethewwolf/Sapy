@@ -25,170 +25,123 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-import json
-import os
-import datetime
-import copy,csv
-
+import copy, datetime
 from sapy_lib.lom import Lom
 from sapy_lib.mom import Mom
-
-_DEBUG_ = True
+from sapy_lib.json_handler import JsonHandler
+from sapy_lib.csv_handler import CsvHandler
 
 
 class DataMgr(object):
-    if _DEBUG_:
-        print ("__ Data mgr __ : init")
-
     def __init__(self, path2file):
-        self.__lom_list = list()
-        self.__last_lom_id = -1
-        self.__path_data_file = path2file
+        self.__data_handler = JsonHandler()
+        self.__data_handler.set_url(path2file)
 
-        if not self.__path_data_file : 
-            print ("file2path could not be empty")
-            return
-
-        if not os.path.isfile(self.__path_data_file) :
-            print ("file2path file must exist")
-            return
-
-        datafile = open(os.path.abspath(self.__path_data_file), "r")
-        for lom_dict in json.load(datafile):
-            lom_tmp = Lom()
-            lom_tmp.from_dict(lom_dict)
-            self.__lom_list.append(lom_tmp)
-
-        datafile.close()
-        # sort by date
-        self.__lom_list = sorted(self.__lom_list, key=lambda lom: lom.lom_id())
-        # set the last lom id
-        if self.__lom_list :
-            self.__last_lom_id =  self.__lom_list[-1].lom_id()
- 
-
-    def from_csv(self, file_path, lom):
-        if os.path.isfile(os.path.abspath(file_path)):
-            datafile = open(os.path.abspath(file_path), "r")
-            reader = csv.reader(datafile)
-            for row in reader :
-                mom = Mom()
-                mom.time(
-                        datetime.datetime(
-                            int(row[0].split("/")[2]),
-                            int(row[0].split("/")[1]),
-                            int(row[0].split("/")[0])
-                            )
-                        )
-                mom.cause(row[1])
-                mom.price(float(row[2].replace(",","")))
-                lom.insert(mom)
-
-    def from_file(self, file_path = None):
-        if os.path.isfile(os.path.abspath(file_path)):
-            datafile = open(os.path.abspath(file_path), "r")
-            self.__lom_list = [ Lom(tmp_lom) for tmp_lom in json.load(datafile) ]
-            datafile.close()
-       # sort by date
-            self.__lom_list = sorted(self.__lom_list, key=lambda lom: lom.lom_id())
-        # set the last lom id
-            self.__last_lom_id =  self.__lom_list[-1].lom_id()
-
-        elif _DEBUG_:
-            print (" no file " + str(os.path.abspath(self.Datafile)))
-
-        else:
-            print ("no file %s available", self.Datafile)
-
-    def to_file(self, file_path = None):
-        rawdata = [ tmp_lom.to_dict() for tmp_lom in self.__lom_list ]
-
-        if file_path is not None and (not isinstance(file_path, str)):
-            print ("type error")
-            return
-        
-        if file_path == None :
-            datafile = open(os.path.abspath(self.__path_data_file), "w")
-            json.dump(rawdata, datafile, indent=True)
-            datafile.close()
-            return
-
-        if os.path.isfile(os.path.isfile(from_file)):
-            datafile = open(os.path.abspath(from_file), "w")
-            json.dump(rawdata, datafile, indent=True)
-            datafile.close()
+        # update last_lom_id
+        loms_list = self.__data_handler.get_loms_list()
+        self.__last_lom_id = 0
+        for lom in loms_list:
+            if lom['lom_id'] > self.__last_lom_id:
+                self.__last_lom_id = lom['lom_id']
 
     def new_lom(self, name = None):
+        # chek name type
         if name is not None and (not isinstance(name, str)):
-            print ("type error")
             return
 
         if name :
-            tmp_lom = Lom(name)
+            lom = Lom(name)
         else :
-            tmp_lom = Lom()
+            lom = Lom()
         
-        self.__last_lom_id += 1
-        tmp_lom.lom_id(self.__last_lom_id)
-        self.__lom_list.append(tmp_lom)
-        
-        return tmp_lom
+        self.__last_lom_id = self.__last_lom_id + 1
+        lom.lom_id(self.__last_lom_id)
+        self.__data_handler.new_lom(lom.to_dict())
+
+        return lom
 
     def insert_lom(self, lom):
+        # check data type
         if  (not isinstance(lom, Lom)):
-            print ("type error")
-            return
+            return -1
 
-        self.__last_lom_id += 1
+        self.__last_lom_id = self.__last_lom_id + 1
         lom.lom_id(self.__last_lom_id)
-        self.__lom_list.append(lom)
-        
+        self.__data_handler.new_lom(lom.to_dict())
+
         return self.__last_lom_id
 
-
     def remove_lom(self,lom):
+        # check data type
         if (not isinstance(lom, Lom)):
-            print ("type error")
             return
-
-        self.Lom_list.remove(lom)
-        # TODO:manage grabbage ?
-        pass
+        
+        self.__data_handler.remove_lom(lom.lom_id())
 
     def add_mom(self, lom, mom):
+        # check data type
         if (not isinstance(lom, Lom)):
-            print ("type error")
             return
         
+        # check data type
         if (not isinstance(mom, dict)):
-            print ("type error")
             return
-        tmp_mom = Mom()
-        tmp_mom.from_dict(mom)
-        [l for l in self.__lom_list if l.name() == lom.name()][0].insert(mom)
+
+        self.__data_handler.new_mom(lom.lom_id(), mom)
       
     def remove_mom(self, lom, mom):
+        # check data type
         if (not isinstance(lom, Lom)):
-            print ("type error")
             return
         
+        # check data type
         if (not isinstance(mom, Mom)):
-            print ("type error")
             return
 
-        [l for l in self.__lom_list if l.name() == lom.name()][0].remove(mom)
+        self.__data_handler.remove_mom(lom.lom_id(), mom.mom_id()) 
       
-    def get_loms(self):
-        return self.__lom_list
+    def get_simple_loms(self):
+        data = list()
+        for dict_lom in self.__data_handler.get_loms_list():
+            lom = Lom()
+            lom.from_dict(dict_lom)
+            data.append(lom)
+        return data
 
+    def get_lom(self, lom_id, start_date, end_date):
+        lom_dict = self.__data_handler.get_lom(lom_id, start_date, end_date) 
+        if lom_dict is None:
+            return None
+        lom = Lom()
+        lom.from_dict(lom_dict)
+        return lom
 
     def get_graph_data(self, start_date, end_date):
         graph_data = list()
-        for lom in self.__lom_list:
+        data = list()
+
+        for dict_lom in self.__data_handler.get_loms_list():
+            lom = Lom()
+            lom.from_dict(self.__data_handler.get_full_lom(dict_lom['lom_id']))
+            data.append(lom)
+
+        for lom in data:
             if lom.is_visible():
                 graph_data.append(lom.balance_per_day(start_date, end_date))
 
         return graph_data
 
+    def from_csv(self, file_path, lom):
+        csv_handler = CsvHandler()
+        csv_handler.set_url(file_path)
 
-
+        for mom_dict in csv_handler.get_moms(
+            lom.lom_id(),
+            datetime.date.min,
+            datetime.date.max
+            ):
+            mom = Mom()
+            mom.from_dict(mom_dict)
+            lom.insert(mom)
+            self.add_mom(lom, mom.to_dict())
+    

@@ -33,11 +33,11 @@ class Lom(object):  # list of movements
     def __init__(
         self,
         name="list of movements",
-    ):
+        ):
         self.__name = name
         self.movements = []  # array ordered by date
         self.__lom_id = -1
-        self.__last_mom_id = -1
+        self.__last_mom_id = 0
         self.__visible = False
 
     def name(self, name=None):
@@ -50,8 +50,6 @@ class Lom(object):  # list of movements
 
         return self.__name
 
-        
-        
     def visible(self, visible=True):
         if visible is not None and (not isinstance(visible, bool)):
             print ("type error")
@@ -80,7 +78,7 @@ class Lom(object):  # list of movements
             print ("type error")
             return
         # manage ids
-        self.__last_mom_id += 1
+        self.__last_mom_id = self.__last_mom_id + 1
         m.mom_id(self.__last_mom_id)
         # insert mom in the list
         self.movements.append(m)
@@ -111,19 +109,28 @@ class Lom(object):  # list of movements
             print ("type error i want dict")
             return
 
-        self.__name = source['name']
-        self.__lom_id = source['lom_id']
-        self.__last_mom_id = source['last_mom_id']
-        self.__visible = source['visible']
+        if 'name' in source:
+            self.__name = source['name']
+        if 'lom_id' in source:
+            self.__lom_id = source['lom_id']
+        if 'last_mom_id' in source:
+            self.__last_mom_id = source['last_mom_id']
+        if 'visible' in source:
+            self.__visible = source['visible']
 
-        for mom_dict in source['movements']:
-            mom_tmp = Mom()
-            mom_tmp.from_dict(mom_dict)
-            self.movements.append(mom_tmp)
+        if 'movements' in source:
+            for mom_dict in source['movements']:
+                mom_tmp = Mom()
+                mom_tmp.from_dict(mom_dict)
+                if mom_tmp.mom_id() >= self.__last_mom_id:
+                    self.__last_mom_id = mom_tmp.mom_id()
+                self.movements.append(mom_tmp)
 
         # TODO: enable sort by date
         #self.Movements.sort(key=lambda x: x.date, reverse=False)
 
+    def get_moms(self):
+        return self.movements
 
     def get_mom_in_period(self, start_date, time_delta):
         if not isinstance(start_date, datetime.date):
@@ -145,7 +152,6 @@ class Lom(object):  # list of movements
             print ("type error")
             return
         return [m for m in self.movements if m.time().date() == time.date()]
-
 
     def balance_per_day(self, start_date, end_date):
         if not isinstance(start_date, datetime.date):
