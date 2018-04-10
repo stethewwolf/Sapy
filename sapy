@@ -68,14 +68,8 @@ class Sapy(object):
         data_folder = pathlib.Path(self.__configuration['data_folder'])
         if not data_folder.is_dir():
             os.mkdir(data_folder)
-        
-        json_data = pathlib.Path(self.__configuration['json_data'])
-        if not json_data.is_file():
-            with open(json_data, 'w') as data_file:
-                json.dump({}, data_file, indent=True)
-            data_file.close()
 
-        self.__data = DataMgr(self.__configuration['json_data'])
+        self.__data = DataMgr(pathlib.Path(self.__configuration['json_data']))
         self.__gui = GuiCtr(self.__data)
         self.__icli = None
         self.__cli = None
@@ -90,11 +84,7 @@ class Sapy(object):
         self.__gui.run()
         pass
 
-    def save(self):
-        self.__data.to_file()
-
 
 if __name__ == "__main__":
     sapy = Sapy()
     sapy.run_gui()
-    sapy.save()

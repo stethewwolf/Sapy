@@ -149,9 +149,15 @@ class JsonHandler(object):
 
         self.new_lom(lom)
 
-    def update_lom(self):
-        pass
+    def update_lom(self, updated_lom):
+        old_lom = self.get_full_lom(updated_lom['lom_id'])
+        self.remove_lom(updated_lom['lom_id'])
+
+        for field in old_lom:
+            if field != "movements" and field != "lom_id":
+                if old_lom[field] != updated_lom[field]:
+                    old_lom[field] = updated_lom[field]
+        self.new_lom(old_lom)
 
     def update_mom(self):
         pass        
-

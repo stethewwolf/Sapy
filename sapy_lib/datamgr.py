@@ -117,6 +117,7 @@ class DataMgr(object):
         return lom
 
     def get_graph_data(self, start_date, end_date):
+        #print("running graph data")
         graph_data = list()
         data = list()
 
@@ -129,6 +130,7 @@ class DataMgr(object):
             if lom.is_visible():
                 graph_data.append(lom.balance_per_day(start_date, end_date))
 
+        print(graph_data)
         return graph_data
 
     def from_csv(self, file_path, lom):
@@ -145,3 +147,5 @@ class DataMgr(object):
             lom.insert(mom)
             self.add_mom(lom, mom.to_dict())
     
+    def update_lom(self, lom):
+        self.__data_handler.update_lom(lom.to_dict())
