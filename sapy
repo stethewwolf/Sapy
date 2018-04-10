@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 #   File : sapy
 #   Author : stefano prina 
@@ -59,7 +59,7 @@ class Sapy(object):
 
         # load configuration file
         if self.__configuration_file.is_file(): 
-            with open(self.__configuration_file, 'r') as configuration_file:
+            with self.__configuration_file.open() as configuration_file:
                 self.__configuration = json.load(configuration_file)
                 configuration_file.close()
         

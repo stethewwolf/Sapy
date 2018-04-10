@@ -38,7 +38,7 @@ class JsonHandler(object):
 
         # check the file exists, if not create it
         if not url.is_file():
-            with open(url, 'w') as data_file:
+            with url.open('w') as data_file:
                 data_file.write('[]')
             
         # now save url
@@ -52,7 +52,7 @@ class JsonHandler(object):
  
     def get_loms_list(self):
         loms_list = []
-        with open(self.__url, 'r') as data_file:
+        with self.__url.open( 'r') as data_file:
             data = json.load(data_file)
         data_file.close()
         
@@ -69,7 +69,7 @@ class JsonHandler(object):
 
     def get_full_lom(self, lom_id):
         lom = None
-        with open(self.__url, 'r') as data_file:
+        with self.__url.open('r') as data_file:
             data = json.load(data_file)
         
         for lom in data:
@@ -106,7 +106,7 @@ class JsonHandler(object):
         return lom['movements']
 
     def new_lom(self, lom_dict):
-        with open(self.__url, 'r+') as data_file:
+        with self.__url.open('r+') as data_file:
             data = json.load(data_file)
 
         data.append(lom_dict)
@@ -117,26 +117,26 @@ class JsonHandler(object):
     def new_mom(self, lom_id, mom_dict):
         lom = self.get_full_lom(lom_id)
 
-        with open(self.__url, 'r+') as data_file:
+        with self.__url.open('r+') as data_file:
             data = json.load(data_file)
         
         data.remove(lom)
         lom['movements'].append(mom_dict)
         data.append(lom)
 
-        with open(self.__url, 'w') as data_file:
+        with self.__url.open('w') as data_file:
             data_file.truncate()
             json.dump(data, data_file, indent=True)
         
     def remove_lom(self, lom_id):
         lom = self.get_full_lom(lom_id)
 
-        with open(self.__url, 'r+') as data_file:
+        with self.__url.open('r+') as data_file:
             data = json.load(data_file)
         
         data.remove(lom)
 
-        with open(self.__url, 'w') as data_file:
+        with self.__url.open('w') as data_file:
             json.dump(data, data_file, indent=True)
            
     def remove_mom(self, lom_id, mom_id):
