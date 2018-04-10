@@ -177,10 +177,10 @@ class Lom(object):  # list of movements
             for mom in self.get_mom_by_time(date_itr): # i select all mom in day
                 balance += mom.get_value() 
 
-            print("==============")
-            print(date_itr.date())
-            print(balance)
-            print("==============")
+            #print("==============")
+            #print(date_itr.date())
+            #print(balance)
+            #print("==============")
             balances.append(balance)
             dates.append(date_itr.date())
 
