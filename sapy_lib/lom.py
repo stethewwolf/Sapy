@@ -168,7 +168,6 @@ class Lom(object):  # list of movements
             if mom.time().date() < start_date.date() :
                 balance += mom.get_value()
 
-
         balances = []
         dates = []
         # now I create a tuple with 2 vectors, one of dates and one of values
@@ -185,6 +184,7 @@ class Lom(object):  # list of movements
             dates.append(date_itr.date())
 
             date_itr += datetime.timedelta(days=1)
+
          
 
         return (dates, balances)

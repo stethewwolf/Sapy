@@ -111,7 +111,7 @@ class CsvHandler(object):
         self.__type == 'mom'
         mom_list = list()
 
-        with open(self.__url, 'r') as data_file:
+        with self.__url.open('r') as data_file:
             #data = csv.DictReader(data_file, fieldnames=self.__mom_dict.keys())
             #data = csv.DictReader(data_file)
             data = csv.DictReader(data_file, fieldnames=[
@@ -121,23 +121,34 @@ class CsvHandler(object):
                 "month",
                 "year"
             ])
-            for mom in data:
-                date = datetime.date(
-                    int(mom['year']),
-                    int(mom['month']),
-                    int(mom['day'])
-                    )
 
-                if date >= start_date or date <= end_date:
-                    mom_list.append({
-                        'cause' : mom['cause'],
-                        'price' : mom['price'],
-                        'time' : {
-                            'year' : mom['year'],
-                            'month' : mom['month'],
-                            'day' : mom['day']
-                        }
-                    })
+            i = 0
+            for mom in data:
+                try : 
+                    date = datetime.date(
+                        int(mom['year']),
+                        int(mom['month']),
+                        int(mom['day'])
+                    )
+                    if date >= start_date or date <= end_date:
+                        mom_list.append({
+                            'cause' : mom['cause'],
+                            'price' : mom['price'],
+                            'time' : {
+                                'year' : mom['year'],
+                                'month' : mom['month'],
+                                'day' : mom['day']
+                            }
+                        })
+  
+                except:
+                    print("fail to import mom")
+                    print(mom)
+                    i= i+1
+
+           
+            #print("failed imports : i \ "+str(len(data)))
+            print(type( data ))
 
         return mom_list
 

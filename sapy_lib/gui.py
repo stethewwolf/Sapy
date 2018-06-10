@@ -32,10 +32,11 @@ from sapy_lib.datamgr import DataMgr
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+from matplotlib.backends.backend_gtk3agg import (
+    FigureCanvasGTK3Agg as FigureCanvas)
 from matplotlib.figure import Figure
+#import matplotlib.pyplot as plt
 import matplotlib
-from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
-from time import sleep
 
 class LomTab(Gtk.Box):
     def __init__(
@@ -260,9 +261,9 @@ class MainTabCtr(object):
         #
         # http://gtk3-matplotlib-cookbook.readthedocs.io/en/latest/enteringdata.html
         self.figure = Figure( figsize=(1, 1), dpi=100)
-        self.subplot = None
+        #self.subplot = self.figure.add_subplot(111)
         self.view = MainTab(self)
-        self.plot()
+        self.plot() 
 
     def toggle_visible_lom(self, widget, path):
         self.lom_store[path][2] = not self.lom_store[path][2]
@@ -274,6 +275,7 @@ class MainTabCtr(object):
                 not lom.is_visible()
                 )
         self.parent.data.update_lom(lom)
+        self.figure.clear()
         self.plot()
 
     def toggle_delete_lom(self, widget, path):
@@ -316,9 +318,8 @@ class MainTabCtr(object):
             treeiter = nexiter
 
     def plot(self, widget = None):
-        if self.subplot:
-            self.figure.delaxes(self.subplot)
 
+        #self.figure = Figure( figsize=(1, 1), dpi=100)
         self.subplot = self.figure.add_subplot(111)
         #self.plt = self.subplot.plot([],[])
         #print(type(self.plt[0]))
@@ -330,8 +331,11 @@ class MainTabCtr(object):
         for lom in drawing_data:
             dates = matplotlib.dates.date2num(lom[0])
             self.subplot.scatter(dates, lom[1])
-            
+        
 
+        #self.view.canvas = FigureCanvas(self.figure)  # a gtk.DrawingArea
+        #self.view.right_box.pack_start(self.view.canvas, True, True, 10)
+            
     def set_start_drawing_date(self, widget = None):
         dialog = dialogs.CalendarDialogsCtr(None)
         response = dialog.run()
@@ -363,7 +367,6 @@ class MainTabCtr(object):
                 )
         dialog.destroy()
         #self.view.plot()
-
 
 
 class Gui(Gtk.Window):

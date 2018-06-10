@@ -130,7 +130,7 @@ class DataMgr(object):
             if lom.is_visible():
                 graph_data.append(lom.balance_per_day(start_date, end_date))
 
-        print(graph_data)
+        #print(graph_data)
         return graph_data
 
     def from_csv(self, file_path, lom):

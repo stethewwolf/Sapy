@@ -52,9 +52,9 @@ class JsonHandler(object):
  
     def get_loms_list(self):
         loms_list = []
+        #print(self.__url)
         with self.__url.open( 'r') as data_file:
             data = json.load(data_file)
-        data_file.close()
         
         for lom in data:
             loms_list.append(
@@ -107,12 +107,13 @@ class JsonHandler(object):
 
     def new_lom(self, lom_dict):
         with self.__url.open('r+') as data_file:
+            
             data = json.load(data_file)
 
         data.append(lom_dict)
 
-        with open(self.__url, 'w') as data_file:
-            json.dump(data, data_file, indent=True)
+        with self.__url.open( 'w') as data_file:
+            data_file.write(unicode(json.dumps(data, indent=True)))
     
     def new_mom(self, lom_id, mom_dict):
         lom = self.get_full_lom(lom_id)
@@ -126,7 +127,7 @@ class JsonHandler(object):
 
         with self.__url.open('w') as data_file:
             data_file.truncate()
-            json.dump(data, data_file, indent=True)
+            data_file.write(unicode(json.dumps(data, indent=True)))
         
     def remove_lom(self, lom_id):
         lom = self.get_full_lom(lom_id)
@@ -137,7 +138,7 @@ class JsonHandler(object):
         data.remove(lom)
 
         with self.__url.open('w') as data_file:
-            json.dump(data, data_file, indent=True)
+            data_file.write(unicode(json.dumps(data, data_file, indent=True)))
            
     def remove_mom(self, lom_id, mom_id):
         lom = self.get_full_lom(lom_id)
