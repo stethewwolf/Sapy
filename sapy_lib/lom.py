@@ -187,7 +187,7 @@ class Lom(object):  # list of movements
 
          
 
-        return (dates, balances)
+        return (dates, balances, self.__name)
 
 
 # RUNS TESTS

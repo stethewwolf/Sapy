@@ -134,7 +134,8 @@ class LomTabCtr(object):
             str(mom.time()),
             False
             ])
-
+        self.parent.__main_tab.plot()
+        
     def delete_mom(self, widget):
         treeiter = self.mom_store.get_iter_first()
         while treeiter != None:
@@ -149,6 +150,7 @@ class LomTabCtr(object):
                 self.mom_store.remove(treeiter)
 
             treeiter = nexiter
+        self.parent.__main_tab.plot()
             
     def toggle_delete_mom(self, widget, path):
         self.mom_store[path][4] = not self.mom_store[path][4]
@@ -275,7 +277,6 @@ class MainTabCtr(object):
                 not lom.is_visible()
                 )
         self.parent.data.update_lom(lom)
-        self.figure.clear()
         self.plot()
 
     def toggle_delete_lom(self, widget, path):
@@ -318,11 +319,8 @@ class MainTabCtr(object):
             treeiter = nexiter
 
     def plot(self, widget = None):
-
-        #self.figure = Figure( figsize=(1, 1), dpi=100)
+        self.figure.clear()
         self.subplot = self.figure.add_subplot(111)
-        #self.plt = self.subplot.plot([],[])
-        #print(type(self.plt[0]))
         drawing_data = self.parent.data.get_graph_data(
             self.parent.start_date, 
             self.parent.end_date
@@ -330,12 +328,12 @@ class MainTabCtr(object):
 
         for lom in drawing_data:
             dates = matplotlib.dates.date2num(lom[0])
-            self.subplot.scatter(dates, lom[1])
+            self.subplot.scatter(dates, lom[1], label=lom[2])
         
+        self.subplot.set_xlim(self.parent.start_date, self.parent.end_date)
+        self.figure.autofmt_xdate()
+        self.figure.legend()
 
-        #self.view.canvas = FigureCanvas(self.figure)  # a gtk.DrawingArea
-        #self.view.right_box.pack_start(self.view.canvas, True, True, 10)
-            
     def set_start_drawing_date(self, widget = None):
         dialog = dialogs.CalendarDialogsCtr(None)
         response = dialog.run()
@@ -350,7 +348,7 @@ class MainTabCtr(object):
                 dialog.get_time()[2]
                 )
         dialog.destroy()
-        #self.view.plot()
+        self.plot()
 
     def set_end_drawing_date(self, widget = None):
         dialog = dialogs.CalendarDialogsCtr(None)
@@ -366,7 +364,7 @@ class MainTabCtr(object):
                 dialog.get_time()[2]
                 )
         dialog.destroy()
-        #self.view.plot()
+        self.plot()
 
 
 class Gui(Gtk.Window):
