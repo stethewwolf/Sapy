@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=0.2
+Name=Sapy
+Comment=Monitor your money
+Exec=python3 /home/stefano/Projects/Sapy/sapy
+Icon=/home/stefano/Projects/Sapy/icon/icon.png
+Terminal=false
+Type=Application
+Categories=Utility;Application;
