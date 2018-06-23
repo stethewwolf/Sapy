@@ -2,8 +2,8 @@
 Version=0.2
 Name=Sapy
 Comment=Monitor your money
-Exec=/home/stefano/Projects/Sapy/sapy
-Icon=/home/stefano/Projects/Sapy/icon/icon.png
+Exec=<BINARY_LOCATION>/sapy
+Icon=<ICON_NAME>
 Terminal=false
 Type=Application
 Categories=Utility;Application;
