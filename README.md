@@ -9,7 +9,15 @@ Is designed to allow the creation of various lists of money moves and to compare
 
 ## Installation
 
-work in progress
+Download the tar, uncompress it and run the install.sh
+
+```
+    wget https://github.com/stethewwolf/Sapy/archive/v0.1.tar.gz
+    tar -xf v0.1.tar.gz
+    cd Sapy-0.1
+    ./install.sh
+
+```
 
 ## Screenshots
 
