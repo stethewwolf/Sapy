@@ -42,7 +42,7 @@ class Sapy(object):
         # check if user app folder exist
         self.__app_folder = pathlib.Path(home + "/.sapy/")
         if not self.__app_folder.is_dir(): 
-            pathlib.os.makedirs(self.__app_folder)
+            self.__app_folder.mkdir()
 
         default_configuration = {
             'debug' : False,
@@ -55,19 +55,22 @@ class Sapy(object):
         if not self.__configuration_file.is_file():
             with open(home + '/.sapy/config.json', 'w') as configuration_file:
                 configuration_file.write(unicode(json.dumps(default_configuration, indent=True)))
-            configuration_file.close()
+                configuration_file.close()
 
         # load configuration file
         if self.__configuration_file.is_file(): 
             with self.__configuration_file.open() as configuration_file:
                 self.__configuration = json.load(configuration_file)
-                configuration_file.close()
         
-        # check if configured files exist
+        # check if data folder is present
+        if not os.path.isdir(self.__configuration['data_folder']): 
+            os.makedirs(self.__configuration['data_folder'])
 
-        data_folder = pathlib.Path(self.__configuration['data_folder'])
-        if not data_folder.is_dir():
-            os.mkdir(data_folder)
+        # check if json data file is present
+        if not os.path.isfile(self.__configuration['json_data']):
+            with open(self.__configuration['json_data'], 'w') as json_file:
+                json_file.write(unicode(json.dumps([], indent=True)))
+
 
         self.__data = DataMgr(pathlib.Path(self.__configuration['json_data']))
         self.__gui = GuiCtr(self.__data)
