@@ -55,7 +55,6 @@ class Sapy(object):
         if not self.__configuration_file.is_file():
             with open(home + '/.sapy/config.json', 'w') as configuration_file:
                 configuration_file.write(unicode(json.dumps(default_configuration, indent=True)))
-                configuration_file.close()
 
         # load configuration file
         if self.__configuration_file.is_file(): 
