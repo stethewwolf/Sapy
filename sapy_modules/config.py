@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
 #
-#   File : sapy
 #   Author : stefano prina 
 #
 # MIT License
@@ -25,21 +23,22 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-from sapy_modules import CommandLine_Parser
-import sapy_modules.mlogger as loggerFactory
+import configparser
 
+class Config:
+    class __Config:
+        def __init__(self, arg):
+            self.val = arg
+        def __str__(self):
+            return repr(self) + self.val
 
-if __name__ == "__main__":
-    # setup logging service
-    logger = loggerFactory.getLogger('sapy')
+    instance = None
 
-    # the app starts
-    logger.debug('start')
+    def __init__(self):
+        if not __Config.instance:
+            Config.instance = Config.__Config(arg)
+        else:
+            Config.instance.val = arg
 
-    clp = CommandLine_Parser()
-
-    for cmd in clp.parse():
-        cmd.run()
-    
-    # the app ends
-    logger.debug('end')
+    def __getattr__(self, name):
+        return getattr(self.instance, name)

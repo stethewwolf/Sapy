@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-#
-#   File : sapy
+#   File : mlogger.py
 #   Author : stefano prina 
 #
 # MIT License
@@ -25,21 +23,28 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-from sapy_modules import CommandLine_Parser
-import sapy_modules.mlogger as loggerFactory
+import logging, sys
 
+loggerList = []
+logLevel = logging.DEBUG
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-if __name__ == "__main__":
-    # setup logging service
-    logger = loggerFactory.getLogger('sapy')
+def getLogger( name ):
+    logger = logging.getLogger( name )
+    logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logLevel)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
 
-    # the app starts
-    logger.debug('start')
+    loggerList.append(logger)
 
-    clp = CommandLine_Parser()
+    return logger
 
-    for cmd in clp.parse():
-        cmd.run()
-    
-    # the app ends
-    logger.debug('end')
+def setLogFile( file ):
+    handler = logging.StreamHandler(file)
+    handler.setLevel(logLevel)
+    handler.setFormatter(formatter)
+
+    for l in loggerList:
+        l.addHandler(handler)
