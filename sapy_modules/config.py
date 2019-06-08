@@ -23,22 +23,33 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-import configparser
+import configparser,os
 
 class Config:
-    class __Config:
-        def __init__(self, arg):
-            self.val = arg
-        def __str__(self):
-            return repr(self) + self.val
-
+    _APP_HOME = '.sapy'
+    _CONF_FILE = 'conf.ini'
+    _DATA_FILE = 'conf.ini'
+    
     instance = None
 
     def __init__(self):
         if not __Config.instance:
-            Config.instance = Config.__Config(arg)
-        else:
-            Config.instance.val = arg
+            Config.instance = configparser.ConfigParser()
 
+            if os.path.exists(
+                os.path.join( os.environ['HOME'], Config._APP_HOME, Config._DATA_FILE )
+            ) :
+                Config.instance.read(
+                        os.path.join( 
+                            os.environ['HOME'], Config._APP_HOME, Config._DATA_FILE 
+                            )
+                    )
+
+
+            Config.instance['private']['home'] = os.path.join( os.environ['HOME'], '' )
+            Config.instance['private']['conf'] = os.path.join( os.environ['HOME'], '.sapy', 'conf.ini' )
+            Config.instance['private']['db'] = os.path.join( os.environ['HOME'], '.sapy', 'data.sqlite' )
+
+            
     def __getattr__(self, name):
         return getattr(self.instance, name)
