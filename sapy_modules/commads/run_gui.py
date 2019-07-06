@@ -1,4 +1,3 @@
-#   File : commandline_parser
 #   Author : stefano prina 
 #
 # MIT License
@@ -23,25 +22,31 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-import argparse
+import sapy_modules.config as SingleConfig
 import sapy_modules.mlogger as loggerFactory
-from  sapy_modules.commads.setup_env import SetUpEnv
-from  sapy_modules.commads.run_gui import RunGui
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
-class CommandLine_Parser( object ):
+class Handler:
+    def onDestroy(self, *args):
+        Gtk.main_quit()
+
+    def onButtonPressed(self, button):
+        print("Hello World!")
+
+class RunGui( object ):
     def __init__( self ):
+        self.cfg = SingleConfig.getConfig()
         self.logger = loggerFactory.getLogger( str( self.__class__ ))
-        pass
 
-    def parse( self ):
-        command_list = []
+    def run( self ):
+        builder = Gtk.Builder()
+        builder.add_from_file("/home/stethewwolf/Progetti/Sapy/glade/sapy.glade")
+        builder.connect_signals(Handler())
 
-        self.logger.debug('parse starts')
+        window = builder.get_object("window1")
+        window.show_all()
 
-        command_list.append( SetUpEnv()  )
+        Gtk.main()
 
-        command_list.append( RunGui()  )
-
-        self.logger.debug('parse ends')
-        
-        return command_list

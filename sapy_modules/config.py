@@ -25,31 +25,43 @@
 
 import configparser,os
 
-class Config:
-    _APP_HOME = '.sapy'
-    _CONF_FILE = 'conf.ini'
-    _DATA_FILE = 'conf.ini'
-    
-    instance = None
+def getConfig():
+    __APP_HOME = '.sapy'
+    __CONF_FILE = 'conf.ini'
+    __DATA_FILE = 'data.sqlite3'
+    __DB_CREATE_TABLE_DAYS = 'CREATE TABLE `days` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `num` INTEGER UNIQUE, `day` TEXT )'
+    __DB_CREATE_TABLE_MONTHS = 'CREATE TABLE `months` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `num` INTEGER UNIQUE, `month` TEXT )'
+    __DB_CREATE_TABLE_YEARS = 'CREATE TABLE `years` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `year` INTEGER UNIQUE )'
+    __DB_CREATE_TABLE_LIST = 'CREATE TABLE `lists` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, )'
+    __DB_POPULATE_TABLE_LIST = """INSERT OR IGNORE INTO `lists` (`name`) VALUES ('income'),('outcome) )"""
+    __DB_CREATE_TABLE_MONEY_OPS = 'CREATE TABLE "money_ops" ( `id` INTEGER, `movements_of_money_id` INTEGER NOT NULL, `day_id` INTEGER, PRIMARY KEY(`id`) )'
+    __DB_CREATE_TABLE_MOMS = 'CREATE TABLE `movements_of_money` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` REAL, `cause` TEXT )'
+    __instance = None
 
-    def __init__(self):
-        if not __Config.instance:
-            Config.instance = configparser.ConfigParser()
+    if not __instance :
+        __instance = configparser.ConfigParser()
+        __instance['private'] = {
+                'home' : os.path.join( os.environ['HOME'], __APP_HOME),
+                'conf' : os.path.join( os.environ['HOME'], __APP_HOME, __CONF_FILE ),
+                'data' : os.path.join( os.environ['HOME'], __APP_HOME, __DATA_FILE ),
+                'db_create_table_days' : __DB_CREATE_TABLE_DAYS ,
+                'db_create_table_month' : __DB_CREATE_TABLE_MONTHS,
+                'db_create_table_year' : __DB_CREATE_TABLE_YEARS,
+                'db_create_table_list' : __DB_CREATE_TABLE_LIST,
+                'db_populate_table_list' : __DB_POPULATE_TABLE_LIST,
+                'db_create_table_moms' : __DB_CREATE_TABLE_MOMS,
+                'db_create_table_ops' : __DB_CREATE_TABLE_MONEY_OPS 
+            }  
 
-            if os.path.exists(
-                os.path.join( os.environ['HOME'], Config._APP_HOME, Config._DATA_FILE )
-            ) :
-                Config.instance.read(
-                        os.path.join( 
-                            os.environ['HOME'], Config._APP_HOME, Config._DATA_FILE 
-                            )
-                    )
+        if os.path.exists(
+            __instance['private']['conf'] 
+        ) :
+            __instance.read( __instance['private']['conf'] )
 
+ 
 
-            Config.instance['private']['home'] = os.path.join( os.environ['HOME'], '' )
-            Config.instance['private']['conf'] = os.path.join( os.environ['HOME'], '.sapy', 'conf.ini' )
-            Config.instance['private']['db'] = os.path.join( os.environ['HOME'], '.sapy', 'data.sqlite' )
+    return __instance
 
-            
-    def __getattr__(self, name):
-        return getattr(self.instance, name)
+def save( cfg ):
+    with open( cfg['private']['conf'], 'w') as file:
+        cfg.write(file)

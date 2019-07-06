@@ -1,4 +1,3 @@
-#   File : commandline_parser
 #   Author : stefano prina 
 #
 # MIT License
@@ -23,25 +22,42 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-import argparse
+import sapy_modules.config as SingleConfig
+import os, sqlite3
 import sapy_modules.mlogger as loggerFactory
-from  sapy_modules.commads.setup_env import SetUpEnv
-from  sapy_modules.commads.run_gui import RunGui
 
-class CommandLine_Parser( object ):
+class SetUpEnv( object ):
     def __init__( self ):
+        self.cfg = SingleConfig.getConfig()
         self.logger = loggerFactory.getLogger( str( self.__class__ ))
+
+    def run( self ):
+        self.home_app()
+        self.database()
         pass
+    
+    def home_app(self):
+        if not os.path.exists( self.cfg['private']['home'] ) :
+            os.makedirs( self.cfg['private']['home'] )
+            SingleConfig.save( self.cfg )
+            self.logger.debug("created app home dir")
+        else:
+            self.logger.debug("app home dir yet present")
 
-    def parse( self ):
-        command_list = []
+    def database(self):
+        print(self.cfg['private']['data'])
+        if not os.path.exists( self.cfg['private']['data'] ) :
+            con = sqlite3.connect(self.cfg['private']['data'])
+            cur = con.cursor()
 
-        self.logger.debug('parse starts')
+            cur.execute( self.cfg['private']['db_create_table_days'  ] ) 
+            cur.execute( self.cfg['private']['db_create_table_month' ] )
+            cur.execute( self.cfg['private']['db_create_table_year'  ] )
+            cur.execute( self.cfg['private']['db_create_table_list'  ] )
+            cur.execute( self.cfg['private']['db_populate_table_list'] )
+            cur.execute( self.cfg['private']['db_create_table_moms'  ] )
+            cur.execute( self.cfg['private']['db_create_table_ops'   ] )
 
-        command_list.append( SetUpEnv()  )
+            con.commit()
+            cur.close()
 
-        command_list.append( RunGui()  )
-
-        self.logger.debug('parse ends')
-        
-        return command_list
