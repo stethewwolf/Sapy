@@ -36,12 +36,10 @@ class RunGui( object ):
 
     def run( self ):
         builder = Gtk.Builder()
-        builder.add_from_file("/home/stethewwolf/Progetti/Sapy/glade/sapy.glade")
+        builder.add_from_file("glade/sapy.glade")
         builder.connect_signals( myHandlers.Handlers())
 
-        window = builder.get_object("window1")
+        window = builder.get_object("main_window")
         window.show_all()
-        
-        
 
         Gtk.main()
