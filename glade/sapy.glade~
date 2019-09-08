@@ -65,20 +65,21 @@
       </object>
     </child>
   </object>
-  <object class="GtkTreeStore" id="incomeStore">
+  <object class="GtkListStore" id="in_liststore">
     <columns>
-      <!-- column-name amount -->
-      <column type="gint"/>
       <!-- column-name cause -->
-      <column type="GtkInputPurpose"/>
+      <column type="GtkCellRendererMode"/>
+      <!-- column-name amount -->
+      <column type="GtkCellRendererMode"/>
     </columns>
   </object>
-  <object class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="main_window">
     <property name="can_focus">False</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
     <property name="hide_titlebar_when_maximized">True</property>
     <property name="icon">../icon/icon.png</property>
+    <signal name="destroy" handler="onDestroy" swapped="no"/>
     <child>
       <placeholder/>
     </child>
@@ -300,10 +301,10 @@
             <property name="can_focus">False</property>
             <property name="spacing">3</property>
             <child>
-              <object class="GtkTreeView" id="IncomeTreeView">
+              <object class="GtkTreeView" id="IncomeListView">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="model">incomeStore</property>
+                <property name="model">in_liststore</property>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection"/>
                 </child>
@@ -327,7 +328,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkTreeView" id="OutComeTreeView">
+              <object class="GtkTreeView" id="OutComeListView">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <child internal-child="selection">
@@ -362,5 +363,4 @@
       </object>
     </child>
   </object>
-  <object class="GtkTreeStore" id="outcomeStore"/>
 </interface>

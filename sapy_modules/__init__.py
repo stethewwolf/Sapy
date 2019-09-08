@@ -24,7 +24,7 @@
 #     SOFTWARE.
 
 
-__all__ = ['commandline_parser', 'config' ]
+__all__ = ['commands', 'core', 'gtk' ]
 
 # deprecated to keep older scripts who import this from breaking
-from sapy_modules.commandline_parser import CommandLine_Parser
+# from sapy_modules.commandline_parser import CommandLine_Parser
