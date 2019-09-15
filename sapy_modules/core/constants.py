@@ -23,6 +23,7 @@ class DATE:
         '.'
         ]
 
+
 class DB:
     FILE                    = 'data.sqlite3'
     CREATE_LOMS             = """   CREATE TABLE "loms" (
@@ -185,3 +186,14 @@ class COMMANDS:
         HELP    = "set weekly occurrance"
         TYPE    = None
         ACTION  = 'store_true'
+
+
+class FREQUENCY:
+    DAILY   = 'daily'
+    MONTHLY = 'monthly'
+    WEEKLY  = 'weekly'
+    NONE    = None
+
+class LOMS:
+    EXPCTD = 'expected'
+    REAL    = 'real'

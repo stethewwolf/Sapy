@@ -33,6 +33,9 @@ def init():
     global __store
     __store[ 'end_date' ] = datetime.today().date()
     __store[ 'start_date' ] = datetime.today().date()
+    __store[ 'value' ] = 0
+    __store[ 'frequency' ] = SapyConstants.FREQUENCY.NONE
+    __store[ 'lom' ] = SapyConstants.LOMS.EXPCTD
 
 def get_value( key ):
     global __store
