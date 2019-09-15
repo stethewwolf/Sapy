@@ -2,9 +2,31 @@
 #   Author : stefano prina 
 
 class APP :
-    NAME            = "Sapy",
-    DESCRIPTION     = "A spending traking tool"
+    NAME            = 'Sapy'
+    DESCRIPTION     = 'A spending traking tool'
+    HOME            = '.sapy'
+    CONF_FILE       = 'conf.ini'
 
+
+class DB:
+    FILE                    = 'data.sqlite3'
+    CREATE_LOMS             = """   CREATE TABLE "loms" (
+	                                    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	                                    "name"	TEXT NOT NULL UNIQUE
+                                    ) """
+    CREATE_MOMS          = """   CREATE TABLE "moms" (
+	                                    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	                                    "value"	REAL NOT NULL,
+	                                    "cause"	TEXT,
+	                                    "date"	TEXT NOT NULL
+                                    ) """ 
+    CREATE_MOM_IN_LOM    = """   CREATE TABLE "mom_in_lom" (
+	                                    "mom_id"	INTEGER NOT NULL,
+	                                    "lom_id"	INTEGER NOT NULL,
+	                                    PRIMARY KEY("lom_id","mom_id")
+                                    ) """
+    POPULATE_LOM         = """ INSERT INTO "loms" ("id","name") VALUES (1,'real'),(2,'expected'); """
+ 
 
 class COMMANDS:
     class CMD:

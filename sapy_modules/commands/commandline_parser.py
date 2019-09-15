@@ -78,15 +78,15 @@ class CommandLine_Parser( object ):
         args = self.parser.parse_args()
 
         for cmd in self.scl:
-            if getattr( args, cmd.long_arg ) :
+            if getattr( args, cmd.long_arg.replace("-","_") ) :
                 self.logger.debug("passed option --" + cmd.long_arg)
-                command_list.append( cmd( getattr( args, cmd.long_arg ) ) )
+                command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
 
         count = 0
         for cmd in self.rcl:
-            if getattr( args, cmd.long_arg ) :
+            if getattr( args, cmd.long_arg.replace("-","_") ) :
                 self.logger.debug("passed option --" + cmd.long_arg)
-                command_list.append( cmd( getattr( args, cmd.long_arg ) ) )
+                command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
                 count += 1
 
             if count > 0 :

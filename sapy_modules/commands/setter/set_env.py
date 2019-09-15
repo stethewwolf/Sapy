@@ -10,11 +10,11 @@ from sapy_modules.commands.command import Command
 import os, sqlite3
 
 class SetEnv( Command ):
-    short_arg = SapyConstants.COMMANDS.SET_ENV.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.SET_ENV.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.SET_ENV.HELP
-    cmd_type = SapyConstants.COMMANDS.SET_ENV.TYPE
-    cmd_action = SapyConstants.COMMANDS.SET_ENV.ACTION
+    short_arg   = SapyConstants.COMMANDS.SET_ENV.SHORT_ARG
+    long_arg    = SapyConstants.COMMANDS.SET_ENV.LONG_ARG
+    cmd_help    = SapyConstants.COMMANDS.SET_ENV.HELP
+    cmd_type    = SapyConstants.COMMANDS.SET_ENV.TYPE
+    cmd_action  = SapyConstants.COMMANDS.SET_ENV.ACTION
 
     def __init__( self, param  = None ):
         super().__init__( )
@@ -33,18 +33,14 @@ class SetEnv( Command ):
             self.logger.debug("app home dir yet present")
 
     def database(self):
-        print(self.cfg['private']['data'])
         if not os.path.exists( self.cfg['private']['data'] ) :
             con = sqlite3.connect(self.cfg['private']['data'])
             cur = con.cursor()
 
-            cur.execute( self.cfg['private']['db_create_table_days'  ] ) 
-            cur.execute( self.cfg['private']['db_create_table_month' ] )
-            cur.execute( self.cfg['private']['db_create_table_year'  ] )
-            cur.execute( self.cfg['private']['db_create_table_list'  ] )
-            cur.execute( self.cfg['private']['db_populate_table_list'] )
-            cur.execute( self.cfg['private']['db_create_table_moms'  ] )
-            cur.execute( self.cfg['private']['db_create_table_ops'   ] )
+            cur.execute( SapyConstants.DB.CREATE_LOMS )
+            cur.execute( SapyConstants.DB.CREATE_MOMS )
+            cur.execute( SapyConstants.DB.CREATE_MOM_IN_LOM )
+            cur.execute( SapyConstants.DB.POPULATE_LOM )
 
             con.commit()
             cur.close()
