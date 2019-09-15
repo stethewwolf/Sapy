@@ -7,6 +7,7 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
+import sapy_modules.core.values as SapyValues
 import os, sqlite3
 
 class SetEnv( Command ):
@@ -23,6 +24,7 @@ class SetEnv( Command ):
     def run( self ):
         self.home_app()
         self.database()
+        SapyValues.init()
     
     def home_app(self):
         if not os.path.exists( self.cfg['private']['home'] ) :

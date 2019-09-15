@@ -7,6 +7,8 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
+from sapy_modules.commands.setter.set_end import SetEnd
+import sapy_modules.core.values as SapyValues
 
 class SetStart ( Command ):
     short_arg = SapyConstants.COMMANDS.SET_START.SHORT_ARG
@@ -18,10 +20,11 @@ class SetStart ( Command ):
     def __init__( self, param ):
         super().__init__()
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.__param = param
 
     def run( self ):
         self.logger.debug("start")
 
-        self.logger.warn("not implemented")
+        SapyValues.set_value( 'start_date', SetEnd.parse_date( self.__param, self.logger ) )
 
         self.logger.debug("end")

@@ -8,6 +8,21 @@ class APP :
     CONF_FILE       = 'conf.ini'
 
 
+class DATE:
+    FORMATS = [ 
+            '%d-%m-%Y',
+            '%d-%m-%y', 
+            '%c'
+            ]
+    SEPARATORS = [ 
+        '-', 
+        ' ', 
+        '/', 
+        '|', 
+        ':', 
+        '.'
+        ]
+
 class DB:
     FILE                    = 'data.sqlite3'
     CREATE_LOMS             = """   CREATE TABLE "loms" (
@@ -26,7 +41,7 @@ class DB:
 	                                    PRIMARY KEY("lom_id","mom_id")
                                     ) """
     POPULATE_LOM         = """ INSERT INTO "loms" ("id","name") VALUES (1,'real'),(2,'expected'); """
- 
+
 
 class COMMANDS:
     class CMD:
