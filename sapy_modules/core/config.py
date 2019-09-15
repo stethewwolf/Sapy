@@ -25,6 +25,8 @@
 
 import configparser,os
 
+__instance = None
+
 def getConfig():
     __APP_HOME = '.sapy'
     __CONF_FILE = 'conf.ini'
@@ -36,7 +38,7 @@ def getConfig():
     __DB_POPULATE_TABLE_LIST = """INSERT OR IGNORE INTO `lists` (`name`) VALUES ('income'),('outcome) )"""
     __DB_CREATE_TABLE_MONEY_OPS = 'CREATE TABLE "money_ops" ( `id` INTEGER, `movements_of_money_id` INTEGER NOT NULL, `day_id` INTEGER, PRIMARY KEY(`id`) )'
     __DB_CREATE_TABLE_MOMS = 'CREATE TABLE `movements_of_money` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` REAL, `cause` TEXT )'
-    __instance = None
+    global __instance
 
     if not __instance :
         __instance = configparser.ConfigParser()
