@@ -1,11 +1,17 @@
 #
 #   Author : stefano prina 
 
+from string import Template
+
 class APP :
     NAME            = 'Sapy'
     DESCRIPTION     = 'A spending traking tool'
     HOME            = '.sapy'
     CONF_FILE       = 'conf.ini'
+    VERSION         = '1.0.0'
+    AUTHORS         = """
+                        Stefano Prina <stethewwolf@gmail.com>
+                         """
 
 
 class DATE:
@@ -30,18 +36,26 @@ class DB:
 	                                    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	                                    "name"	TEXT NOT NULL UNIQUE
                                     ) """
+
     CREATE_MOMS          = """   CREATE TABLE "moms" (
 	                                    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	                                    "value"	REAL NOT NULL,
 	                                    "cause"	TEXT,
 	                                    "date"	TEXT NOT NULL
                                     ) """ 
+
     CREATE_MOM_IN_LOM    = """   CREATE TABLE "mom_in_lom" (
 	                                    "mom_id"	INTEGER NOT NULL,
 	                                    "lom_id"	INTEGER NOT NULL,
 	                                    PRIMARY KEY("lom_id","mom_id")
                                     ) """
+                                    
     POPULATE_LOM         = """ INSERT INTO "loms" ("id","name") VALUES (1,'real'),(2,'expected'); """
+
+    MOM_CREATE_QUERY    =  Template( 'INSERT INTO moms ("value", "cause", "date") values ( "$value","$cause","$date");' )
+    MOM_SEARCH_BY_ID_QUERY    =  Template( 'SELECT * from moms WHERE id=$id;')
+    MOM_SEARCH_BY_CAUSE_QUERY    =  Template( 'SELECT * from moms WHERE cause=$cause;')
+
 
 
 class COMMANDS:
@@ -193,6 +207,7 @@ class FREQUENCY:
     MONTHLY = 'monthly'
     WEEKLY  = 'weekly'
     NONE    = None
+
 
 class LOMS:
     EXPCTD = 'expected'

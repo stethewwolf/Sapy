@@ -25,7 +25,7 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-from sapy_lib.mom import Mom
+from sapy_modules.sapy.moms.mom import Mom
 import datetime
 
 

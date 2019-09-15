@@ -3,7 +3,7 @@
 #   file : mom_bridge.py
 #   author : stefano prina <stethewwolf@gmail.com>
 #
-# mit license
+# MIT License
 #
 # copyright (c) 2017 stefano prina <stethewwolf@gmail.com>
 #
@@ -25,15 +25,9 @@
 #     out of or in connection with the software or the use or other dealings in the
 #     software.
 
-
-CREATE_MOM_QUERY = """ """
-GET_MOMS_QUERY = """ """
-
 def get_moms( time ):
     pass
 
 def add_mom( mom ):
     pass
-
-
     

@@ -38,9 +38,8 @@ class Mom(object):  # movement of money
         value=0,
         mom_id=-1,
         cause="not specified",
-        time=datetime.datetime.now()
+        time=datetime.datetime.today().date()
     ):
-        # type: (int, int, int, str, str, str, date, time) -> Mom
         self.__value = float(value)
         self.__mom_id = mom_id
         self.__cause = cause  # description of money movement
@@ -94,8 +93,6 @@ class Mom(object):  # movement of money
                 'year': self.__time.year,
                 'month': self.__time.month,
                 'day':  self.__time.day,
-                'hours': self.__time.hour,
-                'minutes':self.__time.minute
             },
             'mom_id': self.__mom_id
         }
@@ -117,15 +114,11 @@ class Mom(object):  # movement of money
         if 'time' in source:
             if 'year' in source['time']         \
                 and 'month' in source['time']   \
-                and 'day' in source['time']     \
-                and 'hours' in source['time']   \
-                and 'minutes' in source['time']:
+                and 'day' in source['time'] :     
                 self.__time = datetime.datetime(
                     int(source['time']['year']),
                     int(source['time']['month']),
                     int(source['time']['day']),
-                    int(source['time']['hours']),
-                    int(source['time']['minutes'])
                 )
             elif 'year' in source['time']       \
                 and 'month' in source['time']   \

@@ -7,6 +7,7 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
+import sapy_modules.core.values as SapyValues
 
 class SetReal ( Command ):
     short_arg = SapyConstants.COMMANDS.SET_REAL.SHORT_ARG
@@ -22,6 +23,6 @@ class SetReal ( Command ):
     def run( self ):
         self.logger.debug("start")
 
-        self.logger.warn("not implemented")
+        SapyValues.set_value( 'lom', SapyConstants.LOMS.REAL )
 
         self.logger.debug("end")

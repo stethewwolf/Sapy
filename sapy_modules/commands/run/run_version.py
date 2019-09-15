@@ -22,6 +22,7 @@ class RunVersion ( Command ):
     def run( self ):
         self.logger.debug("start")
 
-        self.logger.warn("not implemented")
+        print(SapyConstants.APP.NAME + " - " + SapyConstants.APP.VERSION )
+        print("\t" + SapyConstants.APP.AUTHORS )
 
         self.logger.debug("end")

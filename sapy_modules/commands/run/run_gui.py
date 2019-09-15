@@ -43,7 +43,11 @@ class RunGui( Command ):
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
 
     def run( self ):
-        pass
+        self.logger.debug("start")
+
+        self.logger.warn("not implemented")
+
+        self.logger.debug("end")
  #       builder = Gtk.Builder()
  #       builder.add_from_file("glade/sapy.glade")
  #       builder.connect_signals( myHandlers.Handlers())
