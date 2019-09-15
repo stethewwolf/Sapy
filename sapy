@@ -8,7 +8,6 @@
 from sapy_modules.commands import CommandLine_Parser
 from sapy_modules.core import LoggerFactory
 
-
 if __name__ == "__main__":
     # setup logging service
     logger = LoggerFactory.getLogger('sapy')
