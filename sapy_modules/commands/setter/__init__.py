@@ -8,7 +8,8 @@ __all__ = [
     'SetReal',
     'SetStart',
     'SetValue',
-    'SetWeekly'
+    'SetWeekly',
+    'SetCause'
     ]
 
 # deprecated to keep older scripts who import this from breaking
@@ -22,3 +23,4 @@ from sapy_modules.commands.setter.set_real      import SetReal
 from sapy_modules.commands.setter.set_start     import SetStart
 from sapy_modules.commands.setter.set_value     import SetValue
 from sapy_modules.commands.setter.set_weekly    import SetWeekly
+from sapy_modules.commands.setter.set_cause     import SetCause

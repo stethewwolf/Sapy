@@ -7,6 +7,8 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
+from sapy_modules.sapy.moms.mom import Mom
+import sapy_modules.core.values as SapyValues
 
 class RunAdd ( Command ):
     short_arg = SapyConstants.COMMANDS.RUN_ADD.SHORT_ARG
@@ -24,5 +26,11 @@ class RunAdd ( Command ):
         self.logger.debug("start")
 
         self.logger.warn("not implemented")
+ 
+        m = Mom( value = SapyValues.get_value( 'value' ),
+                cause = SapyValues.get_value( 'cause' )
+                 )
+
+        self.logger.debug(m.to_dict())
 
         self.logger.debug("end")

@@ -34,7 +34,8 @@ class CommandLine_Parser( object ):
             SetReal,
             SetStart,
             SetValue,
-            SetWeekly
+            SetWeekly,
+            SetCause
             ]
         
         for cmd in self.rcl + self.scl:
@@ -69,7 +70,7 @@ class CommandLine_Parser( object ):
 
     def parse( self ):
         command_list = []
-
+        
         self.logger.debug('add set_env command')
         command_list.append( SetEnv() )
 

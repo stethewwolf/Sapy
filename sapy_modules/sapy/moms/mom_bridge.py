@@ -25,9 +25,28 @@
 #     out of or in connection with the software or the use or other dealings in the
 #     software.
 
-def get_moms( time ):
+import datetime
+import sapy_modules.core.db as db_iface
+from sapy_modules.core import LoggerFactory
+
+
+def get_moms( ):
     pass
 
-def add_mom( mom ):
-    pass
+def add_mom( value=0, cause="not specified", date=datetime.datetime.today().date() ):
+
+    cur = db_iface.get_cursor()
+    cur.execute( "insert into moms (value,cause,date) values ( ?, ?, ?)", (value,cause,date, ))
+
+    cur.execute("select id from moms order by id DESC ;")
+    id = cur.fetchone()[0]
     
+    db_iface.commit()
+    cur.close()
+
+    return id
+
+
+def update_mom( mom ):
+    pass
+

@@ -26,6 +26,7 @@
 #     software.
 
 import datetime, copy
+import sapy_modules.sapy.moms.mom_bridge as mb 
 
 class Mom(object):  # movement of money
     """
@@ -36,14 +37,13 @@ class Mom(object):  # movement of money
     def __init__(
         self,
         value=0,
-        mom_id=-1,
         cause="not specified",
         time=datetime.datetime.today().date()
     ):
         self.__value = float(value)
-        self.__mom_id = mom_id
         self.__cause = cause  # description of money movement
         self.__time = time
+        self.__mom_id = mb.add_mom(value,cause,time)
 
     def time(self, time=None):
         """ time function return the value, if time paramenter is passed it setted"""
@@ -72,12 +72,7 @@ class Mom(object):  # movement of money
             self.__cause = cause
         return self.__cause
 
-    def mom_id(self, mom_id=None):
-        if mom_id is not None and (not isinstance(mom_id, int)):
-            print ("type error")
-            return
-        if mom_id:
-            self.__mom_id = mom_id
+    def mom_id(self):
         return self.__mom_id
 
     def to_string(self, separator=" "):
@@ -133,11 +128,12 @@ class Mom(object):  # movement of money
         if not (isinstance(mom, Mom)):
             print ("type error")
             return None
+
         return dict(
-            price=self.__direction*self.__price - mom.__direction * mom.__price,
-            mom_id=[self.__mom_id == mom.__mom_id],
-            cause=[self.__cause == mom.__cause],
-            time=self.__time-mom.__time
+            delta   = self.__value - mom.__value,
+            mom_id  = [ self.__mom_id == mom.__mom_id ],
+            cause   = [ self.__cause == mom.__cause ],
+            time    = self.__time - mom.__time
         )
 
     def copy(self):

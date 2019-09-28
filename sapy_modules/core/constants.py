@@ -201,6 +201,12 @@ class COMMANDS:
         TYPE    = None
         ACTION  = 'store_true'
 
+    class SET_CAUSE:
+        SHORT_ARG   = "c"
+        LONG_ARG    = "cause"
+        HELP    = "set cause"
+        TYPE    = str
+        ACTION  = None
 
 class FREQUENCY:
     DAILY   = 'daily'
