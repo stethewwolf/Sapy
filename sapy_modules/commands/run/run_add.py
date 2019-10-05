@@ -9,6 +9,9 @@ from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
 from sapy_modules.sapy.moms.mom import Mom
 import sapy_modules.core.values as SapyValues
+import sapy_modules.sapy.loms.lom as loms
+import datetime
+
 
 class RunAdd ( Command ):
     short_arg = SapyConstants.COMMANDS.RUN_ADD.SHORT_ARG
@@ -24,13 +27,43 @@ class RunAdd ( Command ):
     
     def run( self ):
         self.logger.debug("start")
+        mlist=[]
 
-        self.logger.warn("not implemented")
- 
-        m = Mom( value = SapyValues.get_value( 'value' ),
-                cause = SapyValues.get_value( 'cause' )
-                 )
+        l = loms.get_lom( SapyValues.get_value('lom') )
 
-        self.logger.debug(m.to_dict())
+        sd = SapyValues.get_value('start_date')
+        ed = SapyValues.get_value('end_date')
+        f = SapyValues.get_value('frequency')
+
+        if sd != ed and ed > sd and f :
+            if f == SapyConstants.FREQUENCY.DAILY:
+                step = datetime.timedelta(days=1)
+
+            if f == SapyConstants.FREQUENCY.WEEKLY:
+                step = datetime.timedelta(days=7)
+
+            if f == SapyConstants.FREQUENCY.MONTHLY:
+                step = datetime.timedelta(days=30)
+            
+            itr = datetime.timedelta(days=0)
+
+            while itr + sd <= ed :
+                mlist.append( Mom ( 
+                    value = SapyValues.get_value( 'value' ),
+                    cause = SapyValues.get_value( 'cause' ),
+                    time = sd + itr 
+                    )        
+                )
+
+                itr += step
+
+        else:
+            mlist.append( Mom ( 
+                value = SapyValues.get_value( 'value' ),
+                cause = SapyValues.get_value( 'cause' ),
+                )        
+            )
+
+        l.add(mlist)
 
         self.logger.debug("end")

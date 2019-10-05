@@ -27,6 +27,7 @@
 
 import datetime, copy
 import sapy_modules.sapy.moms.mom_bridge as mb 
+import sapy_modules.core.db as db_iface
 
 class Mom(object):  # movement of money
     """
@@ -36,60 +37,35 @@ class Mom(object):  # movement of money
 
     def __init__(
         self,
+        id = None,
         value=0,
         cause="not specified",
         time=datetime.datetime.today().date()
     ):
-        self.__value = float(value)
-        self.__cause = cause  # description of money movement
-        self.__time = time
-        self.__mom_id = mb.add_mom(value,cause,time)
+        self.value = float(value)
+        self.cause = cause  # description of money movement
+        self.time = time
 
-    def time(self, time=None):
-        """ time function return the value, if time paramenter is passed it setted"""
-        if time is not None and (not isinstance(time, datetime.datetime)):
-            print ("type error")
-            return
-
-        if time:
-            self.__time = time
-        return self.__time
-
-    def value(self, value=None):
-        if value is not None and (not isinstance(value, float)):
-            print ("type error")
-            return
-        if value:
-            self.__value = value
-
-        return self.__value
-
-    def cause(self, cause=None):
-        if cause is not None and (not isinstance(cause, str)):
-            print ("type error")
-            return
-        if cause:
-            self.__cause = cause
-        return self.__cause
-
-    def mom_id(self):
-        return self.__mom_id
+        if id == None:
+            self.id = mb.add_mom(value,cause,time)
+        else:
+            self.id = id
 
     def to_string(self, separator=" "):
-        return str(self.__value)+separator \
-            + self.__cause+separator \
-            + self.__time.isoformat()
+        return str(self.value)+separator \
+            + self.cause+separator \
+            + self.time.isoformat()
 
     def to_dict(self):
         return {
-            'value': self.__value,
-            'cause': self.__cause,
+            'value': self.value,
+            'cause': self.cause,
             'time': {
-                'year': self.__time.year,
-                'month': self.__time.month,
-                'day':  self.__time.day,
+                'year': self.time.year,
+                'month': self.time.month,
+                'day':  self.time.day,
             },
-            'mom_id': self.__mom_id
+            'id': self.id
         }
 
     def from_dict(self, source=None):
@@ -98,19 +74,19 @@ class Mom(object):  # movement of money
             return
 
         if 'value' in source:
-            self.__value = float(source['value'])
+            self.value = float(source['value'])
 
         if 'mom_id' in source:
-            self.__mom_id = source['mom_id']
+            self.id = source['id']
 
         if 'cause' in source:
-            self.__cause = source['cause']
+            self.cause = source['cause']
 
         if 'time' in source:
             if 'year' in source['time']         \
                 and 'month' in source['time']   \
                 and 'day' in source['time'] :     
-                self.__time = datetime.datetime(
+                self.time = datetime.datetime(
                     int(source['time']['year']),
                     int(source['time']['month']),
                     int(source['time']['day']),
@@ -118,7 +94,7 @@ class Mom(object):  # movement of money
             elif 'year' in source['time']       \
                 and 'month' in source['time']   \
                 and 'day' in source['time']:
-                self.__time = datetime.datetime(
+                self.time = datetime.datetime(
                     int(source['time']['year']),
                     int(source['time']['month']),
                     int(source['time']['day']),
@@ -130,12 +106,23 @@ class Mom(object):  # movement of money
             return None
 
         return dict(
-            delta   = self.__value - mom.__value,
-            mom_id  = [ self.__mom_id == mom.__mom_id ],
-            cause   = [ self.__cause == mom.__cause ],
-            time    = self.__time - mom.__time
+            delta   = self.value - mom.value,
+            mom_id  = [ self.id == mom.id ],
+            cause   = [ self.cause == mom.cause ],
+            time    = self.time - mom.time
         )
 
     def copy(self):
         return  copy.deepcopy(self)
 
+    def delete(self):
+        cur = db_iface.get_cursor()
+        cur.execute( "delete from moms where id = ?", (self.id, ))
+        cur.execute( "delete from mom_in_lom where mom_id = ?", (self.id, ))
+        db_iface.commit()
+        cur.close()
+        self.value = None
+        self.cause = None
+        self.time  = None
+        self.id    = None
+ 

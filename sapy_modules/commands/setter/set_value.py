@@ -16,7 +16,7 @@ class SetValue ( Command ):
     cmd_type = SapyConstants.COMMANDS.SET_VALUE.TYPE
     cmd_action = SapyConstants.COMMANDS.SET_VALUE.ACTION
 
-    def __init__( self, param ):
+    def __init__( self, param = 0):
         super().__init__()
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
         self.__param = param

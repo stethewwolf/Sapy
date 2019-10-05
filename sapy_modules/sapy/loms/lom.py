@@ -26,217 +26,69 @@
 #     SOFTWARE.
 
 from sapy_modules.sapy.moms.mom import Mom
+import sapy_modules.core.db as db_iface
 import datetime
-
+import sapy_modules.commands.setter.set_end as se
+from sapy_modules.core import LoggerFactory
 
 class Lom(object):  # list of movements
     def __init__(
         self,
         name="list of movements",
+        id = -1
         ):
-        self.__name = name
-        self.movements = []  # array ordered by date
-        self.__lom_id = -1
-        self.__last_mom_id = 0
-        self.__visible = False
+        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.name = name
+        self.id = id
+        self.visible = False
 
-    def name(self, name=None):
-        if name is not None and (not isinstance(name, str)):
-            print ("type error")
-            pass
+    def add(self, mlist):
+        cur = db_iface.get_cursor()
+        for m in mlist:
+            cur.execute( "insert into mom_in_lom (mom_id,lom_id) values ( ?, ?)", (m.id, self.id, ) )
 
-        if  name :
-            self.__name = name
-
-        return self.__name
-
-    def visible(self, visible=True):
-        if visible is not None and (not isinstance(visible, bool)):
-            print ("type error")
-            pass
-
-        if visible == None :
-            return self.__visible
-        else :
-            self.__visible = visible
-
-        return self.__visible
-
-    def is_visible(self):
-        return self.__visible
-
-    def lom_id(self, lom_id=None):
-        if lom_id is not None and (not isinstance(lom_id, int)):
-            print ("type error")
-            return -1
-        if lom_id:
-            self.__lom_id = lom_id
-        return self.__lom_id
-
-    def insert(self, m):
-        if m is not None and (not isinstance(m, Mom)):
-            print ("type error")
-            return
-        # manage ids
-        self.__last_mom_id = self.__last_mom_id + 1
-        m.mom_id(self.__last_mom_id)
-        # insert mom in the list
-        self.movements.append(m)
-        self.movements.sort(key=lambda x: x.time(), reverse=False)
-        return m.mom_id()
+        db_iface.commit()
+        cur.close()
 
     def remove(self, m):
-        if not isinstance(m, Mom):
-            print ("error")
-            pass
-        try:
-            self.movements.remove(m)
-        except:
-            # TODO: add exception class
-            print("impossible delete " + m.to_string())
+        pass
 
-    def to_dict(self):
-        return {
-            'name': self.__name,
-            'movements': [ mom.to_dict() for mom in self.movements ],
-            'lom_id': self.__lom_id,
-            'last_mom_id': self.__last_mom_id,
-            'visible': self.__visible,
-        }
+    def get_moms(self, id=None, start_date=None, end_date=None ):
+        mlist = []
+        cur = db_iface.get_cursor()
 
-    def from_dict(self, source):
-        if source is not None and (not isinstance(source, dict)):
-            print ("type error i want dict")
-            return
+        if id :
+            cur.execute( "SELECT * from moms where moms.id = ? ;", ( id, ) )
+        else:
+            cur.execute( "SELECT * from moms where moms.id in (select mom_id from mom_in_lom where lom_id = ? );", (self.id, ) )
 
-        if 'name' in source:
-            self.__name = source['name']
-        if 'lom_id' in source:
-            self.__lom_id = source['lom_id']
-        if 'last_mom_id' in source:
-            self.__last_mom_id = source['last_mom_id']
-        if 'visible' in source:
-            self.__visible = source['visible']
-
-        if 'movements' in source:
-            for mom_dict in source['movements']:
-                mom_tmp = Mom()
-                mom_tmp.from_dict(mom_dict)
-                if mom_tmp.mom_id() >= self.__last_mom_id:
-                    self.__last_mom_id = mom_tmp.mom_id()
-                self.movements.append(mom_tmp)
-
-        # TODO: enable sort by date
-        #self.Movements.sort(key=lambda x: x.date, reverse=False)
-
-    def get_moms(self):
-        return self.movements
+        for raw in cur.fetchall():
+            m = Mom( id=raw[0], value=raw[1], cause=raw[2], time=se.parse_date( raw[3], self.logger ) )
+            if start_date and end_date :
+                if m.time >= start_date and m.time <= end_date:
+                    mlist.append( m )
+            else:
+                mlist.append( m )
+                
+        cur.close()
+        return mlist
 
     def get_mom_in_period(self, start_date, time_delta):
-        if not isinstance(start_date, datetime.date):
-            print("type error")
-            return
-        if not isinstance(time_delta, datetime.timedelta):
-            print("type error")
-            return
-        return [m for m in self.movements if ((m.date >= start_date) and (m.date <= start_date+time_delta))]
+        return []
 
     def get_mom_by_id(self, mom_id):
-        if not isinstance(mom_id, int):
-            print ("type error")
-            return
-        return [m for m in self.movements if m.mom_id() == mom_id][0]
-
-    def get_mom_by_time(self, time):
-        if not isinstance(time, datetime.datetime):
-            print ("type error")
-            return
-        return [m for m in self.movements if m.time().date() == time.date()]
+        return[]
 
     def balance_per_day(self, start_date, end_date):
-        if not isinstance(start_date, datetime.date):
-            print("type error")
-            return
-        if not isinstance(end_date, datetime.date):
-            print("type error")
-            return
-        
-        balance = 0
+        return -1
 
-        # I calculate the basic budget 
-        for mom in self.movements:
-            if mom.time().date() < start_date.date() :
-                balance += mom.get_value()
+def get_lom( name ):
+    cur = db_iface.get_cursor()
+    cur.execute("select * from loms where `name` == ? ", (name, ))
+    res = cur.fetchone()
+    cur.close()
+    return Lom(res[1], res[0])
 
-        balances = []
-        dates = []
-        # now I create a tuple with 2 vectors, one of dates and one of values
-        date_itr = start_date
-        while date_itr <= end_date:
-            for mom in self.get_mom_by_time(date_itr): # i select all mom in day
-                balance += mom.get_value() 
-
-            #print("==============")
-            #print(date_itr.date())
-            #print(balance)
-            #print("==============")
-            balances.append(balance)
-            dates.append(date_itr.date())
-
-            date_itr += datetime.timedelta(days=1)
-
-         
-
-        return (dates, balances, self.__name)
-
-
-# RUNS TESTS
-if __name__ == "__main__":
-    print ("testing loms")
-    # TODO: write some tests
-    # create 2 lom
-    lom1 = Lom("lom1")
-    # import 2 lom from json
-    json_lom2 = {
-        'visible': False,
-        'name': 'lom2',
-        'last_mom_id': -1,
-        'lom_id': 2,
-        'movements': []
-    }
-    json_lom3 = {
-        'visible': False,
-        'name': 'lom2',
-        'last_mom_id': -1,
-        'lom_id': 3,
-        'movements': []
-    }
-
-    lom2 = Lom()
-    lom3 = Lom()
-
-    # implict test of from_json() method
-    lom2.from_dict(json_lom2)
-    lom3.from_dict(json_lom3)
-
-    if lom2.lom_id() != json_lom2['lom_id']:
-        print("failed method lom_id()")
-        print (lom2.lom_id())
-        print (json_lom2['lom_id'])
-    else:
-        print("method lom_id() ok")
-
-    lom1.insert(
-        Mom(
-            price=float(10),
-            direction=-1,
-            mom_id=1,
-            cause="test mom A",
-            agent="agent mom A",
-            payee="payee mom A",
-            time=datetime.datetime.now()
-        )
-    )
 
 
 

@@ -16,7 +16,7 @@ class SetWeekly ( Command ):
     cmd_type = SapyConstants.COMMANDS.SET_WEEKLY.TYPE
     cmd_action = SapyConstants.COMMANDS.SET_WEEKLY.ACTION
 
-    def __init__( self ):
+    def __init__( self, param = None):
         super().__init__()
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
 

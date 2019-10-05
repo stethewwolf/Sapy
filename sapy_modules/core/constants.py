@@ -17,7 +17,9 @@ class APP :
 class DATE:
     FORMATS = [ 
             '%d-%m-%Y',
+            '%Y-%m-%d',
             '%d-%m-%y', 
+            '%y-%m-%d', 
             '%c'
             ]
     SEPARATORS = [ 
@@ -102,8 +104,8 @@ class COMMANDS:
         SHORT_ARG   = "r"
         LONG_ARG    = "remove"
         HELP    = "remove movements of money"
-        TYPE    = None
-        ACTION  = 'store_true'
+        TYPE    = int
+        ACTION  = None
 
 
     class RUN_LIST:
