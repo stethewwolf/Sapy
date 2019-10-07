@@ -7,6 +7,11 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
+from sapy_modules.sapy.moms.mom import Mom
+import sapy_modules.commands.setter.set_end as se
+import csv, pathlib
+import sapy_modules.sapy.loms.lom as loms
+import sapy_modules.core.values as SapyValues
 
 class RunImport ( Command ):
     short_arg = SapyConstants.COMMANDS.RUN_IMPORT.SHORT_ARG
@@ -18,10 +23,29 @@ class RunImport ( Command ):
     def __init__( self, param ):
         super().__init__()
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.file = pathlib.Path( param )
+
 
     def run( self ):
         self.logger.debug("start")
 
-        self.logger.warn("not implemented")
+        l = loms.get_lom( SapyValues.get_value('lom') )
+
+        mlist = []
+        with self.file.open('r') as data_file:
+            data = csv.DictReader( data_file, fieldnames=[
+                'date',
+                'cause',
+                'value'
+            ] )
+
+            for raw in data:
+                mlist.append( Mom( 
+                    time  = se.parse_date( raw['date'], self.logger ),
+                    cause = raw['cause'],
+                    value = float( raw['value'] )
+                 ) ) 
+
+        l.add(mlist)
 
         self.logger.debug("end")
