@@ -73,14 +73,12 @@ class Lom(object):  # list of movements
         cur.close()
         return mlist
 
-    def get_mom_in_period(self, start_date, time_delta):
-        return []
-
-    def get_mom_by_id(self, mom_id):
-        return[]
-
-    def balance_per_day(self, start_date, end_date):
-        return -1
+    def balance(self, start_date=None, end_date=None):
+        balance = 0
+        for m in self.get_moms(start_date=start_date,end_date=end_date):
+            balance += m.value
+        
+        return balance
 
 def get_lom( name ):
     cur = db_iface.get_cursor()

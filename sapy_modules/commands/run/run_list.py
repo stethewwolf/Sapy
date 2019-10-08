@@ -42,4 +42,6 @@ class RunList ( Command ):
         for m in l.get_moms(start_date=sd, end_date=ed ):
             print(str( m.id ) + " | " + str( m.time ) + " | " + str( m.value ) + " | " + m.cause )
         print('------------------------------')
+        print(' balance : ' + str( l.balance(sd,ed)) )
+        print('------------------------------')
         self.logger.debug("end")
