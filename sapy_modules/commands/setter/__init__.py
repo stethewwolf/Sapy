@@ -1,6 +1,5 @@
 __all__ = [
     'SetDaily', 
-    'SetDb', 
     'SetEnd', 
     'SetEnv', 
     'SetExpected', 
@@ -15,7 +14,6 @@ __all__ = [
 
 # deprecated to keep older scripts who import this from breaking
 from sapy_modules.commands.setter.set_daily     import SetDaily
-from sapy_modules.commands.setter.set_db        import SetDb 
 from sapy_modules.commands.setter.set_end       import SetEnd
 from sapy_modules.commands.setter.set_env       import SetEnv
 from sapy_modules.commands.setter.set_expected  import SetExpected

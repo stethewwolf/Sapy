@@ -132,14 +132,6 @@ class COMMANDS:
         ACTION  = 'store_true'
 
 
-    class SET_DB:
-        SHORT_ARG   = None
-        LONG_ARG    = "db"
-        HELP    = "set database path"
-        TYPE    = str
-        ACTION  = None
-
-
     class SET_END:
         SHORT_ARG   = None
         LONG_ARG    = "end-date"

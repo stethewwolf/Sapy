@@ -28,7 +28,6 @@ class CommandLine_Parser( object ):
 
         self.scl = [ 
             SetDaily,
-            SetDb,
             SetEnd,
             SetExpected,
             SetMonthly,
