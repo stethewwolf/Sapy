@@ -22,7 +22,8 @@ class CommandLine_Parser( object ):
             RunImport,
             RunList,
             RunRemove,
-            RunVersion
+            RunVersion,
+            RunBalance
             ]
 
         self.scl = [ 
@@ -35,7 +36,8 @@ class CommandLine_Parser( object ):
             SetStart,
             SetValue,
             SetWeekly,
-            SetCause
+            SetCause,
+            SetDate
             ]
         
         for cmd in self.rcl + self.scl:

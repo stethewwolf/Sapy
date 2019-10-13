@@ -61,6 +61,7 @@ class RunAdd ( Command ):
             mlist.append( Mom ( 
                 value = SapyValues.get_value( 'value' ),
                 cause = SapyValues.get_value( 'cause' ),
+                time = sd 
                 )        
             )
 

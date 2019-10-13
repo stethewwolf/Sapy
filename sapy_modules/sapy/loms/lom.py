@@ -67,6 +67,12 @@ class Lom(object):  # list of movements
             if start_date and end_date :
                 if m.time >= start_date and m.time <= end_date:
                     mlist.append( m )
+            elif start_date is None and end_date :
+                if m.time <= end_date:
+                    mlist.append( m )
+            elif start_date and end_date is None :
+                if m.time >= start_date :
+                    mlist.append( m )
             else:
                 mlist.append( m )
                 

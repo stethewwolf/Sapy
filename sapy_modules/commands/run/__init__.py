@@ -5,7 +5,8 @@ __all__ = [
     'RunImport', 
     'RunList', 
     'RunRemove', 
-    'RunVersion' 
+    'RunVersion',
+    'RunBalance'
     ]
 
 # deprecated to keep older scripts who import this from breaking
@@ -16,3 +17,4 @@ from sapy_modules.commands.run.run_import    import RunImport
 from sapy_modules.commands.run.run_list      import RunList
 from sapy_modules.commands.run.run_remove    import RunRemove
 from sapy_modules.commands.run.run_version   import RunVersion
+from sapy_modules.commands.run.run_balance   import RunBalance

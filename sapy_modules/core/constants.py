@@ -125,7 +125,7 @@ class COMMANDS:
 
 
     class SET_DAILY:
-        SHORT_ARG   = "d"
+        SHORT_ARG   = "D"
         LONG_ARG    = "daily"
         HELP    = "set daily occurance"
         TYPE    = None
