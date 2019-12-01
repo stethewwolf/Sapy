@@ -34,30 +34,6 @@ class DATE:
 
 class DB:
     FILE                    = 'data.sqlite3'
-    CREATE_LOMS             = """   CREATE TABLE "loms" (
-	                                    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	                                    "name"	TEXT NOT NULL UNIQUE
-                                    ) """
-
-    CREATE_MOMS          = """   CREATE TABLE "moms" (
-	                                    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	                                    "value"	REAL NOT NULL,
-	                                    "cause"	TEXT,
-	                                    "date"	TEXT NOT NULL
-                                    ) """ 
-
-    CREATE_MOM_IN_LOM    = """   CREATE TABLE "mom_in_lom" (
-	                                    "mom_id"	INTEGER NOT NULL,
-	                                    "lom_id"	INTEGER NOT NULL,
-	                                    PRIMARY KEY("lom_id","mom_id")
-                                    ) """
-                                    
-    POPULATE_LOM         = """ INSERT INTO "loms" ("id","name") VALUES (1,'real'),(2,'expected'); """
-
-    MOM_CREATE_QUERY    =  Template( 'INSERT INTO moms ("value", "cause", "date") values ( "$value","$cause","$date");' )
-    MOM_SEARCH_BY_ID_QUERY    =  Template( 'SELECT * from moms WHERE id=$id;')
-    MOM_SEARCH_BY_CAUSE_QUERY    =  Template( 'SELECT * from moms WHERE cause=$cause;')
-
 
 
 class COMMANDS:
@@ -65,14 +41,6 @@ class COMMANDS:
         SHORT_ARG   = "c"
         LONG_ARG    = "command"
         HELP    = "this is a command"
-        TYPE    = None
-        ACTION  = 'store_true'
-
-
-    class RUN_ADD:
-        SHORT_ARG   = "a"
-        LONG_ARG    = "add"
-        HELP    = "add new movements of money"
         TYPE    = None
         ACTION  = 'store_true'
 
@@ -99,21 +67,6 @@ class COMMANDS:
         HELP    = "import data from csv file"
         TYPE    = str
         ACTION  = None
-
-    class RUN_REMOVE:
-        SHORT_ARG   = "r"
-        LONG_ARG    = "remove"
-        HELP    = "remove movements of money"
-        TYPE    = int
-        ACTION  = None
-
-
-    class RUN_LIST:
-        SHORT_ARG   = "l"
-        LONG_ARG    = "list"
-        HELP    = "list movements of money"
-        TYPE    = None
-        ACTION  = 'store_true'
 
 
     class RUN_VERSION:
@@ -148,26 +101,10 @@ class COMMANDS:
         ACTION  = None
 
 
-    class SET_EXPECTED:
-        SHORT_ARG   = "E"
-        LONG_ARG    = "expected"
-        HELP    = "work on expected list"
-        TYPE    = None
-        ACTION  = 'store_true'
-        
-
     class SET_MONTHLY:
         SHORT_ARG   = None
         LONG_ARG    = "monthly"
         HELP    = "set monthly occurrance"
-        TYPE    = None
-        ACTION  = 'store_true'
-
-
-    class SET_REAL:
-        SHORT_ARG   = None
-        LONG_ARG    = "real"
-        HELP    = "work on real list"
         TYPE    = None
         ACTION  = 'store_true'
 

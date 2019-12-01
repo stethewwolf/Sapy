@@ -1,5 +1,5 @@
 #
-#   File : set_real.py
+#   File : set_expecetd.py
 #   Author : stefano prina <stethewwolf@null.net>
 #
 
@@ -8,21 +8,26 @@ from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
 import sapy_modules.core.values as SapyValues
+import sapy_modules.sapy.lom as loms
 
-class SetReal ( Command ):
-    short_arg = SapyConstants.COMMANDS.SET_REAL.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.SET_REAL.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.SET_REAL.HELP
-    cmd_type = SapyConstants.COMMANDS.SET_REAL.TYPE
-    cmd_action = SapyConstants.COMMANDS.SET_REAL.ACTION
+class SetLom ( Command ):
+    short_arg = None
+    long_arg = 'lom'
+    cmd_help = 'specify the list of money ( lom )'
+    cmd_type = str
+    cmd_action = None 
 
     def __init__( self, param ):
-        super().__init__()
+        super().__init__( )
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.name=param
 
     def run( self ):
         self.logger.debug("start")
 
-        SapyValues.set_value( 'lom', SapyConstants.LOMS.REAL )
+        l = loms.get_lom(name=self.name)
+
+        if l:
+            SapyValues.set_value('lom', l.id)
 
         self.logger.debug("end")

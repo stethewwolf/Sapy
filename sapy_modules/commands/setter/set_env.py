@@ -23,9 +23,9 @@ class SetEnv( Command ):
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
 
     def run( self ):
+        SapyValues.init()
         self.home_app()
         self.database()
-        SapyValues.init()
     
     def home_app(self):
         if not os.path.exists( self.cfg['private']['home'] ) :
@@ -42,10 +42,13 @@ class SetEnv( Command ):
             db_iface.open()
             cur = db_iface.get_cursor()
 
-            cur.execute( SapyConstants.DB.CREATE_LOMS )
-            cur.execute( SapyConstants.DB.CREATE_MOMS )
-            cur.execute( SapyConstants.DB.CREATE_MOM_IN_LOM )
-            cur.execute( SapyConstants.DB.POPULATE_LOM )
+            cur.execute( SapyValues.get_value('db.create.moms') )
+            cur.execute( SapyValues.get_value('db.create.mom_in_lom') )
+            cur.execute( SapyValues.get_value('db.create.loms') )
+            cur.execute( SapyValues.get_value('db.populate.lom') )
+            cur.execute( SapyValues.get_value('db.create.objectives') )
+            cur.execute( SapyValues.get_value('db.create.tags') )
+            cur.execute( SapyValues.get_value('db.create.tag_in_mom') )
 
             db_iface.commit()
             cur.close()

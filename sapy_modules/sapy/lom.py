@@ -25,7 +25,7 @@
 #     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #     SOFTWARE.
 
-from sapy_modules.sapy.moms.mom import Mom
+from sapy_modules.sapy.mom import Mom
 import sapy_modules.core.db as db_iface
 import datetime
 import sapy_modules.commands.setter.set_end as se
@@ -34,13 +34,24 @@ from sapy_modules.core import LoggerFactory
 class Lom(object):  # list of movements
     def __init__(
         self,
-        name="list of movements",
-        id = -1
-        ):
+        id=None,
+        name="list of movements"
+    ):
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
         self.name = name
-        self.id = id
         self.visible = False
+
+        if id == None:
+            cur = db_iface.get_cursor()
+            cur.execute( "insert into loms (name) values ( ?)", (name, ))
+
+            cur.execute("select id from loms order by id DESC ;")
+            self.id = cur.fetchone()[0]
+    
+            db_iface.commit()
+            cur.close()
+        else:
+            self.id = id
 
     def add(self, mlist):
         cur = db_iface.get_cursor()
@@ -50,8 +61,13 @@ class Lom(object):  # list of movements
         db_iface.commit()
         cur.close()
 
-    def remove(self, m):
-        pass
+    def delete(self):
+        cur = db_iface.get_cursor()
+        cur.execute( "delete from loms where id = ?", (self.id, ))
+        db_iface.commit()
+        cur.close()
+        self.name = None
+        self.id    = None
 
     def get_moms(self, id=None, start_date=None, end_date=None ):
         mlist = []
@@ -86,12 +102,24 @@ class Lom(object):  # list of movements
         
         return balance
 
-def get_lom( name ):
+def get_lom(name=None, id=None):
     cur = db_iface.get_cursor()
-    cur.execute("select * from loms where `name` == ? ", (name, ))
+    if name:
+        cur.execute('select * from loms where `name` == ? ', (name, ))
+    elif id:
+        cur.execute('select * from loms where `id` == ? ', (id, ))
     res = cur.fetchone()
     cur.close()
-    return Lom(res[1], res[0])
+    return Lom(res[0], res[1])
+
+def get_loms():
+    llist=[]
+    cur = db_iface.get_cursor()
+    cur.execute('select * from loms ')
+    for l in cur.fetchall():
+        llist.append(Lom(l[0], l[1]))
+    cur.close()
+    return  llist
 
 
 

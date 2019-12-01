@@ -9,7 +9,7 @@ from sapy_modules.core import SapyConstants
 import sapy_modules.core.values as SapyValues
 from sapy_modules.commands.command import Command
 import datetime
-import sapy_modules.sapy.loms.lom as loms
+import sapy_modules.sapy.lom as loms
 
 class RunBalance ( Command ):
     short_arg = "b"

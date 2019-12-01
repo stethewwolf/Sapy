@@ -9,22 +9,39 @@ from sapy_modules.core import SapyConstants
 import sapy_modules.core.values as SapyValues
 from sapy_modules.commands.command import Command
 import datetime
-import sapy_modules.sapy.loms.lom as loms
+import sapy_modules.sapy.lom as loms
+import sapy_modules.sapy.tags as tags
+import sapy_modules.sapy.objectives as objs
 
 class RunList ( Command ):
-    short_arg = SapyConstants.COMMANDS.RUN_LIST.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.RUN_LIST.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.RUN_LIST.HELP
-    cmd_type = SapyConstants.COMMANDS.RUN_LIST.TYPE
-    cmd_action = SapyConstants.COMMANDS.RUN_LIST.ACTION
+    short_arg = 'l'
+    long_arg = 'list' 
+    cmd_help = 'list things, target lom | mom | tag | obj '
+    cmd_type = str
+    cmd_action = None
 
     def __init__( self, param ):
         super().__init__()
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.target = param
 
     def run( self ):
         self.logger.debug("start")
 
+        if self.target == 'mom' :
+            self.list_mom()
+        elif self.target == 'lom':
+            self.list_lom()
+        elif self.target == 'obj':
+            self.list_obj()
+        elif self.target == 'tag':
+            self.list_tag()
+        else :
+            print('invalid targget :{}'.format(self.target))
+
+        self.logger.debug("end")
+
+    def list_mom(self):
         sd = SapyValues.get_value('start_date')
         ed = SapyValues.get_value('end_date')
 
@@ -34,14 +51,36 @@ class RunList ( Command ):
         
         l = loms.get_lom( SapyValues.get_value('lom') )
         
-
         print('------------------------------')
         print(l.name)
         print('------------------------------')
-        print(' id |  time  | value | cause  ')
+        print('\tid\t|\ttime\t|\tvalue\t|\tcause\t')
         for m in l.get_moms(start_date=sd, end_date=ed ):
-            print(str( m.id ) + " | " + str( m.time ) + " | " + str( m.value ) + " | " + m.cause )
+            print('\t{}\t|\t{}\t|\t{}\t|\t{}\t'.format(m.id,m.time,m.value,m.cause))
         print('------------------------------')
         print(' balance : ' + str( l.balance(sd,ed)) )
         print('------------------------------')
-        self.logger.debug("end")
+
+    def list_lom(self):
+        print('------------------------------')
+        print('\tid\t|\tname\t|')
+        print('------------------------------')
+        for l in loms.get_loms():
+            print('\t{}\t|\t{}\t|'.format(l.id,l.name))
+        print('------------------------------')
+
+    def list_tag(self):
+        print('------------------------------')
+        print('\tid\t|\tname\t|')
+        print('------------------------------')
+        for t in tags.get_tags():
+            print('\t{}\t|\t{}\t|'.format(t.id,t.name))
+        print('------------------------------')
+
+    def list_obj(self):
+        print('------------------------------')
+        print('\tid\t|\tdescription\t|\tduedate\t|')
+        print('------------------------------')
+        for t in objs.get_objs(self.logger):
+            print('\t{}\t|\t{}\t|\t{}\t|'.format(t.id,t.description,t.duedate))
+        print('------------------------------')

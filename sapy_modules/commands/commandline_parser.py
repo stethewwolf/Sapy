@@ -8,6 +8,7 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.run import *
 from sapy_modules.commands.setter import *
+from sapy_modules.commands.tasks import *
 
 class CommandLine_Parser( object ):
     def __init__( self ):
@@ -29,17 +30,25 @@ class CommandLine_Parser( object ):
         self.scl = [ 
             SetDaily,
             SetEnd,
-            SetExpected,
+            SetId,
             SetMonthly,
-            SetReal,
+            SetLom,
             SetStart,
             SetValue,
             SetWeekly,
             SetCause,
-            SetDate
+            SetDate,
+            SetName
             ]
+
+        self.tcl = [ 
+            NewYear,
+            NewMonth,
+            EndWeek,
+            EndMonth
+        ]
         
-        for cmd in self.rcl + self.scl:
+        for cmd in self.rcl + self.scl + self.tcl:
             if cmd.short_arg:
                 if cmd.cmd_type:
                     self.parser.add_argument(  
@@ -94,6 +103,18 @@ class CommandLine_Parser( object ):
             if count > 0 :
                 self.logger.warn("it is possible use only one task")
                 break
+
+        count = 0
+        for cmd in self.tcl:
+            if getattr( args, cmd.long_arg.replace("-","_") ) :
+                self.logger.debug("passed option --" + cmd.long_arg)
+                command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
+                count += 1
+
+            if count > 0 :
+                self.logger.warn("it is possible use only one task")
+                break
+
 
         self.logger.debug('parse ends')
         

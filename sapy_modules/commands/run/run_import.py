@@ -7,10 +7,10 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
-from sapy_modules.sapy.moms.mom import Mom
+import sapy_modules.sapy.mom as moms
 import sapy_modules.commands.setter.set_end as se
 import csv, pathlib
-import sapy_modules.sapy.loms.lom as loms
+import sapy_modules.sapy.lom as loms
 import sapy_modules.core.values as SapyValues
 
 class RunImport ( Command ):
@@ -40,7 +40,7 @@ class RunImport ( Command ):
             ] )
 
             for raw in data:
-                mlist.append( Mom( 
+                mlist.append( moms.Mom( 
                     time  = se.parse_date( raw['date'], self.logger ),
                     cause = raw['cause'],
                     value = float( raw['value'] )

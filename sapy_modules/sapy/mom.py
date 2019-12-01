@@ -26,7 +26,6 @@
 #     software.
 
 import datetime, copy
-import sapy_modules.sapy.moms.mom_bridge as mb 
 import sapy_modules.core.db as db_iface
 
 class Mom(object):  # movement of money
@@ -47,7 +46,14 @@ class Mom(object):  # movement of money
         self.time = time
 
         if id == None:
-            self.id = mb.add_mom(value,cause,time)
+            cur = db_iface.get_cursor()
+            cur.execute( "insert into moms (value,cause,date) values ( ?, ?, ?)", (value,cause,time, ))
+
+            cur.execute("select id from moms order by id DESC ;")
+            self.id = cur.fetchone()[0]
+    
+            db_iface.commit()
+            cur.close()
         else:
             self.id = id
 
