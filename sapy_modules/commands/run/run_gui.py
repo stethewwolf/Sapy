@@ -25,11 +25,11 @@
 from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
+import sapy_modules.gui.glade.glade_builder as mBuilder
 from sapy_modules.commands.command import Command
-import sapy_modules.gtk.Handlers as myHandlers
-# import gi
-# gi.require_version('Gtk', '3.0')
-# from gi.repository import Gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 class RunGui( Command ):
     short_arg = SapyConstants.COMMANDS.RUN_GUI.SHORT_ARG
@@ -41,23 +41,21 @@ class RunGui( Command ):
     def __init__( self, param ):
         super().__init__()
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        mBuilder.init()
 
     def run( self ):
         self.logger.debug("start")
 
-        self.logger.warn("not implemented")
+        window = mBuilder.get_object("main_window")
+        window.show_all()
+
+        Gtk.main()
 
         self.logger.debug("end")
- #       builder = Gtk.Builder()
- #       builder.add_from_file("glade/sapy.glade")
- #       builder.connect_signals( myHandlers.Handlers())
 
- #       window = builder.get_object("main_window")
- #       window.show_all()
 
  #       ins_store = Gtk.ListStore(str, float)
 
  #       in_list = builder.get_object("IncomeListView")
 
 
- #       Gtk.main()

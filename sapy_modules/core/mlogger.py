@@ -26,7 +26,7 @@
 import logging, sys
 
 loggerList = []
-logLevel = logging.INFO
+logLevel = logging.DEBUG
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 def getLogger( name ):

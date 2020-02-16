@@ -68,6 +68,7 @@ class RunList ( Command ):
         for l in loms.get_loms():
             print('\t{}\t|\t{}\t|'.format(l.id,l.name))
         print('------------------------------')
+        return loms.get_loms()
 
     def list_tag(self):
         print('------------------------------')
