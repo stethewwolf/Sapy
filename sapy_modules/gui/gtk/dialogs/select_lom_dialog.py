@@ -1,11 +1,16 @@
+#
+#   File : select_lom_dialog.py
+#   Author : stefano prina <stethewwolf@gmail.com>
+#
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 
-class select_lom_dialog_view(Gtk.Dialog):
+class select_lom_dialog_view(Gtk.MessageDialog):
     def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "My Dialog", parent, 0,
+        Gtk.Dialog.__init__(self, "Select List", parent, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              Gtk.STOCK_OK, Gtk.ResponseType.OK))
         self.set_default_size(150, 100)
@@ -35,5 +40,7 @@ class select_lom_dialog_view(Gtk.Dialog):
 
 class select_lom_dialog_controller(object):
     def __init__(self):
+        #TODO: only one lom is selected per time, when you selcet one, other
+        #       are deselected
         pass
 

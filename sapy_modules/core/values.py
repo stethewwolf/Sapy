@@ -25,6 +25,7 @@
 
 import configparser,os
 import sapy_modules.core.constants as SapyConstants
+import sapy_modules.sapy.lom as loms
 from datetime import datetime
 
 __store = {}
@@ -36,7 +37,8 @@ def init():
     __store['date'] = datetime.today().date()
     __store['value'] = 0
     __store['frequency'] = SapyConstants.FREQUENCY.NONE
-    __store['lom'] = SapyConstants.LOMS.EXPCTD
+    __store['lom'] = ""
+    #__store['lom'] = loms.get_loms()[0]
     __store['name'] = 'new name'
 
     # db values

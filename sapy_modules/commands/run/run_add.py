@@ -46,7 +46,7 @@ class RunAdd(Command):
 
     def add_mom(self):
         mlist=[]
-        l = loms.get_lom( SapyValues.get_value('lom') )
+        l = SapyValues.get_value('lom')
 
         sd = SapyValues.get_value('start_date')
         ed = SapyValues.get_value('end_date')
@@ -68,8 +68,10 @@ class RunAdd(Command):
                 mlist.append( moms.Mom ( 
                     value = SapyValues.get_value( 'value' ),
                     cause = SapyValues.get_value( 'cause' ),
-                    time = sd + itr 
-                    )        
+                    year  = (sd + itr).year,
+                    month = (sd + itr).month,
+                    day   = (sd + itr).day
+                    )
                 )
 
                 itr += step
@@ -78,7 +80,9 @@ class RunAdd(Command):
             mlist.append( moms.Mom ( 
                 value = SapyValues.get_value( 'value' ),
                 cause = SapyValues.get_value( 'cause' ),
-                time = sd 
+                year  = sd.year,
+                month = sd.month,
+                day   = sd.day
                 )        
             )
 

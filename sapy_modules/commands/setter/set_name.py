@@ -22,8 +22,8 @@ class SetName ( Command ):
         self.__param = param
 
     def run( self ):
-        self.logger.debug("start")
+        self.logger.error("start")
 
         SapyValues.set_value('name', self.__param)
 
-        self.logger.debug("end")
+        self.logger.error("end")

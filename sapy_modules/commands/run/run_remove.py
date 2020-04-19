@@ -44,7 +44,7 @@ class RunRemove ( Command ):
         self.logger.debug("end")
 
     def rm_mom(self):
-        l = loms.get_lom( name=SapyValues.get_value('lom') )
+        l = SapyValues.get_value('lom')
         mlist = l.get_moms( id = self.id2rm )
         mlist[0].delete()
 

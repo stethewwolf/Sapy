@@ -23,6 +23,7 @@ if __name__ == "__main__":
     logger.debug('start run commands')
     for cmd in command_list :
         logger.debug('running command ' + str( cmd.__class__ ) )
+        print('running command ' + str( cmd.__class__ ) )
         cmd.run()
     
     # close db connection

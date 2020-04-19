@@ -29,7 +29,7 @@ class RunImport ( Command ):
     def run( self ):
         self.logger.debug("start")
 
-        l = loms.get_lom( SapyValues.get_value('lom') )
+        l = SapyValues.get_value('lom') 
 
         mlist = []
         with self.file.open('r') as data_file:

@@ -16,14 +16,14 @@ class SetCause ( Command ):
     cmd_type = SapyConstants.COMMANDS.SET_CAUSE.TYPE
     cmd_action = SapyConstants.COMMANDS.SET_CAUSE.ACTION
 
-    def __init__( self, param ):
+    def __init__(self, param):
         super().__init__()
-        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.logger = LoggerFactory.getLogger(str(self.__class__))
         self.__param = param
 
-    def run( self ):
+    def run(self):
         self.logger.debug("start")
 
-        SapyValues.set_value( 'cause', self.__param )
+        SapyValues.set_value('cause', self.__param)
 
         self.logger.debug("end")

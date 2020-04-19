@@ -49,7 +49,7 @@ class RunList ( Command ):
             sd = datetime.datetime.today().date() - datetime.timedelta(days=15)
             ed = datetime.datetime.today().date() + datetime.timedelta(days=15)
         
-        l = loms.get_lom( SapyValues.get_value('lom') )
+        l = SapyValues.get_value('lom')
         
         print('------------------------------')
         print(l.name)

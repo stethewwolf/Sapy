@@ -9,6 +9,7 @@ import sapy_modules.core.db as db_iface
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
 import sapy_modules.core.values as SapyValues
+import sapy_modules.sapy.lom as loms
 import os, sqlite3
 
 class SetEnv( Command ):
@@ -26,6 +27,7 @@ class SetEnv( Command ):
         SapyValues.init()
         self.home_app()
         self.database()
+        SapyValues.set_value('lom',loms.get_loms()[0])
     
     def home_app(self):
         if not os.path.exists( self.cfg['private']['home'] ) :

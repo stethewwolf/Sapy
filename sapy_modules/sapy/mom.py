@@ -39,15 +39,17 @@ class Mom(object):  # movement of money
         id = None,
         value=0,
         cause="not specified",
-        time=datetime.datetime.today().date()
-    ):
+        year=datetime.datetime.today().date().year,
+        month=datetime.datetime.today().date().month,
+        day=datetime.datetime.today().date().day
+        ):
         self.value = float(value)
         self.cause = cause  # description of money movement
-        self.time = time
+        self.time = datetime.date(int(year),int(month),int(day))
 
         if id == None:
             cur = db_iface.get_cursor()
-            cur.execute( "insert into moms (value,cause,date) values ( ?, ?, ?)", (value,cause,time, ))
+            cur.execute( "insert into moms (value,cause,date) values ( ?, ?, ?)", (self.value,self.cause,self.time, ))
 
             cur.execute("select id from moms order by id DESC ;")
             self.id = cur.fetchone()[0]
@@ -92,18 +94,10 @@ class Mom(object):  # movement of money
             if 'year' in source['time']         \
                 and 'month' in source['time']   \
                 and 'day' in source['time'] :     
-                self.time = datetime.datetime(
-                    int(source['time']['year']),
-                    int(source['time']['month']),
-                    int(source['time']['day']),
-                )
-            elif 'year' in source['time']       \
-                and 'month' in source['time']   \
-                and 'day' in source['time']:
-                self.time = datetime.datetime(
-                    int(source['time']['year']),
-                    int(source['time']['month']),
-                    int(source['time']['day']),
+                self.time = datetime.date(
+                    year=int(source['time']['year']),
+                    month=int(source['time']['month']),
+                    day=int(source['time']['day'])
                 )
 
     def compare(self, mom):
@@ -131,4 +125,26 @@ class Mom(object):  # movement of money
         self.cause = None
         self.time  = None
         self.id    = None
- 
+
+    def update(
+            self,
+            new_value= None,
+            new_cause= None,
+            new_year = None,
+            new_month= None,
+            new_day  = None
+        ):
+        cur = db_iface.get_cursor()
+
+        if new_value:
+            cur.execute("UPDATE moms SET value=? WHERE id=?;", (new_value, self.id, ))
+        
+        if new_cause:
+            cur.execute("UPDATE moms SET cause=? WHERE id=?;", (new_cause, self.id, ))
+        
+        if new_year and new_month and new_day:
+            new_time = datetime.date(year=new_year, month=new_month, day=new_day)
+            cur.execute("UPDATE moms SET date=? WHERE id=?;", (new_time, self.id, ))
+
+        db_iface.commit()
+        cur.close()

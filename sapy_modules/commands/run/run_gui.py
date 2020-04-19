@@ -28,19 +28,18 @@ from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
 from sapy_modules.gui.gtk.main_window_controller import main_window_controller
 
-class RunGui( Command ):
+class RunGui(Command):
     short_arg = SapyConstants.COMMANDS.RUN_GUI.SHORT_ARG
     long_arg = SapyConstants.COMMANDS.RUN_GUI.LONG_ARG
     cmd_help = SapyConstants.COMMANDS.RUN_GUI.HELP
     cmd_type = SapyConstants.COMMANDS.RUN_GUI.TYPE
     cmd_action = SapyConstants.COMMANDS.RUN_GUI.ACTION
 
-    def __init__( self, param ):
+    def __init__(self, param):
         super().__init__()
-        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
-        self.main_controller = main_window_controller()
+        self.logger=LoggerFactory.getLogger(str( self.__class__ ))
 
     def run( self ):
         self.logger.debug("start")
-        
+        self.main_controller = main_window_controller()
         self.main_controller.run()

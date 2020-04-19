@@ -9,6 +9,7 @@ Is designed to allow the creation of various lists of money moves and to compare
 * [sapy-v0.2](https://github.com/stethewwolf/Sapy/releases/tag/v0.2)
 
 ## Installation
+sudo dnf install python-matplotlib-gtk3 
 
 Download the tar, uncompress it and run the install.sh
 

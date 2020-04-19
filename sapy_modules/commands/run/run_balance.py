@@ -25,11 +25,9 @@ class RunBalance ( Command ):
     def run( self ):
         self.logger.debug("start")
 
-        l = loms.get_lom( SapyValues.get_value('lom') )
+        l = SapyValues.get_value('lom') 
 
         ed = SapyValues.get_value('end_date')
-
-        l = loms.get_lom( SapyValues.get_value('lom') )
         
         print('------------------------------')
         print(l.name)

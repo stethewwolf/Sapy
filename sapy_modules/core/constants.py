@@ -144,8 +144,3 @@ class FREQUENCY:
     MONTHLY = 'monthly'
     WEEKLY  = 'weekly'
     NONE    = None
-
-
-class LOMS:
-    EXPCTD = 'expected'
-    REAL    = 'real'

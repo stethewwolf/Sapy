@@ -17,17 +17,17 @@ class SetLom ( Command ):
     cmd_type = str
     cmd_action = None 
 
-    def __init__( self, param ):
+    def __init__(self, param):
         super().__init__( )
-        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.logger = LoggerFactory.getLogger(str( self.__class__ ))
         self.name=param
 
-    def run( self ):
+    def run(self):
         self.logger.debug("start")
 
         l = loms.get_lom(name=self.name)
 
         if l:
-            SapyValues.set_value('lom', l.id)
+            SapyValues.set_value('lom', l)
 
         self.logger.debug("end")
