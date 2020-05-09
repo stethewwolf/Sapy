@@ -1,29 +1,18 @@
-#!/usr/bin/python3
-#
-#   file : objectives.py
-#   author : stefano prina <stethewwolf@gmail.com>
-#
-# mit license
-#
-# copyright (c) 2017 stefano prina <stethewwolf@gmail.com>
-#
-# permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "software"), to deal
-# in the software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the software, and to permit persons to whom the software is
-# furnished to do so, subject to the following conditions:
-#
-#     the above copyright notice and this permission notice shall be included in all
-#     copies or substantial portions of the software.
-#
-#     the software is provided "as is", without warranty of any kind, express or
-#     implied, including but not limited to the warranties of merchantability,
-#     fitness for a particular purpose and noninfringement. in no event shall the
-#     authors or copyright holders be liable for any claim, damages or other
-#     liability, whether in an action of contract, tort or otherwise, arising from,
-#     out of or in connection with the software or the use or other dealings in the
-#     software.
+# Sapy
+# Copyright (C) 2018 stefano prina <stethewwolf@null.net> <stethewwolf@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime, copy
 import sapy_modules.commands.setter.set_end as se
