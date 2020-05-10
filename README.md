@@ -9,29 +9,33 @@ Is designed to allow the creation of various lists of money moves and to compare
 * [sapy-v0.2](https://github.com/stethewwolf/Sapy/releases/tag/v0.2)
 
 ## Installation
-sudo dnf install python-matplotlib-gtk3 
+
+### Prerequisites
+
+#### Fedora
+
+In order to run the application
+
+``` sudo dnf install python3-gobject gtk3 ```
+
+Packages neede to build 
+
+``` sudo dnf install cairo-gobject-devel gcc gobject-introspection-devel cairo-devel pkg-config python3-devel gtk3```
+
+#### Build and install 
 
 Download the tar, uncompress it and run the install.sh
 
 ```
-    wget https://github.com/stethewwolf/Sapy/archive/v0.2.tar.gz
-    tar -xf v0.1.tar.gz
-    cd Sapy-0.2
-    ./install.sh
+    wget https://github.com/stethewwolf/Sapy/archive/v<version>.tar.gz
+
+    cd sapy-v<version>
+
+    install.sh -p <path> # build and copy compressed app to path
+
+    # or
+
+    install.sh  # setup the system to use the current files
+
 
 ```
-
-## Screenshots
-
-### Main Tab
-
-![main tab](/images/maintab.png)
-
-### Lom Tab
-
-![lom tab](/images/lomtab.png)
-
-## thanks
-
-* [RAJKUMAR18](https://github.com/RAJKUMAR18)
-
