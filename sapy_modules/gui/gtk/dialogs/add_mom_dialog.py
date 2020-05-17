@@ -18,10 +18,9 @@
 import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import sapy_modules.sapy.mom as moms
+from sapy_modules.sapy import moms
 
-
-class add_mom_dialog_view(Gtk.MessageDialog):
+class Add_Mom_Dialog_View(Gtk.MessageDialog):
     def __init__(self, parent):
         Gtk.Dialog.__init__(self, "add new mom", parent, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -101,7 +100,7 @@ class add_mom_dialog_view(Gtk.MessageDialog):
         return new_mom
 
 
-class add_mom_dialog_controller(object):
+class Add_Mom_Dialog_Controller(object):
     def __init__(self):
         #TODO: only one lom is selected per time, when you selcet one, other
         #       are deselected

@@ -17,17 +17,13 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.gui.gtk.dialogs.select_lom_dialog import select_lom_dialog_view
-from sapy_modules.gui.gtk.dialogs.add_mom_dialog import add_mom_dialog_view
-from sapy_modules.gui.gtk.dialogs.del_mom_dialog import del_mom_dialog_view
-from sapy_modules.gui.gtk.dialogs.update_mom_dialog import update_mom_dialog_view
-from sapy_modules.gui.gtk.dialogs.plot_graph_dialog import plot_graph_dialog_view
+from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, Plot_Graph_Dialog_View
 
 from matplotlib.figure import Figure
 
 # -- Buttons
 # -- -- Select Lom Button
-class sapy_select_lom_button(Gtk.ToolButton):
+class Sapy_Select_Lom_Button(Gtk.ToolButton):
     def __init__(self, gtkWindow):
         Gtk.ToolButton.__init__(self)
         self.set_label("List")
@@ -35,7 +31,7 @@ class sapy_select_lom_button(Gtk.ToolButton):
         self.gtkWindow = gtkWindow
 
     def on_button_clicked(self, widget):
-        dialog = select_lom_dialog_view(self.gtkWindow)
+        dialog = Select_Lom_Dialog_View(self.gtkWindow)
 
         if dialog.run() == Gtk.ResponseType.OK:
             lom = dialog.get_selected_item()
@@ -44,9 +40,8 @@ class sapy_select_lom_button(Gtk.ToolButton):
 
         dialog.destroy()
 
-
 # -- -- Add Mom Button
-class sapy_add_mom_button(Gtk.ToolButton):
+class Sapy_Add_Mom_Button(Gtk.ToolButton):
     def __init__(self, gtkWindow):
         Gtk.ToolButton.__init__(self)
         self.set_label("Add")
@@ -54,7 +49,7 @@ class sapy_add_mom_button(Gtk.ToolButton):
         self.gtkWindow = gtkWindow
 
     def on_button_clicked(self, widget):
-        dialog = add_mom_dialog_view(self.gtkWindow)
+        dialog = Add_Mom_Dialog_View(self.gtkWindow)
 
         if dialog.run() == Gtk.ResponseType.OK:
             new_mom = dialog.get_mom()
@@ -62,7 +57,7 @@ class sapy_add_mom_button(Gtk.ToolButton):
 
         dialog.destroy()
 
-class sapy_del_mom_button(Gtk.ToolButton):
+class Sapy_Del_Mom_Button(Gtk.ToolButton):
     def __init__(self, gtkWindow):
         Gtk.ToolButton.__init__(self)
         self.set_label("Del")
@@ -77,8 +72,7 @@ class sapy_del_mom_button(Gtk.ToolButton):
 
         dialog.destroy()
 
-
-class sapy_edit_mom_button(Gtk.ToolButton):
+class Sapy_Edit_Mom_Button(Gtk.ToolButton):
     def __init__(self, gtkWindow):
         Gtk.ToolButton.__init__(self)
         self.set_label("Edit")
@@ -90,7 +84,7 @@ class sapy_edit_mom_button(Gtk.ToolButton):
             if mom_row[4] == True:
                 mom = self.gtkWindow.controller.lom.get_mom(id=mom_row[0])
 
-                dialog = update_mom_dialog_view(self.gtkWindow,mom)
+                dialog = Update_Mom_Dialog_View(self.gtkWindow,mom)
                 
                 if dialog.run() == Gtk.ResponseType.OK:
                     dialog.run_update_mom()
@@ -99,7 +93,7 @@ class sapy_edit_mom_button(Gtk.ToolButton):
         
         self.gtkWindow.controller.rebuild_list()
 
-class sapy_graph_button(Gtk.ToolButton):
+class Sapy_Graph_Button(Gtk.ToolButton):
     def __init__(self, gtkWindow):
         Gtk.ToolButton.__init__(self)
         self.set_label("Graph")
@@ -107,12 +101,12 @@ class sapy_graph_button(Gtk.ToolButton):
         self.gtkWindow = gtkWindow
 
     def on_button_clicked(self, widget):
-        dialog = plot_graph_dialog_view(self.gtkWindow)
+        dialog = Plot_Graph_Dialog_View(self.gtkWindow)
         dialog.run()
         dialog.destroy()
         pass
 
-class sapy_export_button(Gtk.ToolButton):
+class Sapy_Export_Button(Gtk.ToolButton):
     def __init__(self, gtkWindow):
         Gtk.ToolButton.__init__(self)
         self.set_label("Export")
@@ -122,7 +116,7 @@ class sapy_export_button(Gtk.ToolButton):
     def on_button_clicked(self, widget):
         pass
 
-class sapy_import_button(Gtk.ToolButton):
+class Sapy_Import_Button(Gtk.ToolButton):
     def __init__(self, gtkWindow):
         Gtk.ToolButton.__init__(self)
         self.set_label("Import")
@@ -137,24 +131,23 @@ class sapy_import_button(Gtk.ToolButton):
         
         dialog.destroy()
 
-
 # ----
-class sapy_main_toolbar(Gtk.Toolbar):
+class Sapy_Main_Toolbar(Gtk.Toolbar):
     def __init__ (self, window):
         Gtk.Toolbar.__init__(self)
         self.gtkWindow = window
 
-        self.add(sapy_select_lom_button(self.gtkWindow))
+        self.add(Sapy_Select_Lom_Button(self.gtkWindow))
 
-        self.add(sapy_add_mom_button(self.gtkWindow))
+        self.add(Sapy_Add_Mom_Button(self.gtkWindow))
 
-        self.add(sapy_del_mom_button(self.gtkWindow))
+        self.add(Sapy_Del_Mom_Button(self.gtkWindow))
 
-        self.add(sapy_edit_mom_button(self.gtkWindow))
+        self.add(Sapy_Edit_Mom_Button(self.gtkWindow))
 
-        self.add(sapy_graph_button(self.gtkWindow))
+        self.add(Sapy_Graph_Button(self.gtkWindow))
 
-        self.add(sapy_import_button(self.gtkWindow))
+        self.add(Sapy_Import_Button(self.gtkWindow))
 
         #self.add(sapy_export_button(self.gtkWindow))
 

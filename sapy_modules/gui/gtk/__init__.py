@@ -13,3 +13,10 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+__all__ = [ 'Main_Window_Controller', 'Sapy_Main_Toolbar', 'Main_Window_View']
+
+# deprecated to keep older scripts who import this from breaking
+from sapy_modules.gui.gtk.main_window_view import Main_Window_View
+from sapy_modules.gui.gtk.main_window_toolbar import Sapy_Main_Toolbar
+from sapy_modules.gui.gtk.main_window_controller import Main_Window_Controller

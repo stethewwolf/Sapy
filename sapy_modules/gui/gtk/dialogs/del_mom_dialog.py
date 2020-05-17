@@ -21,7 +21,7 @@ from gi.repository import Gtk
 import sapy_modules.sapy.mom as moms
 
 
-class del_mom_dialog_view(Gtk.MessageDialog):
+class Del_Mom_Dialog_View(Gtk.MessageDialog):
     def __init__(self, parent):
         Gtk.Dialog.__init__(self, "add new mom", parent, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -35,6 +35,6 @@ class del_mom_dialog_view(Gtk.MessageDialog):
         box.add(label)
         self.show_all()
 
-class del_mom_dialog_controller(object):
+class Del_Mom_Dialog_Controller(object):
     def __init__(self):
         pass 

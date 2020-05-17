@@ -19,7 +19,7 @@ from sapy_modules.core import LoggerFactory
 from sapy_modules.core import SingleConfig
 from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
-from sapy_modules.gui.gtk.main_window_controller import main_window_controller
+from sapy_modules.gui.gtk import Main_Window_Controller
 
 class RunGui(Command):
     short_arg = SapyConstants.COMMANDS.RUN_GUI.SHORT_ARG
@@ -34,5 +34,5 @@ class RunGui(Command):
 
     def run( self ):
         self.logger.debug("start")
-        self.main_controller = main_window_controller()
+        self.main_controller = Main_Window_Controller()
         self.main_controller.run()

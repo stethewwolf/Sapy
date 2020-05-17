@@ -14,14 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = [
-    "Mom",
-    "Lom",
-    "moms",
-    "loms"
-
-
-]
+__all__ = [ "Mom", "Lom", "moms", "loms" ]
 
 # deprecated to keep older scripts who import this from breaking
 from sapy_modules.sapy.mom import Mom

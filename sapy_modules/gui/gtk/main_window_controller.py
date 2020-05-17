@@ -14,14 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sapy_modules.sapy.lom as loms
+from sapy_modules.gui.gtk import Main_Window_View
+from sapy_modules.sapy import loms
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import datetime
 
 
-class main_window_controller(object):
+class Main_Window_Controller(object):
 
     def __init__(self):
         self.lom_list = loms.get_loms()
@@ -29,7 +30,7 @@ class main_window_controller(object):
         self.view = None
         self.moms_store = Gtk.ListStore(int, str, float, str, bool) # id cause, value, date
         self.set_list(self.lom_list[0].name)
-        self.view = main_window_view(self)
+        self.view = Main_Window_View(self)
 
     def set_list(self, lom_name):
         self.lom = loms.get_lom(name=lom_name)

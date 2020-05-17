@@ -18,10 +18,10 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import sapy_modules.gui.gtk.main_window_toolbar as tlb
+from sapy_modules.gui.gtk.main_window_toolbar import Sapy_Main_Toolbar
 
-class main_window_view(Gtk.Window):
 
+class Main_Window_View(Gtk.Window):
     def __init__(self, controller):
         Gtk.Window.__init__(self)
         self.connect("destroy", Gtk.main_quit)
@@ -39,7 +39,7 @@ class main_window_view(Gtk.Window):
         # menu button row
         row = Gtk.ListBoxRow()
 
-        row.add(tlb.sapy_main_toolbar(self))
+        row.add(Sapy_Main_Toolbar(self))
 
         self.main_listbox.add(row)
 

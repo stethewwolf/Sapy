@@ -15,14 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
-
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-
-class select_lom_dialog_view(Gtk.MessageDialog):
+class Select_Lom_Dialog_View(Gtk.MessageDialog):
     def __init__(self, parent):
         Gtk.Dialog.__init__(self, "Select List", parent, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -52,7 +49,7 @@ class select_lom_dialog_view(Gtk.MessageDialog):
                 break
         return ret
 
-class select_lom_dialog_controller(object):
+class Select_Lom_Dialog_Controller(object):
     def __init__(self):
         #TODO: only one lom is selected per time, when you selcet one, other
         #       are deselected

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-__all__ = ['mlogger', 'config', 'constants' ]
+__all__ = ['LoggerFactory', 'SingleConfig', 'SapyConstants' ]
 
 # deprecated to keep older scripts who import this from breaking
 import sapy_modules.core.mlogger as LoggerFactory
