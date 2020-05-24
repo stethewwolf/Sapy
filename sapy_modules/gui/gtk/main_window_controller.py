@@ -23,7 +23,6 @@ import datetime
 
 
 class Main_Window_Controller(object):
-
     def __init__(self):
         self.lom_list = loms.get_loms()
         self.lom = None
@@ -79,7 +78,6 @@ class Main_Window_Controller(object):
                 self.moms_store.append([mom.id, mom.cause, mom.value, mom.time.strftime('%d-%m-%Y'), False])
 
         pass
-
 
     def add_mom(self, mom):
         self.lom.add([mom])
