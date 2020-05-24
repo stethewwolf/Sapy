@@ -55,6 +55,8 @@ class Select_Lom_Dialog_Controller(object):
         for lom in view.parent.controller.lom_list:
             btn = Lom_List_Item(lom, view.lom_button_box)
             view.lom_button_box.add(btn)
+            if lom.id == view.parent.controller.lom.id:
+                btn.set_active(True)
             
 
 class Lom_List_Item(Gtk.ToggleButton):
