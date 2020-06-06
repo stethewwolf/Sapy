@@ -122,3 +122,5 @@ sapy_lib/views
 
 #glade autosve
 *.glade~
+
+*.spec

@@ -28,17 +28,16 @@ class Main_Window_Controller(object):
         self.lom = None
         self.view = None
         self.moms_store = Gtk.ListStore(int, str, float, str, bool) # id cause, value, date
-        self.set_list(self.lom_list[0].name)
         self.view = Main_Window_View(self)
+        self.set_list(self.lom_list[0].name)
 
     def set_list(self, lom_name):
         self.lom = loms.get_lom(name=lom_name)
 
-        if not self.view:
-            date = datetime.datetime.today().date()
-        else:
-            raw_date = self.view.calendar.get_date()
-            date = datetime.date(year = raw_date.year, month = raw_date.month+1, day = raw_date.day)
+        date = datetime.datetime.today().date()
+        #raw_date = self.view.calendar.get_date()
+        #date = datetime.date(year = raw_date.year, month = raw_date.month+1, day = raw_date.day)
+        self.view.list_label.set_label( lom_name )
 
         sd = date - datetime.timedelta(days=15) # start date
         ed = date + datetime.timedelta(days=15) # end date

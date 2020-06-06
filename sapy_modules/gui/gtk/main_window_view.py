@@ -45,11 +45,15 @@ class Main_Window_View(Gtk.Window):
 
         # calendar row
         row = Gtk.ListBoxRow()
-        self.calendar = Gtk.Calendar()
-        self.connect("button-press-event",self.controller.rebuild_list)
+        self.list_label = Gtk.Label("List")
+
+        #self.calendar = Gtk.Calendar()
+        #self.connect("button-press-event",self.controller.rebuild_list)
         #self.connect("month-changed",self.controller.rebuild_list)
         #self.connect("day-changed",self.controller.rebuild_list)
-        row.add(self.calendar)
+        row.add(self.list_label)
+
+
 
         self.main_listbox.add(row)
 
@@ -86,4 +90,3 @@ class Main_Window_View(Gtk.Window):
         self.show_all()
         Gtk.main()
     
-        
