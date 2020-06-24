@@ -66,7 +66,7 @@ class Add_Mom_Dialog_View(Gtk.MessageDialog):
         
         date_label = Gtk.Label("Date")
         self.date_entry = Gtk.Entry()
-        self.date_entry.set_placeholder_text("dd/mm/yyyy")
+        self.date_entry.set_placeholder_text("dd-mm-yyyy")
 
         grid.attach_next_to(
                 date_label, 

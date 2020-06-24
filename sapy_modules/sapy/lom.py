@@ -21,6 +21,8 @@ import sapy_modules.commands.setter.set_end as se
 from sapy_modules.core import LoggerFactory
 import datetime,csv
 
+
+
 class Lom(object):  # list of movements
     def __init__(
         self,
@@ -67,30 +69,53 @@ class Lom(object):  # list of movements
         mlist = []
         cur = db_iface.get_cursor()
 
-        cur.execute( "SELECT * from moms where moms.id in (select mom_id from mom_in_lom where lom_id = ? );", (self.id, ) )
+        query0 = """
+                SELECT * FROM (
+                    SELECT id,value,cause,date,lom_id 
+                        FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
+                    )
+                where lom_id = ? 
+                """
+        query1 = """
+                SELECT * FROM (
+                    SELECT id,value,cause,date,lom_id 
+                        FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
+                    )
+                where lom_id = ? and  date <= ?
+                """
+        query2 = """
+                SELECT * FROM (
+                    SELECT id,value,cause,date,lom_id 
+                        FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
+                    )
+                where lom_id = ? and date >= ? 
+                """
+        query3 = """
+                SELECT * FROM (
+                    SELECT id,value,cause,date,lom_id 
+                        FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
+                    )
+                where lom_id = ? and date >= ? and date <= ?
+                """
+                
+        if start_date is None and end_date is None:
+            cur.execute(query0, (self.id, ) )
+        elif start_date is None and end_date is not None:
+            cur.execute(query1, (self.id,end_date.strftime('%Y-%m-%d') ) )
+        elif start_date is not None and end_date is None:
+            cur.execute(query2, (self.id,start_date.strftime('%Y-%m-%d') ) )
+        elif start_date is not None and end_date is not None:
+            cur.execute(query3, (self.id, start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d') ) )
 
         for raw in cur.fetchall():
             raw_year = raw[3].split('-')[0]
             raw_month = raw[3].split('-')[1]
             raw_day = raw[3].split('-')[2]
-            m = Mom(id=raw[0], value=raw[1], cause=raw[2], year=raw_year, month=raw_month, day=raw_day)
-            md = datetime.date(year = m.time.year, month = m.time.month, day = m.time.day)
-            sd = datetime.date(year = start_date.year, month = start_date.month, day = start_date.day)
-            ed = datetime.date(year = end_date.year, month = end_date.month, day = end_date.day)
-            
-            if sd and ed :
-                if md >= sd and md <= ed:
-                    mlist.append( m )
-            elif sd is None and ed :
-                if md <= ed:
-                    mlist.append( m )
-            elif start_date and end_date is None :
-                if md >= sd :
-                    mlist.append( m )
-            else:
-                mlist.append( m )
-                
+            mom = Mom(id=raw[0], value=raw[1], cause=raw[2], year=raw_year, month=raw_month, day=raw_day)
+            mlist.append(mom)
+
         cur.close()
+
         return mlist
 
     def get_mom(self,id):
@@ -149,8 +174,15 @@ class Lom(object):  # list of movements
 
     def balance(self, start_date=None, end_date=None):
         balance = 0
+
+        print("----------------------")
         for m in self.get_moms(start_date=start_date,end_date=end_date):
             balance += m.value
+            print(str(m.value) + str(m.time))
+            
+        print("----------------------")
+        print(balance)
+        print("----------------------")
         
         return balance
 

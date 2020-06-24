@@ -26,57 +26,51 @@ class Main_Window_Controller(object):
     def __init__(self):
         self.lom_list = loms.get_loms()
         self.lom = None
-        self.view = None
+
+        self.date = datetime.datetime.today().date()
+        self.start_date = (self.date - datetime.timedelta(days=15)) # start date
+        self.end_date = (self.date + datetime.timedelta(days=15))   # end date
+        self.balance_value = 0
+
         self.moms_store = Gtk.ListStore(int, str, float, str, bool) # id cause, value, date
         self.view = Main_Window_View(self)
         self.set_list(self.lom_list[0].name)
+        self.calc_balance()
 
     def set_list(self, lom_name):
         self.lom = loms.get_lom(name=lom_name)
 
-        date = datetime.datetime.today().date()
-        #raw_date = self.view.calendar.get_date()
-        #date = datetime.date(year = raw_date.year, month = raw_date.month+1, day = raw_date.day)
-        self.view.list_label.set_label( lom_name )
+        self.view.list_label.set_label(lom_name)
 
-        sd = date - datetime.timedelta(days=15) # start date
-        ed = date + datetime.timedelta(days=15) # end date
-
-        moms = self.lom.get_moms(start_date=sd, end_date=ed)
+        moms = self.lom.get_moms(start_date=self.start_date, end_date=self.end_date)
 
         self.moms_store.clear()
 
         if len(moms) == 0:
             self.moms_store.append([-1, "-", 0, "-", False])
         else :
-            for mom in self.lom.get_moms(start_date=sd, end_date=ed):
+            for mom in self.lom.get_moms(start_date=self.start_date, end_date=self.end_date):
                 self.moms_store.append([mom.id, mom.cause, mom.value, mom.time.strftime('%d-%m-%Y'), False])
-
-        pass
+        
+        self.calc_balance()
 
     def rebuild_list(self, widget=None, event=None):
-        print("list updated")
-        if not self.view:
-            date = datetime.datetime.today().date()
-        else:
-            raw_date = self.view.calendar.get_date()
-            print(raw_date)
-            date = datetime.date(year = raw_date.year, month = raw_date.month+1, day = raw_date.day)
 
-        sd = date - datetime.timedelta(days=15) # start date
-        ed = date + datetime.timedelta(days=15) # end date
-
-        moms = self.lom.get_moms(start_date=sd, end_date=ed)
+        moms = self.lom.get_moms(start_date=self.start_date, end_date=self.end_date)
 
         self.moms_store.clear()
 
         if len(moms) == 0:
             self.moms_store.append([-1, "-", 0, "-", False])
         else :
-            for mom in self.lom.get_moms(start_date=sd, end_date=ed):
+            for mom in self.lom.get_moms(start_date=self.start_date, end_date=self.end_date):
                 self.moms_store.append([mom.id, mom.cause, mom.value, mom.time.strftime('%d-%m-%Y'), False])
 
-        pass
+    def calc_balance(self):
+        self.balance_value = self.lom.balance(end_date=self.date)
+
+        self.view.balance_value_label.set_label(str(self.balance_value))
+        print(self.balance_value)
 
     def add_mom(self, mom):
         self.lom.add([mom])

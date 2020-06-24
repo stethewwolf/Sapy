@@ -24,7 +24,8 @@ __all__ = [
     'Select_Lom_Dialog_Controller',
     'Select_Lom_Dialog_View',
     'Update_Mom_Dialog_Controller',
-    'Update_Mom_Dialog_View'
+    'Update_Mom_Dialog_View',
+    'Date_Picker'
     ]
 
 # deprecated to keep older scripts who import this from breaking
@@ -38,3 +39,4 @@ from sapy_modules.gui.gtk.dialogs.select_lom_dialog import Select_Lom_Dialog_Con
 from sapy_modules.gui.gtk.dialogs.select_lom_dialog import Select_Lom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.update_mom_dialog import Update_Mom_Dialog_Controller
 from sapy_modules.gui.gtk.dialogs.update_mom_dialog import Update_Mom_Dialog_View
+from sapy_modules.gui.gtk.dialogs.date_picker import Date_Picker

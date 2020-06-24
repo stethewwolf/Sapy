@@ -23,9 +23,9 @@ from matplotlib.figure import Figure
 
 # -- Buttons
 # -- -- Select Lom Button
-class Sapy_Select_Lom_Button(Gtk.ToolButton):
+class Sapy_Select_Lom_Button(Gtk.Button):
     def __init__(self, gtkWindow):
-        Gtk.ToolButton.__init__(self)
+        Gtk.Button.__init__(self)
         self.set_label("List")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
@@ -41,9 +41,9 @@ class Sapy_Select_Lom_Button(Gtk.ToolButton):
         dialog.destroy()
 
 # -- -- Add Mom Button
-class Sapy_Add_Mom_Button(Gtk.ToolButton):
+class Sapy_Add_Mom_Button(Gtk.Button):
     def __init__(self, gtkWindow):
-        Gtk.ToolButton.__init__(self)
+        Gtk.Button.__init__(self)
         self.set_label("Add")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
@@ -57,24 +57,24 @@ class Sapy_Add_Mom_Button(Gtk.ToolButton):
 
         dialog.destroy()
 
-class Sapy_Del_Mom_Button(Gtk.ToolButton):
+class Sapy_Del_Mom_Button(Gtk.Button):
     def __init__(self, gtkWindow):
-        Gtk.ToolButton.__init__(self)
+        Gtk.Button.__init__(self)
         self.set_label("Del")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
 
     def on_button_clicked(self, widget):
-        dialog = del_mom_dialog_view(self.gtkWindow)
+        dialog = Del_Mom_Dialog_View(self.gtkWindow)
 
         if dialog.run() == Gtk.ResponseType.OK:
             self.gtkWindow.controller.del_mom()
 
         dialog.destroy()
 
-class Sapy_Edit_Mom_Button(Gtk.ToolButton):
+class Sapy_Edit_Mom_Button(Gtk.Button):
     def __init__(self, gtkWindow):
-        Gtk.ToolButton.__init__(self)
+        Gtk.Button.__init__(self)
         self.set_label("Edit")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
@@ -93,9 +93,9 @@ class Sapy_Edit_Mom_Button(Gtk.ToolButton):
         
         self.gtkWindow.controller.rebuild_list()
 
-class Sapy_Graph_Button(Gtk.ToolButton):
+class Sapy_Graph_Button(Gtk.Button):
     def __init__(self, gtkWindow):
-        Gtk.ToolButton.__init__(self)
+        Gtk.Button.__init__(self)
         self.set_label("Graph")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
@@ -106,9 +106,9 @@ class Sapy_Graph_Button(Gtk.ToolButton):
         dialog.destroy()
         pass
 
-class Sapy_Export_Button(Gtk.ToolButton):
+class Sapy_Export_Button(Gtk.Button):
     def __init__(self, gtkWindow):
-        Gtk.ToolButton.__init__(self)
+        Gtk.Button.__init__(self)
         self.set_label("Export")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
@@ -116,9 +116,9 @@ class Sapy_Export_Button(Gtk.ToolButton):
     def on_button_clicked(self, widget):
         pass
 
-class Sapy_Import_Button(Gtk.ToolButton):
+class Sapy_Import_Button(Gtk.Button):
     def __init__(self, gtkWindow):
-        Gtk.ToolButton.__init__(self)
+        Gtk.Button.__init__(self)
         self.set_label("Import")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
@@ -132,10 +132,12 @@ class Sapy_Import_Button(Gtk.ToolButton):
         dialog.destroy()
 
 # ----
-class Sapy_Main_Toolbar(Gtk.Toolbar):
+class Sapy_Main_Toolbar(Gtk.ButtonBox):
     def __init__ (self, window):
-        Gtk.Toolbar.__init__(self)
+        Gtk.ButtonBox.__init__(self)
         self.gtkWindow = window
+        self.set_property("expand", False)
+        print(self.get_property("expand"))
 
         self.add(Sapy_Select_Lom_Button(self.gtkWindow))
 

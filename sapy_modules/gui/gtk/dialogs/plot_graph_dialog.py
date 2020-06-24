@@ -38,11 +38,8 @@ class Plot_Graph_Dialog_View(Gtk.MessageDialog):
         fig = Figure(figsize=(5,5), dpi=100)
         ax = fig.add_subplot(111)
 
-        raw_date = parent.calendar.get_date()
-        date = datetime.date(year=raw_date.year, month=raw_date.month+1, day=raw_date.day)
-
-        sd = date - datetime.timedelta(days=15) # start date
-        ed = date + datetime.timedelta(days=15) # end dat
+        sd = self.parent.controller.start_date
+        ed = self.parent.controller.start_date
 
         for lom in loms.get_loms():
             graph_data = lom.balance_per_day(start_date=sd,end_date=ed)
@@ -59,7 +56,6 @@ class Plot_Graph_Dialog_View(Gtk.MessageDialog):
 
         box.add(canvas) 
         self.show_all()
-
 
 class Plot_Graph_Dialog_Controller(object):
     def __init__(self):
