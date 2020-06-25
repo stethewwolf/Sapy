@@ -162,7 +162,7 @@ xdg_exists_f() {
 
 # Shows a description of the available options
 display_help_f() {
-  printf "\nThis script will add a Saoy desktop shortcut, menu item,\n"
+  printf "\nThis script will add a Sapy desktop shortcut, menu item,\n"
   printf "icons for the current user.\n"
   if ! xdg_exists_f; then
     printf "\nxdg-utils are recommended to be installed, so this script can use them.\n"
@@ -173,7 +173,7 @@ display_help_f() {
   printf "\t-u, --uninstall\t\tRemoves shortcut, menu item and icons.\n\n"
   printf "\t-h, --help\t\tShows this help again.\n\n"
 
-  printf "In order to change the install path export PREFIX befor run install"
+  printf "In order to change the install path export PREFIX befor run install\n"
 }
 
 # Build binary
