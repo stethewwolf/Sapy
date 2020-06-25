@@ -29,8 +29,16 @@ RESOURCE_NAME=sapy-stethewwolf
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd )
 cd "${SCRIPT_PATH}"
 
-# Default mode is to install.
+#check if the user set the PREFIX
+if [ -z $PREFIX ]; then
+  PREFIX="$HOME/.local/bin"
+fi
+
+# Default mode is to do nothing and print help.
 UNINSTALL=false
+INSTALL=false
+BUILD_INSTALL=false
+
 
 # If possible, get location of the desktop folder. Default to ~/Desktop
 XDG_DESKTOP_DIR="${HOME}/Desktop"
@@ -44,8 +52,11 @@ xdg_install_f() {
   # Create a temp dir accessible by all users
   TMP_DIR=`mktemp --directory`
 
+  # Create link in path
+  ln -s $SCRIPT_PATH/sapy $PREFIX/sapy
+
   # Create *.desktop file using the existing template file
-  sed -e "s,<BINARY_LOCATION>,${SCRIPT_PATH},g" \
+  sed -e "s,<BINARY_LOCATION>,${PREFIX},g" \
       -e "s,<ICON_NAME>,${RESOURCE_NAME},g" "${SCRIPT_PATH}/desktop.template" > "${TMP_DIR}/${RESOURCE_NAME}.desktop"
 
   # Install the icon files using name and resolutions
@@ -69,8 +80,11 @@ simple_install_f() {
   # Create a temp dir accessible by all users
   TMP_DIR=`mktemp --directory`
 
+# Create link in path
+  ln -s $SCRIPT_PATH/sapy $PREFIX/sapy
+
   # Create *.desktop file using the existing template file
-  sed -e "s,<BINARY_LOCATION>,${SCRIPT_PATH},g" \
+  sed -e "s,<BINARY_LOCATION>,${PREFIX},g" \
       -e "s,<ICON_NAME>,${RESOURCE_NAME},g" "${SCRIPT_PATH}/desktop.template" > "${TMP_DIR}/${RESOURCE_NAME}.desktop"
 
   mkdir -p "${HOME}/.local/share/applications"
@@ -92,6 +106,11 @@ simple_install_f() {
 # Uninstall using xdg-utils
 xdg_uninstall_f() {
 
+  # Clean PREFIX 
+  if [ -f $PREFIX/sapy ];then
+    rm -v $PREFIX/sapy
+  fi
+
   # Remove *.desktop file
   xdg-desktop-menu uninstall ${RESOURCE_NAME}.desktop
 
@@ -106,14 +125,18 @@ xdg_uninstall_f() {
 
 # Uninstall by simply removing desktop files (fallback), incl. old one
 simple_uninstall_f() {
+  # Clean PREFIX 
+  if [ -f $PREFIX/sapy ];then
+    rm -v $PREFIX/sapy
+  fi
 
   # delete legacy cruft .desktop file
   if [ -f "${HOME}/.local/share/applications/${RESOURCE_NAME}.desktop" ]; then
-    rm "${HOME}/.local/share/applications/${RESOURCE_NAME}.desktop"
+    rm -v "${HOME}/.local/share/applications/${RESOURCE_NAME}.desktop"
   fi
 
   if [ -f "${XDG_DESKTOP_DIR}/${RESOURCE_NAME}.desktop" ]; then
-    rm "${XDG_DESKTOP_DIR}/${RESOURCE_NAME}.desktop"
+    rm -v "${XDG_DESKTOP_DIR}/${RESOURCE_NAME}.desktop"
   fi
 
 }
@@ -145,9 +168,73 @@ display_help_f() {
     printf "\nxdg-utils are recommended to be installed, so this script can use them.\n"
   fi
   printf "\nOptional arguments are:\n\n"
+  printf "\t-i, --install\t\tAdd shortcut, menu item and icons; files containde in $SCRIPT_PATH will be used.\n\n"
+  printf "\t-b, --build-install\tBuild a binary, install it on \$PREFIX=$PREFIX and add shortcut, menu item and icons.\n\n"
   printf "\t-u, --uninstall\t\tRemoves shortcut, menu item and icons.\n\n"
   printf "\t-h, --help\t\tShows this help again.\n\n"
+
+  printf "In order to change the install path export PREFIX befor run install"
 }
+
+# Build binary
+build_sapy_binary_f() {
+  if [ ! -d $PREFIX ]; then
+    mkdir -p $PREFIX
+  fi
+
+  $SCRIPT_PATH/build.sh install $PREFIX
+}
+
+# Install build binary using xdg-utils
+xdg_build_install_f() {
+
+  # Create a temp dir accessible by all users
+  TMP_DIR=`mktemp --directory`
+
+  # Create *.desktop file using the existing template file
+  sed -e "s,<BINARY_LOCATION>,${PREFIX},g" \
+      -e "s,<ICON_NAME>,${RESOURCE_NAME},g" "${SCRIPT_PATH}/desktop.template" > "${TMP_DIR}/${RESOURCE_NAME}.desktop"
+
+  # Install the icon files using name and resolutions
+  xdg-icon-resource install --context apps --size 32 "${SCRIPT_PATH}/icon/icon.png" $RESOURCE_NAME
+
+  # Install the created *.desktop file
+  xdg-desktop-menu install "${TMP_DIR}/${RESOURCE_NAME}.desktop"
+
+  # Create icon on the desktop
+  xdg-desktop-icon install "${TMP_DIR}/${RESOURCE_NAME}.desktop"
+
+  # Clean up
+  rm "${TMP_DIR}/${RESOURCE_NAME}.desktop"
+  rmdir "$TMP_DIR"
+}
+
+# Install by simply copying desktop file (fallback)
+simple_build_install_f() {
+
+  # Create a temp dir accessible by all users
+  TMP_DIR=`mktemp --directory`
+
+  # Create *.desktop file using the existing template file
+  sed -e "s,<BINARY_LOCATION>,${PREFIX},g" \
+      -e "s,<ICON_NAME>,${RESOURCE_NAME},g" "${SCRIPT_PATH}/desktop.template" > "${TMP_DIR}/${RESOURCE_NAME}.desktop"
+
+  mkdir -p "${HOME}/.local/share/applications"
+  cp "${TMP_DIR}/${RESOURCE_NAME}.desktop" "${HOME}/.local/share/applications/"
+
+  # Copy desktop icon if desktop dir exists (was found)
+  if [ -d "${XDG_DESKTOP_DIR}" ]; then
+   cp "${TMP_DIR}/${RESOURCE_NAME}.desktop" "${XDG_DESKTOP_DIR}/"
+   # Altering file permissions to avoid "Untrusted Application Launcher" error on Ubuntu
+   chmod u+x "${XDG_DESKTOP_DIR}/${RESOURCE_NAME}.desktop"
+  fi
+
+  # Clean up temp dir
+  rm "${TMP_DIR}/${RESOURCE_NAME}.desktop"
+  rmdir "${TMP_DIR}"
+
+}
+
 
 # Check for provided arguments
 while [ $# -gt 0 ] ; do
@@ -155,6 +242,14 @@ while [ $# -gt 0 ] ; do
   case $ARG in
       -u|--uninstall)
         UNINSTALL=true
+        shift
+      ;;
+      -i|--install)
+        INSTALL=true
+        shift
+      ;;
+      -b|--build-install)
+        BUILD_INSTALL=true
         shift
       ;;
       -h|--help)
@@ -175,23 +270,53 @@ if xdg_exists_f; then
     printf "Removing desktop shortcut and menu item for Sapy..."
     xdg_uninstall_f
     simple_uninstall_f
-  else
+    updatedbs_f
+    printf " done!\n"
+ 
+  elif [ ${INSTALL} = true ]; then
     printf "Adding desktop shortcut, menu item for Sapy..."
     xdg_uninstall_f
     simple_uninstall_f
     xdg_install_f
+    updatedbs_f
+    printf " done!\n"
+ 
+  elif [ ${BUILD_INSTALL} = true ]; then
+    printf "Building and adding desktop shortcut, menu item for Sapy..."
+    xdg_uninstall_f
+    simple_uninstall_f
+    build_sapy_binary_f
+    xdg_build_install_f
+    updatedbs_f
+    printf " done!\n"
+ 
+  else
+    display_help_f
   fi
 else
   if [ ${UNINSTALL} = true ]; then
     printf "Removing desktop shortcut and menu item for Sapy..."
     simple_uninstall_f
-  else
+    updatedbs_f
+    printf " done!\n"
+ 
+  elif [ ${INSTALL} = true ]; then
     printf "Adding desktop shortcut and menu item for Sapy..."
     simple_uninstall_f
     simple_install_f
+    updatedbs_f
+    printf " done!\n"
+ 
+  elif [ ${BUILD_INSTALL} = true ]; then
+    printf "Building and adding desktop shortcut, menu item for Sapy..."
+    simple_uninstall_f
+    build_sapy_binary_f
+    simple_build_install_f
+    updatedbs_f
+    printf " done!\n"
+  else
+    display_help_f
   fi
 fi
-updatedbs_f
-printf " done!\n"
 
 exit 0
