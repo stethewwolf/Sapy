@@ -17,7 +17,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, Plot_Graph_Dialog_View
+from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, Plot_Graph_Dialog_View, No_Item_Selected
 
 from matplotlib.figure import Figure
 
@@ -65,12 +65,19 @@ class Sapy_Del_Mom_Button(Gtk.Button):
         self.gtkWindow = gtkWindow
 
     def on_button_clicked(self, widget):
-        dialog = Del_Mom_Dialog_View(self.gtkWindow)
 
-        if dialog.run() == Gtk.ResponseType.OK:
-            self.gtkWindow.controller.del_mom()
+        if self.gtkWindow.controller.has_mom_selected():
+            dialog = Del_Mom_Dialog_View(self.gtkWindow)
 
-        dialog.destroy()
+            if dialog.run() == Gtk.ResponseType.OK:
+                self.gtkWindow.controller.del_mom()
+
+            dialog.destroy()
+        else:
+            dialog = No_Item_Selected(self.gtkWindow)
+            dialog.run()
+            dialog.destroy()
+
 
 class Sapy_Edit_Mom_Button(Gtk.Button):
     def __init__(self, gtkWindow):
@@ -80,17 +87,23 @@ class Sapy_Edit_Mom_Button(Gtk.Button):
         self.gtkWindow = gtkWindow
 
     def on_button_clicked(self, widget):
-        for mom_row in self.gtkWindow.controller.moms_store:
-            if mom_row[4] == True:
-                mom = self.gtkWindow.controller.lom.get_mom(id=mom_row[0])
+        if self.gtkWindow.controller.has_mom_selected():
+            for mom_row in self.gtkWindow.controller.moms_store:
+                if mom_row[4] == True:
+                    mom = self.gtkWindow.controller.lom.get_mom(id=mom_row[0])
 
-                dialog = Update_Mom_Dialog_View(self.gtkWindow,mom)
-                
-                if dialog.run() == Gtk.ResponseType.OK:
-                    dialog.run_update_mom()
+                    dialog = Update_Mom_Dialog_View(self.gtkWindow,mom)
+
+                    if dialog.run() == Gtk.ResponseType.OK:
+                        dialog.run_update_mom()
         
-                dialog.destroy()
-        
+                    dialog.destroy()
+        else:
+            dialog = No_Item_Selected(self.gtkWindow)
+            dialog.run()
+            dialog.destroy()
+
+       
         self.gtkWindow.controller.rebuild_list()
 
 class Sapy_Graph_Button(Gtk.Button):

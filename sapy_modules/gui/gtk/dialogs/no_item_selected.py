@@ -18,23 +18,22 @@
 import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import sapy_modules.sapy.mom as moms
 
-
-class Del_Mom_Dialog_View(Gtk.MessageDialog):
+class No_Item_Selected(Gtk.MessageDialog):
     def __init__(self, parent):
-        Gtk.MessageDialog.__init__(self, "add new mom", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        Gtk.MessageDialog.__init__(
+                self,
+                parent,
+                0,
+                Gtk.MessageType.INFO,
+                Gtk.ButtonsType.OK,
+                "No Item Selected",
+               )
+
         self.set_default_size(150, 100)
 
-        box = self.get_content_area()
+        self.format_secondary_text(
+            "Before perform this action select an item in movements list"
+        )
 
-        label = Gtk.Label("Are you shure to delete selected movements of money")
-
-        box.add(label)
         self.show_all()
-
-class Del_Mom_Dialog_Controller(object):
-    def __init__(self):
-        pass 

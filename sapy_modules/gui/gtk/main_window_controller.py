@@ -86,5 +86,14 @@ class Main_Window_Controller(object):
             
                 self.moms_store.remove(mom_row.iter)
 
+    def has_mom_selected(self):
+        for mom_row in self.moms_store:
+            if mom_row[4]:
+                mom_selected = self.lom.get_mom(mom_row[0])
+                return True
+
+        return False
+
+
     def run (self):
         self.view.main()
