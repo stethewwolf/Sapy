@@ -70,7 +70,6 @@ class Main_Window_Controller(object):
         self.balance_value = self.lom.balance(end_date=self.date)
 
         self.view.balance_value_label.set_label(str(self.balance_value))
-        print(self.balance_value)
 
     def add_mom(self, mom):
         self.lom.add([mom])

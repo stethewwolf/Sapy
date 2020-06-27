@@ -159,7 +159,6 @@ class Sapy_Main_Toolbar(Gtk.ButtonBox):
         Gtk.ButtonBox.__init__(self)
         self.gtkWindow = window
         self.set_property("expand", False)
-        print(self.get_property("expand"))
 
         self.add(Sapy_Select_Lom_Button(self.gtkWindow))
 
