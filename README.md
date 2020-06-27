@@ -1,12 +1,8 @@
 # SAPY
 
 The purpose of this softeware is to allow a quick view of your personal budget.
-Is designed to allow the creation of various lists of money moves and to compare them graphically.
-
-## Releases
-
-* [sapy-v0.1](https://github.com/stethewwolf/Sapy/releases/tag/v0.1)
-* [sapy-v0.2](https://github.com/stethewwolf/Sapy/releases/tag/v0.2)
+Is designed to allow the creation of various lists of money moves and to compare
+ them graphically.
 
 ## Installation
 
@@ -16,26 +12,149 @@ Is designed to allow the creation of various lists of money moves and to compare
 
 In order to run the application
 
-``` sudo dnf install python3-gobject gtk3 ```
+```sudo dnf install python3-gobject gtk3 ```
 
 Packages neede to build 
 
-``` sudo dnf install cairo-gobject-devel gcc gobject-introspection-devel cairo-devel pkg-config python3-devel gtk3```
+```
+	sudo dnf install cairo-gobject-devel gcc gobject-introspection-devel \\ 
+					 cairo-devel pkg-config python3-devel gtk3
+```
 
-#### Build and install 
+### Download and Install 
 
-Download the tar, uncompress it and run the install.sh
+The following commands will 
+ * download the application 
+ * extract it to ~/.local/Sapy-<version>
+ * create laucher in menu
+ * create a link in user PATH ( export PREFIX to define)
 
 ```
-    wget https://github.com/stethewwolf/Sapy/archive/v<version>.tar.gz
+    $ wget https://github.com/stethewwolf/Sapy/archive/v<version>.tar.gz -O sapy-v<version>.tar.gz
 
-    cd sapy-v<version>
+    $ tar -xf sapy-<version>.tar.gz -C $HOME/.local/
 
-    install.sh -p <path> # build and copy compressed app to path
+    $ cd $HOME/.local/Sapy-<version>
 
-    # or
+    $ install.sh -i
+```
 
-    install.sh  # setup the system to use the current files
+## Usage
 
+### Command Line
+
+#### Dsiplay Help
+```
+$ sapy -h
+usage: Sapy [-h] [--add ADD] [--graph] [--gui] [--import IMPORT] [--list LIST]
+            [--rm RM] [--version] [--balance] [--daily] [--end-date END_DATE]
+            [--id ID] [--monthly] [--lom LOM] [--start-date START_DATE]
+            [--value VALUE] [--weekly] [--cause CAUSE] [--date DATE]
+            [--name NAME] [--new-year] [--new-month] [--end-week]
+            [--end-month]
+
+A spending traking tool
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --add ADD, -a ADD     add new item, takes : mom | lom | obj | tag
+  --graph, -g           print the graph
+  --gui                 run the application in grafical mode
+  --import IMPORT, -i IMPORT
+                        import data from csv file
+  --list LIST, -l LIST  list things, target lom | mom | tag | obj
+  --rm RM, -r RM        remove target : lom | mom | tag | obj
+  --version, -V         print the version
+  --balance, -b         print the actual balance of the list
+  --daily, -D           set daily occurance
+  --end-date END_DATE   set end date
+  --id ID               specify id for operation
+  --monthly             set monthly occurrance
+  --lom LOM             specify the list of money ( lom )
+  --start-date START_DATE
+                        set start date
+  --value VALUE, -v VALUE
+                        set value
+  --weekly              set weekly occurrance
+  --cause CAUSE, -c CAUSE
+                        set cause
+  --date DATE, -d DATE  set the date for the operation
+  --name NAME           set the name
+  --new-year            start a new year
+  --new-month           start a new month
+  --end-week            ends the week, and insert real movement
+  --end-month           ends the month
 
 ```
+#### Display Version
+
+```
+[stethewwolf@hel ~]$ sapy -V
+Sapy - 1.0.0
+	
+                        Stefano Prina <stethewwolf@gmail.com>
+                         
+
+```
+#### List available list of movements
+```
+$ sapy -l lom
+------------------------------
+	id	|	name	          
+------------------------------
+	1	|	real	
+	2	|	expected	
+------------------------------
+```
+
+#### List movements on a list
+```
+$ sapy -l mom --lom real
+
+------------------------------
+real
+------------------------------
+	id	|	time	|	value	|	cause	
+	6	|	2010-06-22	|	-8.89	|	Stuff
+------------------------------
+ balance : -8.89
+------------------------------
+
+```
+
+
+#### Add a Movement
+
+#### Remove Movement
+
+#### Import From CSV File
+
+### GUI
+
+#### Select A List
+
+#### Add a Movement
+
+#### Remove Movement
+
+#### Import From CSV File
+
+## Notes
+
+### CSV File Format
+
+The CSV file you are importing must have following columns 
+
+  * cause,
+
+  * value,
+
+  * day,
+
+  * month,
+
+  * year
+
+the delimiter for decimal values is the char '.'
+
+the file must not include the header line at the beginning
