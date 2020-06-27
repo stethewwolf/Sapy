@@ -21,11 +21,12 @@ from gi.repository import Gtk
 import sapy_modules.sapy.mom as moms
 
 
-class Del_Mom_Dialog_View(Gtk.MessageDialog):
+class Del_Mom_Dialog_View(Gtk.Dialog):
     def __init__(self, parent):
-        Gtk.MessageDialog.__init__(self, "add new mom", parent, 0,
+        Gtk.Dialog.__init__(self, "delete movements", parent, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              Gtk.STOCK_OK, Gtk.ResponseType.OK))
+
         self.set_default_size(150, 100)
 
         box = self.get_content_area()

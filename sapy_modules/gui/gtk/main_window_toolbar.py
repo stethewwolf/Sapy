@@ -78,7 +78,6 @@ class Sapy_Del_Mom_Button(Gtk.Button):
             dialog.run()
             dialog.destroy()
 
-
 class Sapy_Edit_Mom_Button(Gtk.Button):
     def __init__(self, gtkWindow):
         Gtk.Button.__init__(self)

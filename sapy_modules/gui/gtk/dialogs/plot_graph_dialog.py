@@ -28,9 +28,15 @@ from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as Figur
 
 class Plot_Graph_Dialog_View(Gtk.MessageDialog):
     def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "Graph", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
+        Gtk.MessageDialog.__init__(
+                self,
+                parent,
+                0,
+                Gtk.MessageType.INFO,
+                Gtk.ButtonsType.OK,
+                "Graph",
+               )
+
         self.set_default_size(150, 100)
         self.parent = parent
         box = self.get_content_area()
@@ -39,7 +45,7 @@ class Plot_Graph_Dialog_View(Gtk.MessageDialog):
         ax = fig.add_subplot(111)
 
         sd = self.parent.controller.start_date
-        ed = self.parent.controller.start_date
+        ed = self.parent.controller.end_date
 
         for lom in loms.get_loms():
             graph_data = lom.balance_per_day(start_date=sd,end_date=ed)

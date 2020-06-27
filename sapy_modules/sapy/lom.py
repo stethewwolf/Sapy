@@ -187,6 +187,7 @@ class Lom(object):  # list of movements
         return balance
 
     def balance_per_day(self, start_date=None, end_date=None):
+        base_balance = self.balance(end_date=start_date)
         moms = self.get_moms(start_date=start_date,end_date=end_date)
 
         dates = []
@@ -205,7 +206,7 @@ class Lom(object):  # list of movements
         time_delta = datetime.timedelta(days=1)
 
         while min_date <= max_date:
-            day_balance = 0
+            day_balance = base_balance
 
             for mom in self.get_moms(start_date=min_date,end_date=min_date):
                 day_balance += mom.value
@@ -214,6 +215,7 @@ class Lom(object):  # list of movements
             values.append(day_balance)
 
             min_date += time_delta
+            base_balance = day_balance
 
         return (dates,values)
 
