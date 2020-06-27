@@ -22,7 +22,7 @@ class APP :
     DESCRIPTION     = 'A spending traking tool'
     HOME            = '.sapy'
     CONF_FILE       = 'conf.ini'
-    VERSION         = '1.0.0'
+    VERSION         = '1.1.0'
     AUTHORS         = """
                         Stefano Prina <stethewwolf@gmail.com>
                          """
