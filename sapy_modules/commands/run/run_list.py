@@ -75,19 +75,19 @@ class RunList ( Command ):
 
     def list_lom(self):
         print('------------------------------')
-        print('\tid\t|\tname\t|')
+        print('\tid\t|\tname\t')
         print('------------------------------')
         for l in loms.get_loms():
-            print('\t{}\t|\t{}\t|'.format(l.id,l.name))
+            print('\t{}\t|\t{}\t'.format(l.id,l.name))
         print('------------------------------')
         return loms.get_loms()
 
     def list_tag(self):
         print('------------------------------')
-        print('\tid\t|\tname\t|')
+        print('\tid\t|\tname\t')
         print('------------------------------')
         for t in tags.get_tags():
-            print('\t{}\t|\t{}\t|'.format(t.id,t.name))
+            print('\t{}\t|\t{}\t'.format(t.id,t.name))
         print('------------------------------')
 
     def list_obj(self):
@@ -95,5 +95,5 @@ class RunList ( Command ):
         print('\tid\t|\tdescription\t|\tduedate\t|')
         print('------------------------------')
         for t in objs.get_objs(self.logger):
-            print('\t{}\t|\t{}\t|\t{}\t|'.format(t.id,t.description,t.duedate))
+            print('\t{}\t|\t{}\t|\t{}\t'.format(t.id,t.description,t.duedate))
         print('------------------------------')
