@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stethewwolf@null.net> <stethewwolf@gmail.com>
+# Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -146,7 +146,6 @@ class Lom(object):  # list of movements
             #], dialect=m_dialect)
 
             for raw_mom in data:
-                #print(raw_mom)
                 #raw_year  = raw_mom['date'].split('.')[2]
                 #raw_month = raw_mom['date'].split('.')[1]
                 #raw_day = raw_mom['date'].split('.')[0]
@@ -171,19 +170,12 @@ class Lom(object):  # list of movements
 
         self.add(mom_list)
 
-
     def balance(self, start_date=None, end_date=None):
         balance = 0
 
-        print("----------------------")
         for m in self.get_moms(start_date=start_date,end_date=end_date):
             balance += m.value
-            print(str(m.value) + str(m.time))
             
-        print("----------------------")
-        print(balance)
-        print("----------------------")
-        
         return balance
 
     def balance_per_day(self, start_date=None, end_date=None):

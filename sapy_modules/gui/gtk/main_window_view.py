@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stethewwolf@null.net> <stethewwolf@gmail.com>
+# Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -70,6 +70,8 @@ class Main_Window_View(Gtk.Window):
         external_box.pack_start(self.list_label,False,False,5)
        
         # lom pane
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.tree = Gtk.TreeView(self.controller.moms_store)
         self.tree.append_column (
             Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
@@ -88,7 +90,8 @@ class Main_Window_View(Gtk.Window):
         render_toggle.connect("toggled",self.toggle_checkbox_mom)
         self.tree.append_column(Gtk.TreeViewColumn("",render_toggle, active=4))
 
-        external_box.pack_start(self.tree,False,False,10)
+        scrolled_window.add(self.tree)
+        external_box.pack_start(scrolled_window,True,True,10)
 
         # balance row
         grid = Gtk.Grid()

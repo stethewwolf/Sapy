@@ -19,7 +19,7 @@ import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-class No_Item_Selected(Gtk.MessageDialog):
+class Csv_Structure_Display_Message(Gtk.MessageDialog):
     def __init__(self, parent):
         Gtk.MessageDialog.__init__(
                 self,
@@ -27,13 +27,23 @@ class No_Item_Selected(Gtk.MessageDialog):
                 0,
                 Gtk.MessageType.INFO,
                 Gtk.ButtonsType.OK,
-                "No Item Selected",
+                "CSV Structure",
                )
 
         self.set_default_size(150, 100)
 
         self.format_secondary_text(
-            "Before perform this action select an item in movements list"
+            """
+            The CSV file you are importing must have following columns 
+              * cause,
+              * value,
+              * day,
+              * month,
+              * year
+
+            the delimiter for decimal values is the char '.'
+            the file must not include the header line at the beginning
+            """
         )
 
         self.show_all()

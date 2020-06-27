@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stethewwolf@null.net> <stethewwolf@gmail.com>
+# Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,12 +68,4 @@ class Lom_List_Item(Gtk.ToggleButton):
     def on_button_clicked(self, button):
         for btn in self.button_box.get_children():
             if btn.get_active() and btn.get_label() != self.get_label() :
-                print("active")
                 self.set_active(False)
-            else:
-                print("not active")
-
-        
-        #self.do_toggled()
-        #self.set_active(True)
-        

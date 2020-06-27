@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stethewwolf@null.net> <stethewwolf@gmail.com>
+# Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, Plot_Graph_Dialog_View, No_Item_Selected
+from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, Plot_Graph_Dialog_View, No_Item_Selected,Csv_Structure_Display_Message
 
 from matplotlib.figure import Figure
 
@@ -136,6 +136,10 @@ class Sapy_Import_Button(Gtk.Button):
         self.gtkWindow = gtkWindow
 
     def on_button_clicked(self, widget):
+        dialog = Csv_Structure_Display_Message(self.gtkWindow)
+        dialog.run()
+        dialog.destroy()
+
         dialog = Gtk.FileChooserDialog("Select file to import", self.gtkWindow, Gtk.FileChooserAction.OPEN,(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
         filter = Gtk.FileFilter()
         filter.set_name("CSV")

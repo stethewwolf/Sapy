@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stethewwolf@null.net> <stethewwolf@gmail.com>
+# Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,8 @@ __all__ = [
     'Update_Mom_Dialog_Controller',
     'Update_Mom_Dialog_View',
     'Date_Picker',
-    'No_Item_Selected'
+    'No_Item_Selected',
+    'Csv_Structure_Display_Message'
     ]
 
 # deprecated to keep older scripts who import this from breaking
@@ -42,3 +43,4 @@ from sapy_modules.gui.gtk.dialogs.update_mom_dialog import Update_Mom_Dialog_Con
 from sapy_modules.gui.gtk.dialogs.update_mom_dialog import Update_Mom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.date_picker import Date_Picker
 from sapy_modules.gui.gtk.dialogs.no_item_selected import No_Item_Selected
+from sapy_modules.gui.gtk.dialogs.csv_structure_display_message import Csv_Structure_Display_Message
