@@ -125,6 +125,12 @@ class Sapy_Import_Button(Gtk.Button):
 
     def on_button_clicked(self, widget):
         dialog = Gtk.FileChooserDialog("Select file to import", self.gtkWindow, Gtk.FileChooserAction.OPEN,(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        filter = Gtk.FileFilter()
+        filter.set_name("CSV")
+        filter.add_pattern("*.csv")
+        filter.add_pattern("*.CSV")
+
+        dialog.add_filter(filter)
 
         if dialog.run() == Gtk.ResponseType.OK:
             self.gtkWindow.controller.lom.csv_import(dialog.get_file())
