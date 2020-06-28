@@ -12,14 +12,14 @@ Is designed to allow the creation of various lists of money moves and to compare
 
 In order to run the application
 
-```sudo dnf install python3-gobject gtk3 ```
+```sudo dnf install python3-matplotlib python3-matplotlib-gtk3```
 
-Packages neede to build 
+#### Ubuntu
 
-```
-	sudo dnf install cairo-gobject-devel gcc gobject-introspection-devel \\ 
-					 cairo-devel pkg-config python3-devel gtk3
-```
+In order to run the application
+
+```sudo apt install python3-matplotlib```
+
 
 ### Download and Install 
 
