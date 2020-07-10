@@ -14,8 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = ['Main_Window_View']
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from sapy_modules.gui.gtk.dialogs import Date_Picker
 
-# deprecated to keep older scripts who import this from breaking
-from sapy_modules.gui.gtk.main_window_view import Main_Window_View
-
+class New_Lom_Page(Gtk.VBox):
+    def __init(self, parent):
+        self.controller = New_Lom_Page_controller(self)
+        
+     
+class New_Lom_Page_controller(object):
+    def __init__(self,view):
+        self.view = view

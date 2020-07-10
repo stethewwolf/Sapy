@@ -125,7 +125,7 @@ class CommandLine_Parser( object ):
                 command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
                 count += 1
 
-            if count > 0 :
+            if count > 1 :
                 self.logger.warn("it is possible use only one task")
                 break
 

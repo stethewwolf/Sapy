@@ -17,60 +17,44 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, Plot_Graph_Dialog_View, No_Item_Selected,Csv_Structure_Display_Message
+from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, No_Item_Selected,Csv_Structure_Display_Message
 
-from matplotlib.figure import Figure
 
 # -- Buttons
-# -- -- Select Lom Button
-class Sapy_Select_Lom_Button(Gtk.Button):
-    def __init__(self, gtkWindow):
-        Gtk.Button.__init__(self)
-        self.set_label("List")
-        self.connect("clicked",self.on_button_clicked)
-        self.gtkWindow = gtkWindow
-
-    def on_button_clicked(self, widget):
-        dialog = Select_Lom_Dialog_View(self.gtkWindow)
-
-        if dialog.run() == Gtk.ResponseType.OK:
-            lom = dialog.get_selected_item()
-            if lom: 
-                self.gtkWindow.controller.set_list(lom)
-
-        dialog.destroy()
 
 # -- -- Add Mom Button
 class Sapy_Add_Mom_Button(Gtk.Button):
-    def __init__(self, gtkWindow):
+    def __init__(self, parent, gtkWindow):
         Gtk.Button.__init__(self)
         self.set_label("Add")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
+        self.lom_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
         dialog = Add_Mom_Dialog_View(self.gtkWindow)
 
         if dialog.run() == Gtk.ResponseType.OK:
             new_mom = dialog.get_mom()
-            self.gtkWindow.controller.add_mom(new_mom)
+            self.lom_ctrl.add_mom(new_mom)
 
         dialog.destroy()
 
 class Sapy_Del_Mom_Button(Gtk.Button):
-    def __init__(self, gtkWindow):
+    def __init__(self, parent, gtkWindow):
         Gtk.Button.__init__(self)
         self.set_label("Del")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
+        self.lom_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
 
-        if self.gtkWindow.controller.has_mom_selected():
+        if self.lom_ctrl.has_mom_selected():
             dialog = Del_Mom_Dialog_View(self.gtkWindow)
 
             if dialog.run() == Gtk.ResponseType.OK:
-                self.gtkWindow.controller.del_mom()
+                self.lom_ctrl.del_mom()
 
             dialog.destroy()
         else:
@@ -79,17 +63,18 @@ class Sapy_Del_Mom_Button(Gtk.Button):
             dialog.destroy()
 
 class Sapy_Edit_Mom_Button(Gtk.Button):
-    def __init__(self, gtkWindow):
+    def __init__(self, parent, gtkWindow):
         Gtk.Button.__init__(self)
         self.set_label("Edit")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
+        self.lom_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
-        if self.gtkWindow.controller.has_mom_selected():
-            for mom_row in self.gtkWindow.controller.moms_store:
+        if self.lom_ctrl.has_mom_selected():
+            for mom_row in self.lom_ctrl.moms_store:
                 if mom_row[4] == True:
-                    mom = self.gtkWindow.controller.lom.get_mom(id=mom_row[0])
+                    mom = self.lom_ctrl.lom.get_mom(id=mom_row[0])
 
                     dialog = Update_Mom_Dialog_View(self.gtkWindow,mom)
 
@@ -103,37 +88,26 @@ class Sapy_Edit_Mom_Button(Gtk.Button):
             dialog.destroy()
 
        
-        self.gtkWindow.controller.rebuild_list()
-
-class Sapy_Graph_Button(Gtk.Button):
-    def __init__(self, gtkWindow):
-        Gtk.Button.__init__(self)
-        self.set_label("Graph")
-        self.connect("clicked",self.on_button_clicked)
-        self.gtkWindow = gtkWindow
-
-    def on_button_clicked(self, widget):
-        dialog = Plot_Graph_Dialog_View(self.gtkWindow)
-        dialog.run()
-        dialog.destroy()
-        pass
+        self.lom_ctrl.update_lom_list()
 
 class Sapy_Export_Button(Gtk.Button):
-    def __init__(self, gtkWindow):
+    def __init__(self, parent, gtkWindow):
         Gtk.Button.__init__(self)
         self.set_label("Export")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
+        self.lom_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
         pass
 
 class Sapy_Import_Button(Gtk.Button):
-    def __init__(self, gtkWindow):
+    def __init__(self, parent, gtkWindow):
         Gtk.Button.__init__(self)
         self.set_label("Import")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
+        self.lom_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
         dialog = Csv_Structure_Display_Message(self.gtkWindow)
@@ -149,28 +123,25 @@ class Sapy_Import_Button(Gtk.Button):
         dialog.add_filter(filter)
 
         if dialog.run() == Gtk.ResponseType.OK:
-            self.gtkWindow.controller.lom.csv_import(dialog.get_file())
+            self.lom_ctrl.lom.csv_import(dialog.get_file())
         
         dialog.destroy()
 
 # ----
-class Sapy_Main_Toolbar(Gtk.ButtonBox):
-    def __init__ (self, window):
+class Lom_Page_Toolbar(Gtk.ButtonBox):
+    def __init__ (self, parent):
         Gtk.ButtonBox.__init__(self)
-        self.gtkWindow = window
         self.set_property("expand", False)
+        self.gtkWindow = parent.gtkWindow
+        self.parent = parent
 
-        self.add(Sapy_Select_Lom_Button(self.gtkWindow))
+        self.add(Sapy_Add_Mom_Button(self, self.gtkWindow))
 
-        self.add(Sapy_Add_Mom_Button(self.gtkWindow))
+        self.add(Sapy_Del_Mom_Button(self, self.gtkWindow))
 
-        self.add(Sapy_Del_Mom_Button(self.gtkWindow))
+        self.add(Sapy_Edit_Mom_Button(self, self.gtkWindow))
 
-        self.add(Sapy_Edit_Mom_Button(self.gtkWindow))
-
-        self.add(Sapy_Graph_Button(self.gtkWindow))
-
-        self.add(Sapy_Import_Button(self.gtkWindow))
+        self.add(Sapy_Import_Button(self, self.gtkWindow))
 
         #self.add(sapy_export_button(self.gtkWindow))
 

@@ -68,7 +68,7 @@ class Add_Mom_Dialog_View(Gtk.MessageDialog):
         
 
         #Date selection
-        date = parent.controller.date
+        date = datetime.datetime.today().date()
 
         date_label = Gtk.Label("Date")
 
