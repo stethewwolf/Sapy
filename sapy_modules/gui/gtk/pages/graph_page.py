@@ -61,10 +61,18 @@ class Graph_Page(Gtk.VBox):
 
 
         self.controller.update_loms()
-        self.canvas = None
+        
+        self.fig = Figure(figsize=(5,5), dpi=100)
+        
+        #fig.legend()
+        self.ax = self.fig.add_subplot(111)
+        canvas = FigureCanvas(self.fig)
+        canvas.set_size_request(400,400)
+        self.pack_start(canvas, True, True, 10)
+
         self.controller.update_plot()
 
-        self.pack_start(self.canvas, True, True, 10)
+        
 
 
 
@@ -80,21 +88,18 @@ class Graph_Page_Controller(object):
         self.loms = loms.get_loms()
 
     def update_plot(self):
-        fig = Figure(figsize=(5,5), dpi=100)
-        ax = fig.add_subplot(111)
+        self.view.ax.clear()        
 
         for lom in self.loms:
             graph_data = lom.balance_per_day(start_date=self.start_date,end_date=self.end_date)
-            ax.scatter(mp.dates.date2num(graph_data[0]), graph_data[1], label=lom.name, marker="_")
+            self.view.ax.scatter(mp.dates.date2num(graph_data[0]), graph_data[1], label=lom.name, marker="_")
 
-        ax.set_xlim(self.start_date, self.end_date)
+        self.view.ax.set_xlim(self.start_date, self.end_date)
+        
 
-        fig.autofmt_xdate()
-        fig.legend()
-        ax.plot()
+        self.view.ax.plot()
 
-        self.view.canvas = FigureCanvas(fig)
-        self.view.canvas.set_size_request(400,400)
+        self.view.fig.autofmt_xdate()
 
     def update_loms(self):
         self.loms = loms.get_loms()
