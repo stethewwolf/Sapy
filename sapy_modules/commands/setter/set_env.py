@@ -22,6 +22,9 @@ from sapy_modules.core import SapyConstants
 from sapy_modules.commands.command import Command
 import sapy_modules.core.values as SapyValues
 import sapy_modules.sapy.lom as loms
+import sapy_modules.sapy.mom as moms
+import sapy_modules.sapy.tags as tags
+import sapy_modules.sapy.objectives as objs
 import os, sqlite3
 
 class SetEnv( Command ):
@@ -55,17 +58,14 @@ class SetEnv( Command ):
         if not os.path.exists( self.cfg['private']['data'] ) :
             db_iface.open()
             cur = db_iface.get_cursor()
-
-            cur.execute( SapyValues.get_value('db.create.moms') )
-            cur.execute( SapyValues.get_value('db.create.mom_in_lom') )
-            cur.execute( SapyValues.get_value('db.create.loms') )
-            cur.execute( SapyValues.get_value('db.populate.lom') )
-            cur.execute( SapyValues.get_value('db.create.objectives') )
-            cur.execute( SapyValues.get_value('db.create.tags') )
-            cur.execute( SapyValues.get_value('db.create.tag_in_mom') )
-
+            cur.execute(SapyValues.get_value('db.create.app_meta') )
+            cur.execute(SapyValues.get_value('db.populate.app_meta'),(SapyConstants.APP.VERSION,))
             db_iface.commit()
             cur.close()
-        else :
+            moms.create_tables()
+            loms.create_tables()
+            tags.create_tables()
+            objs.create_tables()
+        else:
             db_iface.open()
 

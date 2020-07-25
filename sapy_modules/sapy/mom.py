@@ -17,6 +17,33 @@
 import datetime, copy
 import sapy_modules.core.db as db_iface
 
+## Queries
+CREATE_TABLE = """
+    CREATE TABLE "moms" (
+        "id"    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        "value" REAL NOT NULL,
+        "cause" TEXT,
+        "date"  TEXT NOT NULL
+    );""" 
+DELETE_MOM = "DELETE FROM moms WHERE id = ?;"
+DELETE_MOM_LINK = "DELETE FROM mom_in_lom WHERE mom_id = ?;"
+INSERT_MOM = "INSERT INTO moms (value,cause,date) VALUES ( ?, ?, ?);"
+GET_LAST_MOM = "SELECT id FROM moms ORDER BY id DESC ;"
+UPDATE_MOM_VALUE = "UPDATE moms SET value=? WHERE id=?;"
+UPDATE_MOM_CAUSE = "UPDATE moms SET cause=? WHERE id=?;"
+UPDATE_MOM_TIME = "UPDATE moms SET date=? WHERE id=?;"
+SET_TAB_VERSION = """INSERT INTO "app_meta" ("key","value") VALUES ("mom_tab_version",?)"""
+
+TAB_VERSION = 1
+
+def create_tables():
+    cur = db_iface.get_cursor()
+    cur.execute(CREATE_TABLE)
+    cur.execute(SET_TAB_VERSION,(TAB_VERSION,))
+    db_iface.commit()
+    cur.close()
+
+
 class Mom(object):  # movement of money
     """
     Class Movemet of Money, this is the base
@@ -25,12 +52,12 @@ class Mom(object):  # movement of money
 
     def __init__(
         self,
-        id = None,
-        value=0,
-        cause="not specified",
-        year=datetime.datetime.today().date().year,
-        month=datetime.datetime.today().date().month,
-        day=datetime.datetime.today().date().day
+        id:int=None,
+        value:float=0,
+        cause:str="not specified",
+        year:int=datetime.datetime.today().date().year,
+        month:int=datetime.datetime.today().date().month,
+        day:int=datetime.datetime.today().date().day
         ):
         self.value = float(value)
         self.cause = cause  # description of money movement
@@ -38,9 +65,9 @@ class Mom(object):  # movement of money
 
         if id == None:
             cur = db_iface.get_cursor()
-            cur.execute( "insert into moms (value,cause,date) values ( ?, ?, ?)", (self.value,self.cause,self.time, ))
+            cur.execute(INSERT_MOM, (self.value,self.cause,self.time,))
 
-            cur.execute("select id from moms order by id DESC ;")
+            cur.execute(GET_LAST_MOM)
             self.id = cur.fetchone()[0]
     
             db_iface.commit()
@@ -106,8 +133,8 @@ class Mom(object):  # movement of money
 
     def delete(self):
         cur = db_iface.get_cursor()
-        cur.execute( "delete from moms where id = ?", (self.id, ))
-        cur.execute( "delete from mom_in_lom where mom_id = ?", (self.id, ))
+        cur.execute(DELETE_MOM, (self.id, ))
+        cur.execute(DELETE_MOM_LINK, (self.id, ))
         db_iface.commit()
         cur.close()
         self.value = None
@@ -126,14 +153,14 @@ class Mom(object):  # movement of money
         cur = db_iface.get_cursor()
 
         if new_value:
-            cur.execute("UPDATE moms SET value=? WHERE id=?;", (new_value, self.id, ))
+            cur.execute(UPDATE_MOM_VALUE, (new_value, self.id, ))
         
         if new_cause:
-            cur.execute("UPDATE moms SET cause=? WHERE id=?;", (new_cause, self.id, ))
+            cur.execute(UPDATE_MOM_TIME, (new_cause, self.id, ))
         
         if new_year and new_month and new_day:
             new_time = datetime.date(year=new_year, month=new_month, day=new_day)
-            cur.execute("UPDATE moms SET date=? WHERE id=?;", (new_time, self.id, ))
+            cur.execute(UPDATE_MOM_TIME, (new_time, self.id, ))
 
         db_iface.commit()
         cur.close()

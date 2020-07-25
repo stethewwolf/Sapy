@@ -22,11 +22,10 @@ class APP :
     DESCRIPTION     = 'A spending traking tool'
     HOME            = '.sapy'
     CONF_FILE       = 'conf.ini'
-    VERSION         = '1.1.0'
+    VERSION         = '2.0.0'
     AUTHORS         = """
                         Stefano Prina <stethewwolf@gmail.com>
                          """
-
 
 class DATE:
     FORMATS = [ 
@@ -45,10 +44,8 @@ class DATE:
         '.'
         ]
 
-
 class DB:
     FILE                    = 'data.sqlite3'
-
 
 class COMMANDS:
     class CMD:

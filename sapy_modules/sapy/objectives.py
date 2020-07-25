@@ -18,6 +18,23 @@ import datetime, copy
 import sapy_modules.commands.setter.set_end as se
 import sapy_modules.core.db as db_iface
 
+CREATE_TABLE_OBJECTIVES = """
+    CREATE TABLE "objectives" 
+        ( "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
+        "description" TEXT, 
+        "duedate"	TEXT )
+        """
+SET_TAB_VERSION = """INSERT INTO "app_meta" ("key","value") VALUES ("obj_tab_version",?)"""
+
+TAB_VERSION = 1
+
+def create_tables():
+    cur = db_iface.get_cursor()
+    cur.execute(CREATE_TABLE_OBJECTIVES)
+    cur.execute(SET_TAB_VERSION,(TAB_VERSION,))
+    db_iface.commit()
+    cur.close()
+
 class Objective(object):  # movement of money
     """
     Class Objective, this is the base

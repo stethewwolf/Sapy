@@ -14,11 +14,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-
 import datetime, copy
 import sapy_modules.core.db as db_iface
+CREATE_TAB_TAG = """
+     CREATE TABLE "tags" (
+     "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+     "name"	TEXT
+    );"""
+CREATE_TAB_TAG_IN_MOM ="""
+    CREATE TABLE "tag_in_mom" (
+        "mom_id"	INTEGER NOT NULL,
+        "tag_id"	INTEGER NOT NULL,
+        PRIMARY KEY("mom_id","tag_id")
+        )"""
 
+SET_TAB_VERSION = """INSERT INTO "app_meta" ("key","value") VALUES ("tag_tab_version",?)"""
+
+TAB_VERSION = 1
+
+
+def create_tables():
+    cur = db_iface.get_cursor()
+    cur.execute(CREATE_TAB_TAG)
+    cur.execute(CREATE_TAB_TAG_IN_MOM)
+    cur.execute(SET_TAB_VERSION,(TAB_VERSION,))
+    db_iface.commit()
+    cur.close()
 
 class Tag(object):  # movement of money
     """
