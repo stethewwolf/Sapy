@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = [ 'Lom_Page', 'New_Lom_Page', 'Graph_Page']
+__all__ = [ 'Lom_Page', 'Home_Page']
 
 # deprecated to keep older scripts who import this from breaking
 from sapy_modules.gui.gtk.pages.lom_page import Lom_Page
-from sapy_modules.gui.gtk.pages.new_lom_page import New_Lom_Page
-from sapy_modules.gui.gtk.pages.graph_page import Graph_Page
+from sapy_modules.gui.gtk.pages.home_page import Home_Page
 
 

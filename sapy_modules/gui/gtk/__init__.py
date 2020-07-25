@@ -17,5 +17,5 @@
 __all__ = ['Main_Window_View']
 
 # deprecated to keep older scripts who import this from breaking
-from sapy_modules.gui.gtk.main_window_view import Main_Window_View
+from sapy_modules.gui.gtk.main_window import Main_Window_View
 
