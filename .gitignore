@@ -124,3 +124,6 @@ sapy_lib/views
 *.glade~
 
 *.spec
+
+#vim swap files
+*.swp
