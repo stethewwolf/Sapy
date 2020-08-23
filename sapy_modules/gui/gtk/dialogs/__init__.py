@@ -19,6 +19,7 @@ __all__ = [
     'Add_Lom_Dialog_View',
     'Add_Mom_Dialog_Controller',
     'Del_Mom_Dialog_View',
+    'Del_Lom_Dialog_View',
     'Del_Mom_Dialog_Controller',
     'Select_Lom_Dialog_Controller',
     'Select_Lom_Dialog_View',
@@ -34,6 +35,7 @@ from sapy_modules.gui.gtk.dialogs.add_mom_dialog import Add_Mom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.add_lom_dialog import Add_Lom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.add_mom_dialog import Add_Mom_Dialog_Controller
 from sapy_modules.gui.gtk.dialogs.del_mom_dialog import Del_Mom_Dialog_View
+from sapy_modules.gui.gtk.dialogs.del_lom_dialog import Del_Lom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.del_mom_dialog import Del_Mom_Dialog_Controller
 from sapy_modules.gui.gtk.dialogs.select_lom_dialog import Select_Lom_Dialog_Controller
 from sapy_modules.gui.gtk.dialogs.select_lom_dialog import Select_Lom_Dialog_View

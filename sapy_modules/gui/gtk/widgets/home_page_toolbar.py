@@ -18,7 +18,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sapy_modules.gui.gtk.dialogs import No_Item_Selected, \
-        Csv_Structure_Display_Message, Add_Lom_Dialog_View
+        Csv_Structure_Display_Message, Add_Lom_Dialog_View, \
+        Del_Lom_Dialog_View
 
 
 # -- Buttons
@@ -51,18 +52,17 @@ class Sapy_Del_Lom_Button(Gtk.Button):
         self.lom_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
-        pass
-        #if self.lom_ctrl.has_mom_selected():
-        #    dialog = Del_Mom_Dialog_View(self.gtkWindow)
-        #
-        #    if dialog.run() == Gtk.ResponseType.OK:
-        #        self.lom_ctrl.del_mom()
-        #
-        #    dialog.destroy()
-        #else:
-        #    dialog = No_Item_Selected(self.gtkWindow)
-        #    dialog.run()
-        #    dialog.destroy()
+        if self.lom_ctrl.has_lom_selected():
+            dialog = Del_Lom_Dialog_View(self.gtkWindow)
+
+            if dialog.run() == Gtk.ResponseType.OK:
+                self.lom_ctrl.del_lom()
+
+            dialog.destroy()
+        else:
+            dialog = No_Item_Selected(self.gtkWindow)
+            dialog.run()
+            dialog.destroy()
 
 class Sapy_Edit_Lom_Button(Gtk.Button):
     def __init__(self, parent, gtkWindow):

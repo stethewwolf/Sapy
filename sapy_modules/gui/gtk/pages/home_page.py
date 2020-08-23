@@ -168,3 +168,21 @@ class Home_Page_Controller(object):
 
     def add_lom_tab(self, lom):
         self.view.gtkWindow.controller.add_lom_page(lom)
+
+    def del_lom(self):
+        for lom_row in self.lists_store:
+            if lom_row[0]:
+                del_lom = loms.get_lom(id=lom_row[1])
+
+                if del_lom:
+                    del_lom.delete()
+
+                self.lists_store.remove(lom_row.iter)
+
+
+    def has_lom_selected(self):
+        for lom_row in self.lists_store:
+            if lom_row[0]:
+                return True
+
+        return False

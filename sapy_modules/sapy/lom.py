@@ -167,7 +167,7 @@ class Lom(object):  # list of movements
         raw_month = raw[3].split('-')[1]
         raw_day = raw[3].split('-')[2]
         return Mom(id=raw[0], value=raw[1], cause=raw[2], year=raw_year, month=raw_month, day=raw_day)
- 
+
     def csv_import(self,csv_file):
         mom_list = []
         #m_dialect = csv.Dialect()

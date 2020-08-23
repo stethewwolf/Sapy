@@ -28,7 +28,6 @@ class Lom_Page(Gtk.VBox):
 
         self.controller = Lom_Page_Controller(self, lom)
         self.gtkWindow = parent
-   
 
         # dates row
         box = Gtk.HBox()
@@ -50,7 +49,7 @@ class Lom_Page(Gtk.VBox):
         dates_grid.attach_next_to(end_date_label,start_date_label, Gtk.PositionType.RIGHT, 1,1)
 
         dates_grid.attach_next_to(end_date_button,end_date_label, Gtk.PositionType.BOTTOM, 2,2)
-        
+
         self.pack_start(box, False, False, 10)
 
         # lom pane
@@ -138,18 +137,18 @@ class Lom_Page_Controller(object):
     def clicked_end_date_button(self, widget):
         date_picker = Date_Picker(self.view.gtkWindow)
         date_picker.set_date(self.end_date)
-        
+
         if date_picker.run() == Gtk.ResponseType.OK:
             self.end_date = date_picker.get_date()
             widget.set_label(self.end_date.strftime('%d-%m-%Y'))
 
         date_picker.destroy()
         self.update_lom_list()
-    
+
     def clicked_balance_date_button(self, widget):
         date_picker = Date_Picker(self.view.gtkWindow)
         date_picker.set_date(self.balance_date)
-        
+
         if date_picker.run() == Gtk.ResponseType.OK:
             self.balance_date = date_picker.get_date()
             widget.set_label(self.balance_date.strftime('%d-%m-%Y'))
@@ -183,13 +182,12 @@ class Lom_Page_Controller(object):
 
                 if del_mom:
                     del_mom.delete()
-            
+
                 self.moms_store.remove(mom_row.iter)
 
     def has_mom_selected(self):
         for mom_row in self.moms_store:
             if mom_row[4]:
-                mom_selected = self.lom.get_mom(mom_row[0])
                 return True
 
         return False
