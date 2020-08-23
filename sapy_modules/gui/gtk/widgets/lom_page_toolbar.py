@@ -17,7 +17,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.gui.gtk.dialogs import Select_Lom_Dialog_View, Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View, No_Item_Selected,Csv_Structure_Display_Message
+from sapy_modules.gui.gtk.dialogs import Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View
 
 
 # -- Buttons

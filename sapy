@@ -36,7 +36,8 @@ if __name__ == "__main__":
     for cmd in command_list :
         logger.debug('running command ' + str( cmd.__class__ ) )
         cmd.run()
-    
+        cmd
+
     # close db connection
     db_iface.close()
 

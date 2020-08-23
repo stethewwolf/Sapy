@@ -18,6 +18,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sapy_modules.gui.gtk.dialogs import Date_Picker
+from sapy_modules.gui.gtk.widgets import Home_Page_Toolbar
 import sapy_modules.sapy.mom as moms
 import sapy_modules.sapy.lom as loms
 import matplotlib as mp
@@ -31,11 +32,10 @@ class Home_Page(Gtk.VBox):
     """docstring for Graph_Page"""
     def __init__(self, parent):
         super(Home_Page, self).__init__()
-        self.parent = parent
+        self.gtkWindow = parent
         self.controller = Home_Page_Controller(self)
 
         self.set_border_width(10)
- 
         # dates row
         box = Gtk.HBox()
         dates_grid = Gtk.Grid()
@@ -57,13 +57,10 @@ class Home_Page(Gtk.VBox):
 
         dates_grid.attach_next_to(end_date_button,end_date_label, Gtk.PositionType.BOTTOM, 2,2)
 
-        self.pack_start(box, False, False, 10)
-
-
         self.controller.update_loms()
-        
+
         self.fig = Figure(figsize=(5,5), dpi=100)
-        
+
         #fig.legend()
         self.ax = self.fig.add_subplot(111)
         canvas = FigureCanvas(self.fig)
@@ -76,27 +73,35 @@ class Home_Page(Gtk.VBox):
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.tree = Gtk.TreeView(self.controller.lists_store)
-       
+
+        render_toggle = Gtk.CellRendererToggle()
+        render_toggle.connect("toggled",self.controller.toggle_selected_list)
+        self.tree.append_column(Gtk.TreeViewColumn("sel",render_toggle, \
+                                                   active=0))
+
         self.tree.append_column (
-            Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
+            Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=1)
         )
-       
+
         self.tree.append_column (
-            Gtk.TreeViewColumn("name",Gtk.CellRendererText(), text=1)
+            Gtk.TreeViewColumn("name",Gtk.CellRendererText(), text=2)
         )
 
         render_toggle = Gtk.CellRendererToggle()
-        render_toggle.connect("toggled",self.controller.toggle_checkbox_list)
-        self.tree.append_column(Gtk.TreeViewColumn("visible",render_toggle, active=2))
+        render_toggle.connect("toggled",self.controller.toggle_visible_list)
+        self.tree.append_column(Gtk.TreeViewColumn("visible",render_toggle,\
+                                                   active=3))
 
         self.tree.append_column (
-            Gtk.TreeViewColumn("color",Gtk.CellRendererText(), text=3)
+            Gtk.TreeViewColumn("color",Gtk.CellRendererText(), text=4)
         )
 
         scrolled_window.add(self.tree)
 
-
         self.pack_start(scrolled_window,True,True,10)
+
+        button_box = Home_Page_Toolbar(self)
+        self.pack_start(button_box,False,False,10)
 
 
 class Home_Page_Controller(object):
@@ -104,39 +109,34 @@ class Home_Page_Controller(object):
     def __init__(self, view):
         super(Home_Page_Controller, self).__init__()
         self.view = view
-        self.lists_store = Gtk.ListStore(int, str, bool, str) # name, is visible
+        self.lists_store = Gtk.ListStore(bool, int, str, bool, str) # name, is visible
 
         self.start_date = (datetime.datetime.today().date() - datetime.timedelta(days=15)) # start date
         self.end_date = (datetime.datetime.today().date() + datetime.timedelta(days=15))   # end date
 
-        self.loms = loms.get_loms()
-
     def update_plot(self):
-        self.view.ax.clear()        
+        self.view.ax.clear()
 
-        for lom in self.loms:
+        for lom in loms.get_loms():
             if lom.visible:
                 graph_data = lom.balance_per_day(start_date=self.start_date,end_date=self.end_date)
                 self.view.ax.scatter(mp.dates.date2num(graph_data[0]), graph_data[1], label=lom.name, marker="_", color=lom.color)
 
         self.view.ax.set_xlim(self.start_date, self.end_date)
-        
 
         self.view.ax.plot()
 
         self.view.fig.autofmt_xdate()
 
     def update_loms(self):
-        self.loms = loms.get_loms()
-
-        for lom in self.loms:
-            self.lists_store.append([lom.id, lom.name, lom.visible, lom.color])
-
+        self.lists_store.clear()
+        for lom in loms.get_loms():
+            self.lists_store.append([False, lom.id, lom.name, lom.visible, lom.color])
 
     def clicked_start_date_button(self, widget):
-        date_picker = Date_Picker(self.view.parent)
+        date_picker = Date_Picker(self.view.gtkWindow)
         date_picker.set_date(self.start_date)
-        
+
         if date_picker.run() == Gtk.ResponseType.OK:
             self.start_date = date_picker.get_date()
             widget.set_label(self.start_date.strftime('%d-%m-%Y'))
@@ -145,9 +145,9 @@ class Home_Page_Controller(object):
         self.update_plot()
 
     def clicked_end_date_button(self, widget):
-        date_picker = Date_Picker(self.view.parent)
+        date_picker = Date_Picker(self.view.gtkWindow)
         date_picker.set_date(self.end_date)
-        
+
         if date_picker.run() == Gtk.ResponseType.OK:
             self.end_date = date_picker.get_date()
             widget.set_label(self.end_date.strftime('%d-%m-%Y'))
@@ -155,11 +155,16 @@ class Home_Page_Controller(object):
         date_picker.destroy()
         self.update_plot()
 
+    def toggle_visible_list(self, widget, path):
+        self.lists_store[path][3] = not self.lists_store[path][3]
+        lom = loms.get_lom(id=self.lists_store[path][1])
 
-    def toggle_checkbox_list(self, widget, path):
-        self.lists_store[path][2] = not self.lists_store[path][2]
-        lom = loms.get_lom(id=self.lists_store[path][0])
+        lom.set_visible(self.lists_store[path][3])
 
-        lom.visible = self.lists_store[path][2]
-        
         self.update_plot()
+
+    def toggle_selected_list(self, widget, path):
+       self.lists_store[path][0] = not self.lists_store[path][0]
+
+    def add_lom_tab(self, lom):
+        self.view.gtkWindow.controller.add_lom_page(lom)

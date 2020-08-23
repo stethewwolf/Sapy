@@ -23,45 +23,45 @@ import datetime,csv
 
 CREATE_TABLE_LOM= """
 	CREATE TABLE "loms" (
-	    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	    "name"	TEXT NOT NULL UNIQUE,
+       "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+       "name"	TEXT NOT NULL UNIQUE,
         "visible" INTEGER NOT NULL DEFAULT 0,
-        "color" TEXT NOT NULL
+        "color" TEXT NOT NULL DEFAULT "red"
     ) """
-CREATE_TABLE_MOM_IN_LOM = """   
+CREATE_TABLE_MOM_IN_LOM = """
 	CREATE TABLE "mom_in_lom" (
-	    "mom_id"	INTEGER NOT NULL,
+        "mom_id"	INTEGER NOT NULL,
         "lom_id"	INTEGER NOT NULL,
         PRIMARY KEY("lom_id","mom_id")
     ) """
-INSERT_LOM = "insert into loms (name) values ( ?)"
+INSERT_LOM = "insert into loms (name,visible,color) values (?,?,?)"
 GET_LAST_LOM = "select id from loms order by id DESC ;"
 LINK_MOM_TO_LOM ="insert into mom_in_lom (mom_id,lom_id) values ( ?, ?)"
 DELETE_LOM = "delete from loms where id = ?"
 GET_MOMS_0 = """
         SELECT * FROM (
-            SELECT id,value,cause,date,lom_id 
+            SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
             )
-        where lom_id = ? 
+        where lom_id = ?
         """
 GET_MOMS_1 = """
         SELECT * FROM (
-            SELECT id,value,cause,date,lom_id 
+            SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
             )
         where lom_id = ? and  date <= ?
         """
 GET_MOMS_2 = """
         SELECT * FROM (
-            SELECT id,value,cause,date,lom_id 
+            SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
             )
-        where lom_id = ? and date >= ? 
+        where lom_id = ? and date >= ?
         """
 GET_MOMS_3 = """
         SELECT * FROM (
-            SELECT id,value,cause,date,lom_id 
+            SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
             )
         where lom_id = ? and date >= ? and date <= ?
@@ -71,11 +71,13 @@ GET_LOM_BY_NAME = 'select * from loms where `name` == ? '
 GET_LOM_BY_ID = 'select * from loms where `id` == ? '
 GET_ALL_LOMS = """SELECT * FROM loms"""
 CREATE_DEFAULT_LOMS = """
-    INSERT INTO "loms" 
-    ("id","name","visible","color") VALUES 
+    INSERT INTO "loms"
+    ("id","name","visible","color") VALUES
     (1,'real','1','green'),
     (2,'expected','1','red')
     ;"""
+UPDATE_LOM_VISIBLE ="UPDATE loms SET `visible`=? WHERE id=?;"
+GET_LOM_VISIBLE ="SELECT visible FROM loms WHERE id=?;"
 SET_TAB_VERSION = """INSERT INTO "app_meta" ("key","value") VALUES ("lom_tab_version",?)"""
 
 TAB_VERSION = 1
@@ -93,20 +95,22 @@ class Lom(object):  # list of movements
     def __init__(
         self,
         id=None,
-        name="list of movements"
+        name="list of movements",
+        visible=False,
+        color="black"
         ):
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
         self.name = name
-        self.visible = False
-        self.color = "black"
+        self.visible = visible
+        self.color = color
 
         if id == None:
             cur = db_iface.get_cursor()
-            cur.execute(INSERT_LOM,(name,))
+            cur.execute(INSERT_LOM,(name,visible,color))
 
             cur.execute(GET_LAST_LOM)
             self.id = cur.fetchone()[0]
-    
+
             db_iface.commit()
             cur.close()
         else:
@@ -151,7 +155,7 @@ class Lom(object):  # list of movements
             raw_month = raw[3].split('-')[1]
             raw_day = raw[3].split('-')[2]
             mom = Mom(id=raw[0], value=raw[1], cause=raw[2], year=raw_year, month=raw_month, day=raw_day)
-            mlist.append(m)
+            mlist.append(mom)
         cur.close()
         return mlist
 
@@ -247,6 +251,14 @@ class Lom(object):  # list of movements
             base_balance = day_balance
 
         return (dates,values)
+    def set_visible(self,value):
+        self.visible = value
+        cur = db_iface.get_cursor()
+        if self.visible :
+            cur.execute(UPDATE_LOM_VISIBLE,(1,self.id))
+        else:
+            cur.execute(UPDATE_LOM_VISIBLE,(0,self.id))
+        db_iface.commit()
 
 def get_lom(name=None, id=None):
     cur = db_iface.get_cursor()
@@ -263,7 +275,10 @@ def get_loms():
     cur = db_iface.get_cursor()
     cur.execute(GET_ALL_LOMS)
     for l in cur.fetchall():
-        llist.append(Lom(l[0], l[1]))
+        if l[2] == 1:
+            llist.append(Lom(l[0], l[1], True, l[3]))
+        else:
+            llist.append(Lom(l[0], l[1], False, l[3]))
     cur.close()
     return  llist
 

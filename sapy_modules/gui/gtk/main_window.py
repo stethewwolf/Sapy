@@ -35,7 +35,7 @@ class Main_Window_View(Gtk.Window):
         self.add(self.notebook) 
 
         self.controller = Main_Window_Controller(self)
-    
+
     def main(self):
         self.show_all()
         Gtk.main()
@@ -53,5 +53,8 @@ class Main_Window_Controller(object):
 
         for lom in self.loms:
             self.view.notebook.insert_page(Lom_Page(self.view, lom), Gtk.Label(lom.name), 1)
-        
+
+    def add_lom_page(self,lom):
+            self.view.notebook.append_page(Lom_Page(self.view, lom), Gtk.Label(lom.name))
+            self.view.notebook.show_all()
 

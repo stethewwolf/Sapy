@@ -14,8 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = [ 'Lom_Page_Toolbar']
+__all__ = ['Lom_Page_Toolbar', 'Lom_Page_Toolbar']
 
 # deprecated to keep older scripts who import this from breaking
 from sapy_modules.gui.gtk.widgets.lom_page_toolbar import Lom_Page_Toolbar
+from sapy_modules.gui.gtk.widgets.home_page_toolbar import Home_Page_Toolbar
 
