@@ -32,7 +32,7 @@ class Main_Window_View(Gtk.Window):
         self.resize(1000, 800)
 
         self.notebook = Gtk.Notebook()
-        self.add(self.notebook) 
+        self.add(self.notebook)
 
         self.controller = Main_Window_Controller(self)
 
@@ -45,16 +45,36 @@ class Main_Window_Controller(object):
     def __init__(self, view):
         self.view = view
         self.loms = loms.get_loms()
+        self.pages_list = dict()
 
-        self,view.notebook.append_page(Home_Page(self.view),Gtk.Label("Home"))
-        self.update_pages_list()
-
-    def update_pages_list(self):
+        # gen pages list
+        self.pages_list['Home'] = Home_Page(self.view)
 
         for lom in self.loms:
-            self.view.notebook.insert_page(Lom_Page(self.view, lom), Gtk.Label(lom.name), 1)
+            self.pages_list[lom.name] = Lom_Page(self.view, lom)
+
+        for page_name in self.pages_list:
+            self.view.notebook.append_page(self.pages_list[page_name],Gtk.Label(page_name))
 
     def add_lom_page(self,lom):
-            self.view.notebook.append_page(Lom_Page(self.view, lom), Gtk.Label(lom.name))
-            self.view.notebook.show_all()
+        self.pages_list[lom.name] = Lom_Page(self.view, lom)
+        self.view.notebook.append_page(self.pages_list[lom.name],Gtk.Label(lom.name))
+        self.view.notebook.show_all()
+
+    def update_lom_page_name(self, old_name, new_name):
+        lom_page = self.pages_list[old_name]
+        self.view.notebook.set_tab_label_text(lom_page,new_name)
+        self.pages_list[new_name] = self.pages_list[old_name]
+        del self.pages_list[old_name]
+
+    def remove_lom_page(self, lom_name):
+       lom_page = self.pages_list[lom_name]
+       page_idx = self.view.notebook.page_num(lom_page)
+       self.view.notebook.remove_page(page_idx)
+       del self.pages_list[lom_name]
+
+
+
+
+
 

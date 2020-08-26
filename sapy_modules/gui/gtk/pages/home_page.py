@@ -175,10 +175,10 @@ class Home_Page_Controller(object):
                 del_lom = loms.get_lom(id=lom_row[1])
 
                 if del_lom:
+                    self.view.gtkWindow.controller.remove_lom_page(del_lom.name)
                     del_lom.delete()
 
                 self.lists_store.remove(lom_row.iter)
-
 
     def has_lom_selected(self):
         for lom_row in self.lists_store:

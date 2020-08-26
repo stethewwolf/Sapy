@@ -77,6 +77,8 @@ CREATE_DEFAULT_LOMS = """
     (2,'expected','1','red')
     ;"""
 UPDATE_LOM_VISIBLE ="UPDATE loms SET `visible`=? WHERE id=?;"
+UPDATE_LOM_NAME ="UPDATE loms SET `name`=? WHERE id=?;"
+UPDATE_LOM_COLOR ="UPDATE loms SET `color`=? WHERE id=?;"
 GET_LOM_VISIBLE ="SELECT visible FROM loms WHERE id=?;"
 SET_TAB_VERSION = """INSERT INTO "app_meta" ("key","value") VALUES ("lom_tab_version",?)"""
 
@@ -232,10 +234,10 @@ class Lom(object):  # list of movements
         for mom in moms:
             if mom.time < min_date:
                 min_date = mom.time
-            
+
             if mom.time > max_date:
                 max_date = mom.time
-        
+
         time_delta = datetime.timedelta(days=1)
 
         while min_date <= max_date:
@@ -251,6 +253,7 @@ class Lom(object):  # list of movements
             base_balance = day_balance
 
         return (dates,values)
+
     def set_visible(self,value):
         self.visible = value
         cur = db_iface.get_cursor()
@@ -258,6 +261,18 @@ class Lom(object):  # list of movements
             cur.execute(UPDATE_LOM_VISIBLE,(1,self.id))
         else:
             cur.execute(UPDATE_LOM_VISIBLE,(0,self.id))
+        db_iface.commit()
+
+    def set_name(self,value):
+        self.name = value
+        cur = db_iface.get_cursor()
+        cur.execute(UPDATE_LOM_NAME,(self.name,self.id))
+        db_iface.commit()
+
+    def set_color(self,value):
+        self.color = value
+        cur = db_iface.get_cursor()
+        cur.execute(UPDATE_LOM_COLOR,(self.color,self.id))
         db_iface.commit()
 
 def get_lom(name=None, id=None):

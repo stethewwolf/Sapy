@@ -19,8 +19,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sapy_modules.gui.gtk.dialogs import No_Item_Selected, \
         Csv_Structure_Display_Message, Add_Lom_Dialog_View, \
-        Del_Lom_Dialog_View
-
+        Del_Lom_Dialog_View, Update_Lom_Dialog_View
+import sapy_modules.sapy.lom as loms
 
 # -- Buttons
 
@@ -49,14 +49,14 @@ class Sapy_Del_Lom_Button(Gtk.Button):
         self.set_label("Del")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
-        self.lom_ctrl = parent.parent.controller
+        self.home_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
-        if self.lom_ctrl.has_lom_selected():
+        if self.home_ctrl.has_lom_selected():
             dialog = Del_Lom_Dialog_View(self.gtkWindow)
 
             if dialog.run() == Gtk.ResponseType.OK:
-                self.lom_ctrl.del_lom()
+                self.home_ctrl.del_lom()
 
             dialog.destroy()
         else:
@@ -70,28 +70,25 @@ class Sapy_Edit_Lom_Button(Gtk.Button):
         self.set_label("Edit")
         self.connect("clicked",self.on_button_clicked)
         self.gtkWindow = gtkWindow
-        self.lom_ctrl = parent.parent.controller
+        self.home_ctrl = parent.parent.controller
 
     def on_button_clicked(self, widget):
-        pass
-        #if self.lom_ctrl.has_mom_selected():
-        #    for mom_row in self.lom_ctrl.moms_store:
-        #        if mom_row[4] == True:
-        #            mom = self.lom_ctrl.lom.get_mom(id=mom_row[0])
+        if self.home_ctrl.has_lom_selected():
+            for lom_row in self.home_ctrl.lists_store:
+                if lom_row[0] == True:
+                    lom = loms.get_lom(id=lom_row[1])
 
-        #            dialog = Update_Mom_Dialog_View(self.gtkWindow,mom)
+                    dialog = Update_Lom_Dialog_View(self.gtkWindow,lom)
 
-        #            if dialog.run() == Gtk.ResponseType.OK:
-        #                dialog.run_update_mom()
-        #
-        #            dialog.destroy()
-        #else:
-        #    dialog = No_Item_Selected(self.gtkWindow)
-        #    dialog.run()
-        #    dialog.destroy()
+                    if dialog.run() == Gtk.ResponseType.OK:
+                        dialog.controller.run_update_lom()
 
-       
-        #self.lom_ctrl.update_lom_list()
+                    dialog.destroy()
+        else:
+            dialog = No_Item_Selected(self.gtkWindow)
+            dialog.run()
+            dialog.destroy()
+        self.home_ctrl.update_loms()
 
 # ----
 class Home_Page_Toolbar(Gtk.ButtonBox):

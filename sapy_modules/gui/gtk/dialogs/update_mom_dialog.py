@@ -30,7 +30,7 @@ class Update_Mom_Dialog_View(Gtk.MessageDialog):
 
         box = self.get_content_area()
         grid = Gtk.Grid()
-        
+
         # value field
         value_label = Gtk.Label("value")
         value_adjustment = Gtk.Adjustment(self.update_mom.value, -99999, 99999, 0.1, 1, 0)
@@ -40,37 +40,37 @@ class Update_Mom_Dialog_View(Gtk.MessageDialog):
         self.value_button.set_numeric(True)
 
         grid.add(value_label)
-        grid.attach_next_to( 
+        grid.attach_next_to(
                 self.value_button,
-                value_label, 
-                Gtk.PositionType.RIGHT, 
+                value_label,
+                Gtk.PositionType.RIGHT,
                 2, 1
                 )
 
         cause_label = Gtk.Label("Cause")
         self.cause_entry = Gtk.Entry()
-        self.cause_entry.set_placeholder_text(self.update_mom.cause)
+        self.cause_entry.set_text(self.update_mom.cause)
 
         grid.attach_next_to(
-                cause_label, 
-                value_label, 
-                Gtk.PositionType.BOTTOM, 
+                cause_label,
+                value_label,
+                Gtk.PositionType.BOTTOM,
                 1, 1
                 )
 
-        grid.attach_next_to( 
+        grid.attach_next_to(
                 self.cause_entry,
-                cause_label, 
-                Gtk.PositionType.RIGHT, 
+                cause_label,
+                Gtk.PositionType.RIGHT,
                 2, 1
                 )
-        
+
         date_label = Gtk.Label("Date")
 
         grid.attach_next_to(
-                date_label, 
-                cause_label, 
-                Gtk.PositionType.BOTTOM, 
+                date_label,
+                cause_label,
+                Gtk.PositionType.BOTTOM,
                 1, 1
                 )
 
@@ -82,14 +82,14 @@ class Update_Mom_Dialog_View(Gtk.MessageDialog):
 
         grid.attach_next_to(
                 year_label,
-                date_label, 
-                Gtk.PositionType.BOTTOM, 
+                date_label,
+                Gtk.PositionType.BOTTOM,
                 1, 1
                 )
         grid.attach_next_to(
                 self.year_spin,
                 year_label,
-                Gtk.PositionType.RIGHT, 
+                Gtk.PositionType.RIGHT,
                 1, 1
                 )
 
@@ -102,13 +102,13 @@ class Update_Mom_Dialog_View(Gtk.MessageDialog):
         grid.attach_next_to(
                 month_label,
                 year_label,
-                Gtk.PositionType.BOTTOM, 
+                Gtk.PositionType.BOTTOM,
                 1, 1
                 )
         grid.attach_next_to(
                 self.month_spin,
                 month_label,
-                Gtk.PositionType.RIGHT, 
+                Gtk.PositionType.RIGHT,
                 1, 1
                 )
 
@@ -120,16 +120,16 @@ class Update_Mom_Dialog_View(Gtk.MessageDialog):
         grid.attach_next_to(
                 day_label,
                 month_label,
-                Gtk.PositionType.BOTTOM, 
+                Gtk.PositionType.BOTTOM,
                 1, 1
                 )
         grid.attach_next_to(
                 self.day_spin,
                 day_label,
-                Gtk.PositionType.RIGHT, 
+                Gtk.PositionType.RIGHT,
                 1, 1
                 )
- 
+
         box.add(grid)
         self.show_all()
 

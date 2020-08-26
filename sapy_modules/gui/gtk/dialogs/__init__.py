@@ -17,14 +17,11 @@
 __all__ = [
     'Add_Mom_Dialog_View',
     'Add_Lom_Dialog_View',
-    'Add_Mom_Dialog_Controller',
     'Del_Mom_Dialog_View',
     'Del_Lom_Dialog_View',
-    'Del_Mom_Dialog_Controller',
-    'Select_Lom_Dialog_Controller',
     'Select_Lom_Dialog_View',
-    'Update_Mom_Dialog_Controller',
     'Update_Mom_Dialog_View',
+    'Update_Lom_Dialog_View',
     'Date_Picker',
     'No_Item_Selected',
     'Csv_Structure_Display_Message'
@@ -33,14 +30,11 @@ __all__ = [
 # deprecated to keep older scripts who import this from breaking
 from sapy_modules.gui.gtk.dialogs.add_mom_dialog import Add_Mom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.add_lom_dialog import Add_Lom_Dialog_View
-from sapy_modules.gui.gtk.dialogs.add_mom_dialog import Add_Mom_Dialog_Controller
 from sapy_modules.gui.gtk.dialogs.del_mom_dialog import Del_Mom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.del_lom_dialog import Del_Lom_Dialog_View
-from sapy_modules.gui.gtk.dialogs.del_mom_dialog import Del_Mom_Dialog_Controller
-from sapy_modules.gui.gtk.dialogs.select_lom_dialog import Select_Lom_Dialog_Controller
 from sapy_modules.gui.gtk.dialogs.select_lom_dialog import Select_Lom_Dialog_View
-from sapy_modules.gui.gtk.dialogs.update_mom_dialog import Update_Mom_Dialog_Controller
 from sapy_modules.gui.gtk.dialogs.update_mom_dialog import Update_Mom_Dialog_View
+from sapy_modules.gui.gtk.dialogs.update_lom_dialog import Update_Lom_Dialog_View
 from sapy_modules.gui.gtk.dialogs.date_picker import Date_Picker
 from sapy_modules.gui.gtk.dialogs.no_item_selected import No_Item_Selected
 from sapy_modules.gui.gtk.dialogs.csv_structure_display_message import Csv_Structure_Display_Message

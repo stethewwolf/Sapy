@@ -49,7 +49,7 @@ class Lom_Page(Gtk.VBox):
         dates_grid.attach_next_to(end_date_label,start_date_label, Gtk.PositionType.RIGHT, 1,1)
 
         dates_grid.attach_next_to(end_date_button,end_date_label, Gtk.PositionType.BOTTOM, 2,2)
-
+        
         self.pack_start(box, False, False, 10)
 
         # lom pane
@@ -121,12 +121,9 @@ class Lom_Page_Controller(object):
 
         self.moms_store = Gtk.ListStore(int, str, float, str, bool) # id cause, value, date
 
-
-
     def clicked_start_date_button(self, widget):
         date_picker = Date_Picker(self.view.gtkWindow)
         date_picker.set_date(self.start_date)
-        
         if date_picker.run() == Gtk.ResponseType.OK:
             self.start_date = date_picker.get_date()
             widget.set_label(self.start_date.strftime('%d-%m-%Y'))
@@ -188,6 +185,7 @@ class Lom_Page_Controller(object):
     def has_mom_selected(self):
         for mom_row in self.moms_store:
             if mom_row[4]:
+                mom_selected = self.lom.get_mom(mom_row[0])
                 return True
 
         return False

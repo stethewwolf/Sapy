@@ -13,19 +13,20 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 
-import gi
+import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+from sapy_modules.sapy import moms
 from sapy_modules.sapy import Lom
 
-class Add_Lom_Dialog_View(Gtk.MessageDialog):
-    def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "add new list", parent, 0,
+class Update_Lom_Dialog_View(Gtk.MessageDialog):
+    def __init__(self, parent, lom):
+        Gtk.Dialog.__init__(self, "edit list", parent, 0,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              Gtk.STOCK_OK, Gtk.ResponseType.OK))
-        self.controller = Add_Lom_Dialog_Controller(self)
+        self.parent = parent
+        self.controller = Update_Lom_Dialog_Controller(self, lom)
         self.set_default_size(150, 100)
 
         box = self.get_content_area()
@@ -33,7 +34,7 @@ class Add_Lom_Dialog_View(Gtk.MessageDialog):
 
         name_label = Gtk.Label("Name")
         self.name_entry = Gtk.Entry()
-        self.name_entry.set_placeholder_text("name")
+        self.name_entry.set_text(lom.name)
         grid.add(name_label)
 
         grid.attach_next_to(
@@ -49,6 +50,10 @@ class Add_Lom_Dialog_View(Gtk.MessageDialog):
         renderer_text = Gtk.CellRendererText()
         self.color_combo.pack_start(renderer_text, True)
         self.color_combo.add_attribute(renderer_text, "text", 0)
+
+        for c_iter in self.color_combo:
+            if c_iter[0]  == lom.color:
+                self.color_combo.set_active(c_iter)
 
         grid.attach_next_to(
                 color_label,
@@ -67,9 +72,10 @@ class Add_Lom_Dialog_View(Gtk.MessageDialog):
         box.add(grid)
         self.show_all()
 
-class Add_Lom_Dialog_Controller(object):
-    def __init__(self, view):
+class Update_Lom_Dialog_Controller(object):
+    def __init__(self, view, lom):
         self.view = view
+        self.lom = lom
         self.color_store = Gtk.ListStore(str)
         colors = [
             "red",
@@ -81,7 +87,7 @@ class Add_Lom_Dialog_Controller(object):
             "orange",
             ]
 
-        self.color = colors[0]
+        self.color = lom.color
 
         for color in colors:
             self.color_store.append([color])
@@ -92,10 +98,14 @@ class Add_Lom_Dialog_Controller(object):
             model = combo.get_model()
             self.color = model[c_iter][0]
 
-    def get_lom(self):
-        l_name = self.view.name_entry.get_text()
-        l_color = self.color
-        l_visible = False
-        return Lom(name=l_name,color=l_color,visible=l_visible)
+    def run_update_lom(self):
+        if self.lom.color != self.color:
+            self.lom.set_color(self.color)
+
+        if self.view.name_entry.get_text() is not None:
+            if self.view.name_entry.get_text() != self.lom.name:
+                old_name = self.lom.name
+                self.lom.set_name(self.view.name_entry.get_text())
+                self.view.parent.controller.update_lom_page_name(old_name,self.lom.name)
 
 
