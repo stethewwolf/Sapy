@@ -47,17 +47,20 @@ class Main_Window_Controller(object):
         self.loms = loms.get_loms()
         self.pages_list = dict()
 
+        self.home_page = Home_Page(self.view)
+
         # gen pages list
-        self.pages_list['Home'] = Home_Page(self.view)
+        self.pages_list['Home'] = self.home_page
 
         for lom in self.loms:
-            self.pages_list[lom.name] = Lom_Page(self.view, lom)
+            self.pages_list[lom.name] = Lom_Page(self.view, lom, \
+                                                 self.home_page.controller.update_plot)
 
         for page_name in self.pages_list:
             self.view.notebook.append_page(self.pages_list[page_name],Gtk.Label(page_name))
 
     def add_lom_page(self,lom):
-        self.pages_list[lom.name] = Lom_Page(self.view, lom)
+        self.pages_list[lom.name] = Lom_Page(self.view, lom, self.home_page.controller.update_plot)
         self.view.notebook.append_page(self.pages_list[lom.name],Gtk.Label(lom.name))
         self.view.notebook.show_all()
 

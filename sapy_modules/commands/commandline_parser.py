@@ -94,7 +94,7 @@ class CommandLine_Parser( object ):
 
     def parse( self ):
         command_list = []
-        
+
         self.logger.debug('add set_env command')
         command_list.append( SetEnv() )
 
@@ -107,16 +107,10 @@ class CommandLine_Parser( object ):
                 self.logger.debug("passed option --" + cmd.long_arg)
                 command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
 
-        count = 0
         for cmd in self.rcl:
             if getattr( args, cmd.long_arg.replace("-","_") ) :
                 self.logger.debug("passed option --" + cmd.long_arg)
                 command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
-                count += 1
-
-            if count > 0 :
-                self.logger.warn("it is possible use only one task")
-                break
 
         count = 0
         for cmd in self.tcl:
@@ -131,5 +125,5 @@ class CommandLine_Parser( object ):
 
 
         self.logger.debug('parse ends')
-        
+
         return command_list

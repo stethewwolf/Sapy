@@ -19,14 +19,15 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sapy_modules.gui.gtk.dialogs import Date_Picker
 from sapy_modules.gui.gtk.widgets import Lom_Page_Toolbar
+import sapy_modules.sapy.mom as moms
 import datetime
 
 
 class Lom_Page(Gtk.VBox):
-    def __init__(self, parent, lom):
+    def __init__(self, parent, lom, update_plot_callback):
         Gtk.VBox.__init__(self)
 
-        self.controller = Lom_Page_Controller(self, lom)
+        self.controller = Lom_Page_Controller(self, lom, update_plot_callback)
         self.gtkWindow = parent
 
         # dates row
@@ -49,29 +50,33 @@ class Lom_Page(Gtk.VBox):
         dates_grid.attach_next_to(end_date_label,start_date_label, Gtk.PositionType.RIGHT, 1,1)
 
         dates_grid.attach_next_to(end_date_button,end_date_label, Gtk.PositionType.BOTTOM, 2,2)
-        
+
         self.pack_start(box, False, False, 10)
 
         # lom pane
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.tree = Gtk.TreeView(self.controller.moms_store)
-        self.tree.append_column (
-            Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
-        )
-        self.tree.append_column (
-            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=1)
-        )
-        self.tree.append_column (
-            Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=2)
-        )
-        self.tree.append_column (
-            Gtk.TreeViewColumn("date",Gtk.CellRendererText(), text=3)
-        )
 
         render_toggle = Gtk.CellRendererToggle()
         render_toggle.connect("toggled",self.toggle_checkbox_mom)
-        self.tree.append_column(Gtk.TreeViewColumn("",render_toggle, active=4))
+        self.tree.append_column(Gtk.TreeViewColumn("sel",render_toggle, active=0))
+
+        self.tree.append_column (
+            Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=1)
+        )
+
+        self.tree.append_column (
+            Gtk.TreeViewColumn("date",Gtk.CellRendererText(), text=2)
+        )
+
+        self.tree.append_column (
+            Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=3)
+        )
+
+        self.tree.append_column (
+            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=4)
+        )
 
         scrolled_window.add(self.tree)
         self.pack_start(scrolled_window,True,True,10)
@@ -93,9 +98,11 @@ class Lom_Page(Gtk.VBox):
         grid.add(balance_date_label)
         grid.attach_next_to(balance_date_button, balance_date_label, Gtk.PositionType.BOTTOM, 1,2)
 
-        grid.attach_next_to(balance_valuelabel_label, balance_date_label, Gtk.PositionType.RIGHT, 1,1)
+        grid.attach_next_to(balance_valuelabel_label, \
+                            balance_date_label, Gtk.PositionType.RIGHT, 1,1)
 
-        grid.attach_next_to(self.balance_value_label, balance_valuelabel_label, Gtk.PositionType.BOTTOM, 2,2)
+        grid.attach_next_to(self.balance_value_label, \
+                            balance_valuelabel_label, Gtk.PositionType.BOTTOM, 2,2)
 
         self.pack_end(grid, False, True, 10)
 
@@ -104,14 +111,16 @@ class Lom_Page(Gtk.VBox):
         self.controller.update_lom_list()
 
     def toggle_checkbox_mom(self, widget, path):
-        self.controller.moms_store[path][4] = not self.controller.moms_store[path][4]
+        self.controller.moms_store[path][0] = not \
+                self.controller.moms_store[path][0]
 
 
 class Lom_Page_Controller(object):
     """docstring for Lom_Page_Controller"""
-    def __init__(self, view, lom):
+    def __init__(self, view, lom, update_plot_callback):
         self.view = view
         self.lom = lom
+        self.update_plot = update_plot_callback
 
         self.start_date = (datetime.datetime.today().date() - datetime.timedelta(days=15)) # start date
         self.end_date = (datetime.datetime.today().date() + datetime.timedelta(days=15))   # end date
@@ -119,7 +128,7 @@ class Lom_Page_Controller(object):
 
         self.balance_value = 0
 
-        self.moms_store = Gtk.ListStore(int, str, float, str, bool) # id cause, value, date
+        self.moms_store = Gtk.ListStore(bool, int, str, float, str) # id cause, value, date
 
     def clicked_start_date_button(self, widget):
         date_picker = Date_Picker(self.view.gtkWindow)
@@ -159,33 +168,38 @@ class Lom_Page_Controller(object):
         self.view.balance_value_label.set_label(str(round(self.balance_value,2)))
 
     def update_lom_list(self):
-        moms = self.lom.get_moms(start_date=self.start_date, end_date=self.end_date)
+        moms_list = self.lom.get_moms(start_date=self.start_date, end_date=self.end_date)
 
         self.moms_store.clear()
 
-        if len(moms) != 0:
-            for mom in moms:
-                self.moms_store.append([mom.id, mom.cause, mom.value, mom.time.strftime('%d-%m-%Y'), False])
+        moms_list.sort(key=moms.date_key)
+        if len(moms_list) != 0:
+            for mom in moms_list:
+                self.moms_store.append([False, mom.id, mom.time.strftime('%d-%m-%Y'), mom.value, mom.cause])
+
+        # todo : trigger update plot
+        self.update_plot()
+
+
 
     def add_mom(self, mom):
         self.lom.add([mom])
-        #self.moms_store.append([mom.id, mom.cause, mom.value, mom.time.strftime('%d-%m-%Y'), False])
         self.update_lom_list()
 
     def del_mom(self):
         for mom_row in self.moms_store:
-            if mom_row[4]:
-                del_mom = self.lom.get_mom(mom_row[0])
+            if mom_row[0]:
+                del_mom = self.lom.get_mom(mom_row[1])
 
                 if del_mom:
                     del_mom.delete()
 
-                self.moms_store.remove(mom_row.iter)
+        self.update_lom_list()
 
     def has_mom_selected(self):
         for mom_row in self.moms_store:
-            if mom_row[4]:
-                mom_selected = self.lom.get_mom(mom_row[0])
+            if mom_row[0]:
+                mom_selected = self.lom.get_mom(mom_row[1])
                 return True
 
         return False

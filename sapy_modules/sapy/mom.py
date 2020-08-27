@@ -24,7 +24,7 @@ CREATE_TABLE = """
         "value" REAL NOT NULL,
         "cause" TEXT,
         "date"  TEXT NOT NULL
-    );""" 
+    );"""
 DELETE_MOM = "DELETE FROM moms WHERE id = ?;"
 DELETE_MOM_LINK = "DELETE FROM mom_in_lom WHERE mom_id = ?;"
 INSERT_MOM = "INSERT INTO moms (value,cause,date) VALUES ( ?, ?, ?);"
@@ -48,8 +48,6 @@ class Mom(object):  # movement of money
     """
     Class Movemet of Money, this is the base
     """
-    import datetime
-
     def __init__(
         self,
         id:int=None,
@@ -69,7 +67,7 @@ class Mom(object):  # movement of money
 
             cur.execute(GET_LAST_MOM)
             self.id = cur.fetchone()[0]
-    
+
             db_iface.commit()
             cur.close()
         else:
@@ -109,7 +107,7 @@ class Mom(object):  # movement of money
         if 'time' in source:
             if 'year' in source['time']         \
                 and 'month' in source['time']   \
-                and 'day' in source['time'] :     
+                and 'day' in source['time'] :
                 self.time = datetime.date(
                     year=int(source['time']['year']),
                     month=int(source['time']['month']),
@@ -154,13 +152,18 @@ class Mom(object):  # movement of money
 
         if new_value:
             cur.execute(UPDATE_MOM_VALUE, (new_value, self.id, ))
-        
+
         if new_cause:
             cur.execute(UPDATE_MOM_TIME, (new_cause, self.id, ))
-        
+
         if new_year and new_month and new_day:
             new_time = datetime.date(year=new_year, month=new_month, day=new_day)
             cur.execute(UPDATE_MOM_TIME, (new_time, self.id, ))
 
         db_iface.commit()
         cur.close()
+
+def date_key(mom):
+    return int('{}{}{}'.format(mom.time.year,mom.time.month,mom.time.day))
+
+

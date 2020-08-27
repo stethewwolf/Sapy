@@ -89,6 +89,7 @@ class Sapy_Edit_Lom_Button(Gtk.Button):
             dialog.run()
             dialog.destroy()
         self.home_ctrl.update_loms()
+        self.home_ctrl.update_plot()
 
 # ----
 class Home_Page_Toolbar(Gtk.ButtonBox):

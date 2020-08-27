@@ -57,6 +57,8 @@ class Home_Page(Gtk.VBox):
 
         dates_grid.attach_next_to(end_date_button,end_date_label, Gtk.PositionType.BOTTOM, 2,2)
 
+        self.pack_start(box,True,True,10)
+
         self.controller.update_loms()
 
         self.fig = Figure(figsize=(5,5), dpi=100)

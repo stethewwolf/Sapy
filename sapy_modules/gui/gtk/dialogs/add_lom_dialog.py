@@ -15,10 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sapy_modules.sapy import Lom
+import matplotlib.colors as mcolors
 
 class Add_Lom_Dialog_View(Gtk.MessageDialog):
     def __init__(self, parent):
@@ -71,17 +73,9 @@ class Add_Lom_Dialog_Controller(object):
     def __init__(self, view):
         self.view = view
         self.color_store = Gtk.ListStore(str)
-        colors = [
-            "red",
-            "blue",
-            "yellow",
-            "green",
-            "black",
-            "cian",
-            "orange",
-            ]
+        colors = mcolors.CSS4_COLORS.keys()
 
-        self.color = colors[0]
+        self.color = 'black'
 
         for color in colors:
             self.color_store.append([color])

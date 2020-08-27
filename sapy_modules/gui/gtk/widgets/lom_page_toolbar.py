@@ -17,7 +17,9 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.gui.gtk.dialogs import Add_Mom_Dialog_View, Del_Mom_Dialog_View, Update_Mom_Dialog_View
+from sapy_modules.gui.gtk.dialogs import Add_Mom_Dialog_View, \
+        Del_Mom_Dialog_View, Update_Mom_Dialog_View, No_Item_Selected, \
+        Csv_Structure_Display_Message
 
 
 # -- Buttons
@@ -73,21 +75,20 @@ class Sapy_Edit_Mom_Button(Gtk.Button):
     def on_button_clicked(self, widget):
         if self.lom_ctrl.has_mom_selected():
             for mom_row in self.lom_ctrl.moms_store:
-                if mom_row[4] == True:
-                    mom = self.lom_ctrl.lom.get_mom(id=mom_row[0])
+                if mom_row[0] == True:
+                    mom = self.lom_ctrl.lom.get_mom(id=mom_row[1])
 
                     dialog = Update_Mom_Dialog_View(self.gtkWindow,mom)
 
                     if dialog.run() == Gtk.ResponseType.OK:
                         dialog.run_update_mom()
-        
+
                     dialog.destroy()
         else:
             dialog = No_Item_Selected(self.gtkWindow)
             dialog.run()
             dialog.destroy()
 
-       
         self.lom_ctrl.update_lom_list()
 
 class Sapy_Export_Button(Gtk.Button):
@@ -124,7 +125,7 @@ class Sapy_Import_Button(Gtk.Button):
 
         if dialog.run() == Gtk.ResponseType.OK:
             self.lom_ctrl.lom.csv_import(dialog.get_file())
-        
+
         dialog.destroy()
 
 # ----
