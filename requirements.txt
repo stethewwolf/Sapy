@@ -2,7 +2,7 @@ altgraph==0.17
 cycler==0.10.0
 kiwisolver==1.2.0
 matplotlib==3.2.1
-numpy==1.18.4
+numpy==1.22.0
 pycairo==1.19.1
 PyGObject==3.36.1
 PyInstaller==3.6
