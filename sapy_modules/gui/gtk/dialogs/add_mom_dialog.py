@@ -18,7 +18,7 @@
 import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.sapy import moms
+from sapy_modules.core import moms
 from sapy_modules.gui.gtk.dialogs.date_picker import Date_Picker
 from calendar import monthrange
 

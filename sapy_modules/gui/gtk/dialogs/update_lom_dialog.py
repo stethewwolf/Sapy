@@ -17,8 +17,8 @@
 import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.sapy import moms
-from sapy_modules.sapy import Lom
+import sapy_modules.core.moms
+from sapy_modules.core.loms import Lom
 import matplotlib.colors as mcolors
 
 class Update_Lom_Dialog_View(Gtk.MessageDialog):

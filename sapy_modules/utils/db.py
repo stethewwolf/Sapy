@@ -15,27 +15,34 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import gi, datetime
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-import sapy_modules.core.moms as moms
+import sqlite3
+from sapy_modules.utils import config as SingleConfig
 
+connession = None
 
-class Del_Lom_Dialog_View(Gtk.Dialog):
-    def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "delete listss", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
+def open():
+    global  connession
+    if not connession :
+        connession = sqlite3.connect( SingleConfig.getConfig()['private']['data'] )
+    pass
 
-        self.set_default_size(150, 100)
+def get_cursor():
+    global connession
 
-        box = self.get_content_area()
+    if not connession :
+        open()
 
-        label = Gtk.Label("Are you shure to delete selected lists")
+    return connession.cursor()
 
-        box.add(label)
-        self.show_all()
+def commit():
+    global connession
 
-class Del_Lom_Dialog_Controller(object):
-    def __init__(self):
-        pass
+    if connession :
+        connession.commit()
+
+def close():
+    global connession
+
+    if connession :
+        connession.close()
+

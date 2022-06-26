@@ -18,7 +18,7 @@
 import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import sapy_modules.sapy.mom as moms
+import sapy_modules.core.moms as moms
 
 
 class Del_Mom_Dialog_View(Gtk.Dialog):

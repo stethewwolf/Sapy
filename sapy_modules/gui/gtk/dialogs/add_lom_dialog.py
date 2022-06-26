@@ -19,7 +19,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.sapy import Lom
+from sapy_modules.core.loms import Lom
 import matplotlib.colors as mcolors
 
 class Add_Lom_Dialog_View(Gtk.MessageDialog):

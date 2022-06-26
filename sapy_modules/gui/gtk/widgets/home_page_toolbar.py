@@ -20,7 +20,7 @@ from gi.repository import Gtk
 from sapy_modules.gui.gtk.dialogs import No_Item_Selected, \
         Csv_Structure_Display_Message, Add_Lom_Dialog_View, \
         Del_Lom_Dialog_View, Update_Lom_Dialog_View
-import sapy_modules.sapy.lom as loms
+import sapy_modules.core.loms as loms
 
 # -- Buttons
 

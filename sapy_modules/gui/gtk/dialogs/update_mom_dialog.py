@@ -17,7 +17,7 @@
 import gi, datetime
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.sapy import moms
+from sapy_modules.core import moms
 from calendar import monthrange
 
 class Update_Mom_Dialog_View(Gtk.MessageDialog):

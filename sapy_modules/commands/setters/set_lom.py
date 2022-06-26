@@ -18,16 +18,29 @@
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.utils import values as SapyValues
+from sapy_modules.commands.command import Command
 
-class Command (object):
-    short_arg = SapyConstants.COMMANDS.CMD.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.CMD.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.CMD.HELP
-    cmd_type = SapyConstants.COMMANDS.CMD.TYPE
-    cmd_action = SapyConstants.COMMANDS.CMD.ACTION
+from sapy_modules.core import loms 
 
-    def __init__( self, param = None ):
-        self.cfg = SingleConfig.getConfig()
+class SetLom ( Command ):
+    short_arg = None
+    long_arg = 'lom'
+    cmd_help = 'specify the list of money ( lom )'
+    cmd_type = str
+    cmd_action = None 
 
-    def run( self ):
-        pass
+    def __init__(self, param):
+        super().__init__( )
+        self.logger = LoggerFactory.getLogger(str( self.__class__ ))
+        self.name=param
+
+    def run(self):
+        self.logger.debug("start")
+
+        l = loms.get_lom(name=self.name)
+
+        if l:
+            SapyValues.set_value('lom', l)
+
+        self.logger.debug("end")

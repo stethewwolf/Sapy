@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sapy_modules.core import LoggerFactory
+from sapy_modules.utils import LoggerFactory
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from sapy_modules.commands.run.run_list import RunList
+from sapy_modules.commands.runs.run_list import RunList
 
 class Handlers:
     def onDestroy(self, *args):

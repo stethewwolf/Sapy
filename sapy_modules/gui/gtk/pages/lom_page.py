@@ -19,7 +19,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sapy_modules.gui.gtk.dialogs import Date_Picker
 from sapy_modules.gui.gtk.widgets import Lom_Page_Toolbar
-import sapy_modules.sapy.mom as moms
+import sapy_modules.core.moms as moms
 import datetime
 
 

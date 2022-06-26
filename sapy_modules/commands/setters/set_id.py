@@ -15,27 +15,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import gi, datetime
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-import sapy_modules.core.moms as moms
+from sapy_modules.utils import loggers as LoggerFactory
+from sapy_modules.utils import config as SingleConfig
+from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.utils import values as SapyValues
+from sapy_modules.commands.command import Command
 
 
-class Del_Lom_Dialog_View(Gtk.Dialog):
-    def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "delete listss", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
+class SetId ( Command ):
+    short_arg = None
+    long_arg = 'id'
+    cmd_help = 'specify id for operation'
+    cmd_type = str
+    cmd_action = None
 
-        self.set_default_size(150, 100)
+    def __init__( self, param ):
+        super().__init__()
+        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.id=param
 
-        box = self.get_content_area()
+    def run( self ):
+        self.logger.debug("start")
 
-        label = Gtk.Label("Are you shure to delete selected lists")
+        SapyValues.set_value('id', self.id)
 
-        box.add(label)
-        self.show_all()
-
-class Del_Lom_Dialog_Controller(object):
-    def __init__(self):
-        pass
+        self.logger.debug("end")

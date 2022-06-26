@@ -18,10 +18,10 @@
 #
 
 from sapy_modules.commands import CommandLine_Parser
-from sapy_modules.core import LoggerFactory
-import sapy_modules.core.db as db_iface
+from sapy_modules.utils import loggers as LoggerFactory
+import sapy_modules.utils.db as db_iface
 
-if __name__ == "__main__":
+def run():
     # setup logging service
     logger = LoggerFactory.getLogger('sapy')
 
@@ -36,10 +36,12 @@ if __name__ == "__main__":
     for cmd in command_list :
         logger.debug('running command ' + str( cmd.__class__ ) )
         cmd.run()
-        cmd
 
     # close db connection
     db_iface.close()
 
     # the app ends
     logger.debug('sapy end')
+
+if __name__ == "__main__":
+    run()

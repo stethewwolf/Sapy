@@ -15,27 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import gi, datetime
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-import sapy_modules.core.moms as moms
+__all__ = [
+    'NewYear',
+    'NewMonth',
+    'EndWeek',
+    'EndMonth'
+    ]
 
-
-class Del_Lom_Dialog_View(Gtk.Dialog):
-    def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "delete listss", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
-
-        self.set_default_size(150, 100)
-
-        box = self.get_content_area()
-
-        label = Gtk.Label("Are you shure to delete selected lists")
-
-        box.add(label)
-        self.show_all()
-
-class Del_Lom_Dialog_Controller(object):
-    def __init__(self):
-        pass
+# deprecated to keep older scripts who import this from breaking
+from sapy_modules.commands.mods.new_year    import NewYear
+from sapy_modules.commands.mods.new_month   import NewMonth
+from sapy_modules.commands.mods.end_week    import EndWeek
+from sapy_modules.commands.mods.end_month   import EndMonth

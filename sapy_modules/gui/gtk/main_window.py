@@ -19,7 +19,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from sapy_modules.gui.gtk.pages import Home_Page, Lom_Page
-from sapy_modules.sapy import loms
+from sapy_modules.core import loms
 
 class Main_Window_View(Gtk.Window):
     def __init__(self):

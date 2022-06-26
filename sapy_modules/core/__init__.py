@@ -13,11 +13,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 
-__all__ = ['LoggerFactory', 'SingleConfig', 'SapyConstants' ]
+__all__ = [ "moms", "loms", "tags", "objectives"]
 
-# deprecated to keep older scripts who import this from breaking
-import sapy_modules.core.mlogger as LoggerFactory
-import sapy_modules.core.config as SingleConfig
-import sapy_modules.core.constants as SapyConstants

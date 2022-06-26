@@ -18,11 +18,11 @@
 
 import argparse
 import importlib
-from sapy_modules.core import LoggerFactory
-from sapy_modules.core import SapyConstants
-from sapy_modules.commands.run import *
-from sapy_modules.commands.setter import *
-from sapy_modules.commands.tasks import *
+from sapy_modules.utils import loggers as LoggerFactory
+from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.commands.runs import *
+from sapy_modules.commands.setters import *
+from sapy_modules.commands.mods import *
 
 class CommandLine_Parser( object ):
     def __init__( self ):

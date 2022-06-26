@@ -15,27 +15,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import gi, datetime
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
-import sapy_modules.core.moms as moms
+__all__ = [
+    'RunAdd', 
+    'RunGraph', 
+    'RunGui', 
+    'RunImport', 
+    'RunList', 
+    'RunRemove', 
+    'RunVersion',
+    'RunBalance'
+    ]
 
-
-class Del_Lom_Dialog_View(Gtk.Dialog):
-    def __init__(self, parent):
-        Gtk.Dialog.__init__(self, "delete listss", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
-
-        self.set_default_size(150, 100)
-
-        box = self.get_content_area()
-
-        label = Gtk.Label("Are you shure to delete selected lists")
-
-        box.add(label)
-        self.show_all()
-
-class Del_Lom_Dialog_Controller(object):
-    def __init__(self):
-        pass
+# deprecated to keep older scripts who import this from breaking
+from sapy_modules.commands.runs.run_add       import RunAdd
+from sapy_modules.commands.runs.run_graph     import RunGraph
+from sapy_modules.commands.runs.run_gui       import RunGui
+from sapy_modules.commands.runs.run_import    import RunImport
+from sapy_modules.commands.runs.run_list  import RunList
+from sapy_modules.commands.runs.run_remove    import RunRemove
+from sapy_modules.commands.runs.run_version   import RunVersion
+from sapy_modules.commands.runs.run_balance   import RunBalance

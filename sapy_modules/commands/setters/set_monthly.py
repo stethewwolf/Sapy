@@ -18,16 +18,24 @@
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.utils import values as SapyValues
 
-class Command (object):
-    short_arg = SapyConstants.COMMANDS.CMD.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.CMD.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.CMD.HELP
-    cmd_type = SapyConstants.COMMANDS.CMD.TYPE
-    cmd_action = SapyConstants.COMMANDS.CMD.ACTION
+from sapy_modules.commands.command import Command
 
-    def __init__( self, param = None ):
-        self.cfg = SingleConfig.getConfig()
+class SetMonthly ( Command ):
+    short_arg = SapyConstants.COMMANDS.SET_MONTHLY.SHORT_ARG
+    long_arg = SapyConstants.COMMANDS.SET_MONTHLY.LONG_ARG
+    cmd_help = SapyConstants.COMMANDS.SET_MONTHLY.HELP
+    cmd_type = SapyConstants.COMMANDS.SET_MONTHLY.TYPE
+    cmd_action = SapyConstants.COMMANDS.SET_MONTHLY.ACTION
+
+    def __init__( self, param ):
+        super().__init__()
+        self.logger = LoggerFactory.getLogger( str( self.__class__ ) )
 
     def run( self ):
-        pass
+        self.logger.debug("start")
+
+        SapyValues.set_value( 'frequency', SapyConstants.FREQUENCY.MONTHLY )
+
+        self.logger.debug("end")

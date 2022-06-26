@@ -18,16 +18,24 @@
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.utils import values as SapyValues
+from sapy_modules.commands.command import Command
 
-class Command (object):
-    short_arg = SapyConstants.COMMANDS.CMD.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.CMD.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.CMD.HELP
-    cmd_type = SapyConstants.COMMANDS.CMD.TYPE
-    cmd_action = SapyConstants.COMMANDS.CMD.ACTION
+class SetCause ( Command ):
+    short_arg = SapyConstants.COMMANDS.SET_CAUSE.SHORT_ARG
+    long_arg = SapyConstants.COMMANDS.SET_CAUSE.LONG_ARG
+    cmd_help = SapyConstants.COMMANDS.SET_CAUSE.HELP
+    cmd_type = SapyConstants.COMMANDS.SET_CAUSE.TYPE
+    cmd_action = SapyConstants.COMMANDS.SET_CAUSE.ACTION
 
-    def __init__( self, param = None ):
-        self.cfg = SingleConfig.getConfig()
+    def __init__(self, param):
+        super().__init__()
+        self.logger = LoggerFactory.getLogger(str(self.__class__))
+        self.__param = param
 
-    def run( self ):
-        pass
+    def run(self):
+        self.logger.debug("start")
+
+        SapyValues.set_value('cause', self.__param)
+
+        self.logger.debug("end")
