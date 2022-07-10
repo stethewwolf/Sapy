@@ -46,6 +46,14 @@ class DATE:
 
 class DB:
     FILE                    = 'data.sqlite3'
+    PLANNED_LIST_NAME       = "Planned"
+    PLANNED_LIST_ID         = 1
+    PLANNED_LIST_VISIBLE    = 1
+    PLANNED_LIST_COLOR       = "green"
+    OCCURRED_LIST_NAME      = "Occurred"
+    OCCURRED_LIST_ID        = 2
+    OCCURRED_LIST_VISIBLE   = 1
+    OCCURRED_LIST_COLOR      = "red"
 
 class COMMANDS:
     class CMD:

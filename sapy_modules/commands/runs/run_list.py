@@ -21,8 +21,8 @@ from sapy_modules.utils import constants as SapyConstants
 from sapy_modules.utils import values as SapyValues
 from sapy_modules.commands.command import Command
 import datetime
-import sapy_modules.core.loms 
-import sapy_modules.core.tags 
+import sapy_modules.core.loms as loms
+import sapy_modules.core.tags as tags
 import sapy_modules.core.objectives as objs
 
 class RunList ( Command ):

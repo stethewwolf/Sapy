@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from xml.dom.minidom import TypeInfo
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
@@ -75,9 +76,19 @@ GET_ALL_LOMS = """SELECT * FROM loms"""
 CREATE_DEFAULT_LOMS = """
     INSERT INTO "loms"
     ("id","name","visible","color") VALUES
-    (1,'real','1','green'),
-    (2,'expected','1','red')
-    ;"""
+    ({},'{}','{}','{}'),
+    ({},'{}','{}','{}')
+    ;""".format(
+        SapyConstants.DB.OCCURRED_LIST_ID,
+        SapyConstants.DB.OCCURRED_LIST_NAME,
+        SapyConstants.DB.OCCURRED_LIST_VISIBLE,
+        SapyConstants.DB.OCCURRED_LIST_COLOR,
+        SapyConstants.DB.PLANNED_LIST_ID,
+        SapyConstants.DB.PLANNED_LIST_NAME,
+        SapyConstants.DB.PLANNED_LIST_VISIBLE,
+        SapyConstants.DB.PLANNED_LIST_COLOR
+        )
+
 UPDATE_LOM_VISIBLE ="UPDATE loms SET `visible`=? WHERE id=?;"
 UPDATE_LOM_NAME ="UPDATE loms SET `name`=? WHERE id=?;"
 UPDATE_LOM_COLOR ="UPDATE loms SET `color`=? WHERE id=?;"
@@ -144,15 +155,31 @@ class Lom(object):  # list of movements
         ):
         mlist = []
         cur = db_iface.get_cursor()
-   
-        if start_date is None and end_date is None:
+
+        _start_date = None
+        _end_date = None
+
+        if start_date is not None :
+            if type(start_date) is datetime.datetime:
+                _start_date = start_date.date()
+            else :
+                _start_date = start_date.strftime('%Y-%m-%d')
+
+        if end_date is not None :
+            if type(end_date) is datetime.datetime:
+                _end_date = end_date.date()
+            else :
+                _end_date = end_date.strftime('%Y-%m-%d')
+
+
+        if _start_date is None and _end_date is None:
             cur.execute(GET_MOMS_0, (self.id, ) )
-        elif start_date is None and end_date is not None:
-            cur.execute(GET_MOMS_1, (self.id,end_date.strftime('%Y-%m-%d') ) )
-        elif start_date is not None and end_date is None:
-            cur.execute(GET_MOMS_2, (self.id,start_date.strftime('%Y-%m-%d') ) )
+        elif start_date is None and _end_date is not None:
+            cur.execute(GET_MOMS_1, (self.id,_end_date) )
+        elif start_date is not None and _end_date is None:
+            cur.execute(GET_MOMS_2, (self.id, _start_date) )
         elif start_date is not None and end_date is not None:
-            cur.execute(GET_MOMS_3, (self.id, start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d') ) )
+            cur.execute(GET_MOMS_3, (self.id, _start_date, _end_date) )
 
         for raw in cur.fetchall():
             raw_year = raw[3].split('-')[0]
