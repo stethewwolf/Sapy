@@ -151,13 +151,16 @@ class Mom(object):  # movement of money
 
         if new_value:
             cur.execute(UPDATE_MOM_VALUE, (new_value, self.id, ))
+            self.value = float( new_value )
 
         if new_cause:
-            cur.execute(UPDATE_MOM_TIME, (new_cause, self.id, ))
+            cur.execute(UPDATE_MOM_CAUSE, (new_cause, self.id, ))
+            self.cause = new_cause
 
         if new_year and new_month and new_day:
             new_time = datetime.date(year=new_year, month=new_month, day=new_day)
             cur.execute(UPDATE_MOM_TIME, (new_time, self.id, ))
+            self.time = datetime.date(int(new_year),int(new_month),int(new_day))
 
         db_iface.commit()
         cur.close()

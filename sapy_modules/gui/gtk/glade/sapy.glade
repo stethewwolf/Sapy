@@ -178,22 +178,22 @@
   </object>
   <object class="GtkListStore" id="movementsOccurredStore">
     <columns>
+      <!-- column-name id -->
+      <column type="gint64"/>
       <!-- column-name cause -->
       <column type="gchararray"/>
       <!-- column-name value -->
       <column type="gfloat"/>
-      <!-- column-name delete -->
-      <column type="gboolean"/>
     </columns>
   </object>
   <object class="GtkListStore" id="movementsPlannedStore">
     <columns>
+      <!-- column-name id -->
+      <column type="gint64"/>
       <!-- column-name cause -->
       <column type="gchararray"/>
       <!-- column-name value -->
       <column type="gfloat"/>
-      <!-- column-name delete -->
-      <column type="gboolean"/>
     </columns>
   </object>
   <object class="GtkApplicationWindow" id="sapyWindow">
@@ -310,6 +310,7 @@
                             <property name="can-focus">True</property>
                             <property name="model">movementsPlannedStore</property>
                             <property name="enable-grid-lines">horizontal</property>
+                            <signal name="row-activated" handler="onPlannedMomSelected" swapped="no"/>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>
@@ -391,6 +392,7 @@
                             <property name="can-focus">True</property>
                             <property name="model">movementsOccurredStore</property>
                             <property name="enable-grid-lines">horizontal</property>
+                            <signal name="row-activated" handler="onOccurredMomSelected" swapped="no"/>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>

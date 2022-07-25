@@ -72,10 +72,13 @@ class RunGui(Command):
 
         momOccurredView = builder.get_object("movementsOccurredView")
         momOccurredView.append_column (
-            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=0)
+            Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
         )
         momOccurredView.append_column (
-            Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=1)
+            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=1)
+        )
+        momOccurredView.append_column (
+            Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=2)
         )
         #renderToggleOccurred = Gtk.CellRendererToggle()
         #renderToggleOccurred.connect("toggled",signal_handler.onToggleCheckboxMom)
@@ -83,14 +86,17 @@ class RunGui(Command):
 
         momOccurredStore = builder.get_object("movementsOccurredStore")
         for mom in loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME).get_moms(start_date,end_date):
-            momOccurredStore.append([mom.cause, mom.value, False])
+            momOccurredStore.append([mom.id, mom.cause, mom.value, False])
 
         momPlannedView = builder.get_object("movementsPlannedView")
         momPlannedView.append_column (
-            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=0)
+            Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
         )
         momPlannedView.append_column (
-            Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=1)
+            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=1)
+        )
+        momPlannedView.append_column (
+            Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=2)
         )
         #renderTogglePlanned = Gtk.CellRendererToggle()
         #renderTogglePlanned.connect("toggled",signal_handler.onToggleCheckboxMom)
@@ -98,7 +104,7 @@ class RunGui(Command):
 
         momPlannedStore = builder.get_object("movementsPlannedStore")
         for mom in loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME).get_moms(start_date,end_date):
-            momPlannedStore.append([mom.cause, mom.value, False])
+            momPlannedStore.append([mom.id, mom.cause, mom.value, False])
 
         window = builder.get_object("sapyWindow")
         window.show_all()
@@ -130,12 +136,12 @@ class Handler:
         momOccurredStore = builder.get_object("movementsOccurredStore")
         momOccurredStore.clear()
         for mom in loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME).get_moms(start_date,end_date):
-            momOccurredStore.append([mom.cause, mom.value, False ])
+            momOccurredStore.append([mom.id, mom.cause, mom.value ])
 
         momPlannedStore = builder.get_object("movementsPlannedStore")
         momPlannedStore.clear()
         for mom in loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME).get_moms(start_date,end_date):
-            momPlannedStore.append([mom.cause, mom.value, False ])
+            momPlannedStore.append([mom.id, mom.cause, mom.value ])
 
     def onAddPlannedSelected(self, button):
         global builder
@@ -211,6 +217,68 @@ class Handler:
         mom_dialog = builder.get_object("momDialog")
         mom_dialog.hide()
 
-    def onToggleCheckboxMom(self, widget, stuff):
+    def onPlannedMomSelected(self, column, path, user_data):
         global builder
-        print("qui")
+        momPlannedStore = builder.get_object("movementsPlannedStore")
+        planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
+        planned_mom = planned_lom.get_mom(id=momPlannedStore[path][0])
+
+        mom_date = builder.get_object("addMomDateEntry")
+        mom_date.set_text(                      \
+            str(planned_mom.time.day) +  \
+            " / " + str(planned_mom.time.month) + \
+            " / " + str(planned_mom.time.year))
+
+        mom_cause = builder.get_object("addMomCauseEntry")
+        mom_cause.set_text(planned_mom.cause)
+        mom_value = builder.get_object("addMomValueEntry")
+        mom_value.set_text(str(planned_mom.value))
+
+        mom_dialog = builder.get_object("momDialog")
+
+        mom_dialog.run()
+        mom_dialog.hide()
+
+        date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
+        planned_mom.update(
+                new_value=float(mom_value.get_text()),
+                new_cause=mom_cause.get_text(),
+                new_year=date.year,
+                new_month=date.month,
+                new_day=date.day
+                )
+        self.onDaySelected(None)
+
+    def onOccurredMomSelected(self, column, path, user_data):
+        global builder
+        momOccurredStore = builder.get_object("movementsOccurredStore")
+        occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
+        occurred_mom = occurred_lom.get_mom(id=momOccurredStore[path][0])
+        mom_date = builder.get_object("addMomDateEntry")
+        mom_date.set_text(                      \
+            str(occurred_mom.time.day) +  \
+            " / " + str(occurred_mom.time.month) + \
+            " / " + str(occurred_mom.time.year))
+
+        mom_cause = builder.get_object("addMomCauseEntry")
+        mom_cause.set_text(occurred_mom.cause)
+        mom_value = builder.get_object("addMomValueEntry")
+        mom_value.set_text(str(occurred_mom.value))
+
+        mom_dialog = builder.get_object("momDialog")
+
+        mom_dialog.run()
+        mom_dialog.hide()
+
+        date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
+        occurred_mom.update(
+                new_value=float(mom_value.get_text()),
+                new_cause=mom_cause.get_text(),
+                new_year=date.year,
+                new_month=date.month,
+                new_day=date.day
+                )
+        self.onDaySelected(None)
+
+    #def onToggleChecksoxMom(self, widget, stuff):
+    #    pass
