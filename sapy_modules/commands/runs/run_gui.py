@@ -58,7 +58,7 @@ class RunGui(Command):
     def run( self ):
         global builder
         global signal_handler
-        builder.add_from_file("/home/stethewwolf/Projects/GitHub/stethewwolf/Sapy/sapy_modules/gui/gtk/glade/sapy.glade")
+        builder.add_from_file("/home/stethewwolf/Progetti/GtkApplications/Sapy/sapy_modules/gui/gtk/glade/sapy.glade")
         builder.connect_signals(signal_handler)
 
         notebook = builder.get_object("sapyNotebooks")
@@ -86,7 +86,7 @@ class RunGui(Command):
 
         momOccurredStore = builder.get_object("movementsOccurredStore")
         for mom in loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME).get_moms(start_date,end_date):
-            momOccurredStore.append([mom.id, mom.cause, mom.value, False])
+            momOccurredStore.append([mom.id, mom.cause, mom.value])
 
         momPlannedView = builder.get_object("movementsPlannedView")
         momPlannedView.append_column (
@@ -104,7 +104,7 @@ class RunGui(Command):
 
         momPlannedStore = builder.get_object("movementsPlannedStore")
         for mom in loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME).get_moms(start_date,end_date):
-            momPlannedStore.append([mom.id, mom.cause, mom.value, False])
+            momPlannedStore.append([mom.id, mom.cause, mom.value])
 
         window = builder.get_object("sapyWindow")
         window.show_all()
@@ -149,6 +149,7 @@ class Handler:
         add_mom_flag = False
         mom_dialog = builder.get_object("momDialog")
         mom_date = builder.get_object("addMomDateEntry")
+        calendar = builder.get_object("sapyCalendar")
         mom_date.set_text( str(calendar.get_date().day) + " / " + str(calendar.get_date().month) + " / " + str(calendar.get_date().year))
 
         mom_dialog.run()
@@ -161,7 +162,7 @@ class Handler:
 
             date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
             mom = Mom(
-                value=float(mom_value.get_text()),
+                value=float(mom_value.get_text().replace(",", ".")),
                 cause=mom_cause.get_text(),
                 year=date.year,
                 month=date.month+1,
@@ -192,7 +193,7 @@ class Handler:
 
             date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
             mom = Mom(
-                value=float(mom_value.get_text()),
+                value=float(mom_value.get_text().replace(",", ".")),
                 cause=mom_cause.get_text(),
                 year=date.year,
                 month=date.month+1,
@@ -241,7 +242,7 @@ class Handler:
 
         date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
         planned_mom.update(
-                new_value=float(mom_value.get_text()),
+                new_value=float(mom_value.get_text().replace(",", ".")),
                 new_cause=mom_cause.get_text(),
                 new_year=date.year,
                 new_month=date.month,
@@ -272,7 +273,7 @@ class Handler:
 
         date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
         occurred_mom.update(
-                new_value=float(mom_value.get_text()),
+                new_value=float(mom_value.get_text().replace(",", ".")),
                 new_cause=mom_cause.get_text(),
                 new_year=date.year,
                 new_month=date.month,
