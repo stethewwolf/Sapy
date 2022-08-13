@@ -196,6 +196,13 @@
       <column type="gfloat"/>
     </columns>
   </object>
+  <object class="GtkAdjustment" id="yearAdjustment">
+    <property name="lower">1900</property>
+    <property name="upper">3000</property>
+    <property name="value">2022</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkApplicationWindow" id="sapyWindow">
     <property name="width-request">800</property>
     <property name="height-request">600</property>
@@ -280,6 +287,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
+                        <signal name="clicked" handler="onDayViewSelected" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -293,6 +301,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
+                        <signal name="clicked" handler="onMonthViewSelected" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -306,6 +315,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
+                        <signal name="clicked" handler="onYearViewSelected" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -322,7 +332,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkNotebook">
+                  <object class="GtkNotebook" id="dateTimeView">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="show-tabs">False</property>
@@ -342,13 +352,18 @@
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkSpinButton">
+                          <object class="GtkSpinButton" id="monthViewYearValue">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="input-purpose">number</property>
-                            <property name="orientation">vertical</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <property name="margin-left">10</property>
+                            <property name="margin-right">10</property>
+                            <property name="input-purpose">digits</property>
+                            <property name="adjustment">yearAdjustment</property>
                             <property name="numeric">True</property>
                             <property name="value">2022</property>
+                            <signal name="value-changed" handler="onYearMonthViewSelected" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -363,11 +378,12 @@
                             <property name="spacing">6</property>
                             <property name="layout-style">center</property>
                             <child>
-                              <object class="GtkButton" id="Gen">
+                              <object class="GtkButton" id="GenButton">
                                 <property name="label" translatable="yes">Gen</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -376,11 +392,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="FebButton">
                                 <property name="label" translatable="yes">Feb</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -389,11 +406,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="MarButton">
                                 <property name="label" translatable="yes">Mar</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -402,11 +420,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="AprButton">
                                 <property name="label" translatable="yes">Apr</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -415,11 +434,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="MayButton">
                                 <property name="label" translatable="yes">May</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -428,11 +448,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="JunButton">
                                 <property name="label" translatable="yes">Jun</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -455,11 +476,12 @@
                             <property name="spacing">6</property>
                             <property name="layout-style">center</property>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="JulButton">
                                 <property name="label" translatable="yes">Jul</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -468,11 +490,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="AugButton">
                                 <property name="label" translatable="yes">Aug</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -481,11 +504,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="SepButton">
                                 <property name="label" translatable="yes">Sep</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -494,11 +518,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="OctButton">
                                 <property name="label" translatable="yes">Oct</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -507,11 +532,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="NovButton">
                                 <property name="label" translatable="yes">Nov</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -520,11 +546,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton">
+                              <object class="GtkButton" id="DecButton">
                                 <property name="label" translatable="yes">Dec</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <signal name="clicked" handler="onMonthSelected" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -554,12 +581,14 @@
                           <object class="GtkSpinButton">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
+                            <property name="halign">center</property>
+                            <property name="margin-left">10</property>
+                            <property name="margin-right">10</property>
                             <property name="input-purpose">number</property>
-                            <property name="orientation">vertical</property>
                             <property name="numeric">True</property>
                           </object>
                           <packing>
-                            <property name="expand">False</property>
+                            <property name="expand">True</property>
                             <property name="fill">False</property>
                             <property name="position">1</property>
                           </packing>
@@ -606,6 +635,9 @@
                             <property name="search-column">0</property>
                             <property name="enable-grid-lines">horizontal</property>
                             <signal name="row-activated" handler="onPlannedMomSelected" swapped="no"/>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -687,6 +719,9 @@
                             <property name="search-column">0</property>
                             <property name="enable-grid-lines">horizontal</property>
                             <signal name="row-activated" handler="onOccurredMomSelected" swapped="no"/>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">True</property>

@@ -1,0 +1,25 @@
+[Buildset]
+BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x00\x08\x00S\x00a\x00p\x00y)
+
+[Launch]
+Launch Configurations=Launch Configuration 0
+
+[Launch][Launch Configuration 0]
+Configured Launch Modes=execute
+Configured Launchers=scriptAppLauncher
+Name=Sapy gui
+Type=Script Application
+
+[Launch][Launch Configuration 0][Data]
+Arguments=--gui
+EnvironmentGroup=
+Executable=file:///home/stethewwolf/Progetti/GtkApplications/Sapy/sapy
+Execute on Remote Host=false
+Interpreter=python3
+Output Filtering Mode=0
+Remote Host=
+Run current file=false
+Working Directory=file:///home/stethewwolf
+
+[Project]
+VersionControlSupport=kdevgit
