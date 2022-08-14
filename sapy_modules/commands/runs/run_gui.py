@@ -377,6 +377,3 @@ class Handler:
         mom_dialog = self.gui_builder.get_object("momEditDialog")
         mom_dialog.hide()
         pass
-
-    #def onToggleChecksoxMom(self, widget, stuff):
-    #    pass
