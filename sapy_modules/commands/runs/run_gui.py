@@ -42,7 +42,6 @@ class RunGui(Command):
     cmd_type = SapyConstants.COMMANDS.RUN_GUI.TYPE
     cmd_action = SapyConstants.COMMANDS.RUN_GUI.ACTION
 
-
     def __init__(self, param):
         super().__init__()
         self.logger=LoggerFactory.getLogger(str( self.__class__ ))
@@ -81,12 +80,16 @@ class RunGui(Command):
         window = self.gui_builder.get_object("sapyWindow")
         window.show_all()
 
-        start_date = datetime.today()
+        self.signal_handler.start_date = datetime.today().date()
+        self.signal_handler.gui_data.day = self.signal_handler.start_date.day
+        self.signal_handler.gui_data.month = self.signal_handler.start_date.month
+        self.signal_handler.gui_data.year = self.signal_handler.start_date.year
         calendar = self.gui_builder.get_object("sapyCalendar")
-        calendar.select_day(start_date.day)
-        calendar.select_month(start_date.month-1, start_date.year)
-        end_date = start_date # + timedelta(days=1)
-        self.signal_handler.updateMomStoreContent(start_date.date(), end_date.date())
+        calendar.select_day(self.signal_handler.start_date.day)
+        calendar.select_month(self.signal_handler.start_date.month-1, self.signal_handler.start_date.year)
+        self.signal_handler.end_date = self.signal_handler.start_date # + timedelta(days=1)
+        #self.signal_handler.updateMomStoreContent(self.signal_handler.start_date.date(), self.signal_handler.end_date.date())
+        self.signal_handler.updateMomStoreContent()
 
         Gtk.main()
 
@@ -97,6 +100,9 @@ class GuiData():
         self.day = 1
         self.month_name = "Gen"
         self.add_mom_flag = False
+        self.mom = None
+        self.start_date = datetime.today().date()
+        self.end_date = datetime.today().date()
 
 class Handler:
     def __init__(self, gui_data:GuiData, gui_builder):
@@ -117,63 +123,50 @@ class Handler:
 
     def onDaySelected(self, button):
         calendar = self.gui_builder.get_object("sapyCalendar")
-        start_date = datetime(calendar.get_date().year, calendar.get_date().month+1, calendar.get_date().day)
-        end_date = start_date #+ timedelta(days=1)
-        self.updateMomStoreContent(start_date.date(), end_date.date())
+        self.gui_data.start_date = datetime(calendar.get_date().year, calendar.get_date().month+1, calendar.get_date().day)
+        self.gui_data.end_date = self.gui_data.start_date #+ timedelta(days=1)
+        #self.updateMomStoreContent(start_date.date(), end_date.date())
+        self.updateMomStoreContent()
 
     def onYearMonthViewSelected(self, spinButton):
-        print(spinButton.get_value())
         self.gui_data.year = int(spinButton.get_value())
+        self.gui_data.start_date = datetime(self.gui_data.year, self.gui_data.month, 1)
+        self.gui_data.end_date = datetime(self.gui_data.year, self.gui_data.month, clndr.monthrange(self.gui_data.year, self.gui_data.month)[1])
+        #self.updateMomStoreContent(start_date, end_date)
+        self.updateMomStoreContent()
 
     def onMonthSelected(self, button):
-        year_selector = self.gui_builder.get_object("monthViewYearValue")
-        year = int( year_selector.get_value() )
-        calendar = self.gui_builder.get_object("sapyCalendar")
-
-        month = 0
-
         month_name = button.get_label()
-
+        self.gui_data.month = 0
         if month_name == "Gen":
-            month = 1
+            self.gui_data.month = 1
         elif month_name == "Feb":
-            month = 2
+            self.gui_data.month = 2
         elif month_name == "Mar":
-            month = 3
+            self.gui_data.month = 3
         elif month_name == "Apr":
-            month = 4
+            self.gui_data.month = 4
         elif month_name == "May":
-            month = 5
+            self.gui_data.month = 5
         elif month_name == "Jun":
-            month = 6
+            self.gui_data.month = 6
         elif month_name == "Jul":
-            month = 7
+            self.gui_data.month = 7
         elif month_name == "Aug":
-            month = 8
+            self.gui_data.month = 8
         elif month_name == "Sep":
-            month = 9
+            self.gui_data.month = 9
         elif month_name == "Oct":
-            month = 10
+            self.gui_data.month = 10
         elif month_name == "Nov":
-            month = 11
+            self.gui_data.month = 11
         elif month_name == "Dec":
-            month = 12
+            self.gui_data.month = 12
 
-        if month != 0:
-            start_date = datetime(year, month, 1)
-            end_date = datetime(year, month, clndr.monthrange(year, month)[1])
-
-            print(start_date)
-            print(end_date)
-            momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
-            momOccurredStore.clear()
-            for mom in loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME).get_moms(start_date,end_date):
-                momOccurredStore.append([mom.id, mom.cause, mom.value ])
-
-            momPlannedStore = self.gui_builder.get_object("movementsPlannedStore")
-            momPlannedStore.clear()
-            for mom in loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME).get_moms(start_date,end_date):
-                momPlannedStore.append([mom.id, mom.cause, mom.value ])
+        if self.gui_data.month != 0:
+            self.gui_data.start_date = datetime(self.gui_data.year, self.gui_data.month, 1)
+            self.gui_data.end_date = datetime(self.gui_data.year, self.gui_data.month, clndr.monthrange(self.gui_data.year, self.gui_data.month)[1])
+            self.updateMomStoreContent()
 
     def onAddPlannedSelected(self, button):
         mom_dialog = self.gui_builder.get_object("momDialog")
@@ -201,7 +194,8 @@ class Handler:
             planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
             planned_lom.add([mom])
 
-            self.onDaySelected(None)
+            self.updateMomStoreContent()
+        print("closing dialog add occurred mom")
 
     def onAddOccurredSelected(self, button):
         self.gui_data.add_mom_flag = False
@@ -229,7 +223,8 @@ class Handler:
 
             occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
             occurred_lom.add([mom])
-            self.onDaySelected(None)
+            self.updateMomStoreContent()
+        print("closing dialog add occurred mom")
 
     def onMomDialogApplayButton(self, widget):
         self.gui_data.add_mom_flag = True
@@ -247,61 +242,43 @@ class Handler:
         planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
         planned_mom = planned_lom.get_mom(id=momPlannedStore[path][0])
 
-        mom_date = self.gui_builder.get_object("addMomDateEntry")
+        mom_date = self.gui_builder.get_object("editMomDateEntry")
         mom_date.set_text(                      \
             str(planned_mom.time.day) +  \
             " / " + str(planned_mom.time.month) + \
             " / " + str(planned_mom.time.year))
 
-        mom_cause = self.gui_builder.get_object("addMomCauseEntry")
+        mom_cause = self.gui_builder.get_object("editMomCauseEntry")
         mom_cause.set_text(planned_mom.cause)
-        mom_value = self.gui_builder.get_object("addMomValueEntry")
+        mom_value = self.gui_builder.get_object("editMomValueEntry")
         mom_value.set_text(str(planned_mom.value))
 
-        mom_dialog = self.gui_builder.get_object("momDialog")
+        mom_dialog = self.gui_builder.get_object("momEditDialog")
 
+        self.gui_data.mom = planned_mom
         mom_dialog.run()
-        mom_dialog.hide()
-
-        date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
-        planned_mom.update(
-                new_value=float(mom_value.get_text().replace(",", ".")),
-                new_cause=mom_cause.get_text(),
-                new_year=date.year,
-                new_month=date.month,
-                new_day=date.day
-                )
-        self.onDaySelected(None)
+        self.updateMomStoreContent()
 
     def onOccurredMomSelected(self, column, path, user_data):
-        momOccurredStore = builder.get_object("movementsOccurredStore")
+        momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
         occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
         occurred_mom = occurred_lom.get_mom(id=momOccurredStore[path][0])
-        mom_date = self.gui_builder.get_object("addMomDateEntry")
+        mom_date = self.gui_builder.get_object("editMomDateEntry")
         mom_date.set_text(                      \
             str(occurred_mom.time.day) +  \
             " / " + str(occurred_mom.time.month) + \
             " / " + str(occurred_mom.time.year))
 
-        mom_cause = self.gui_builder.get_object("addMomCauseEntry")
+        mom_cause = self.gui_builder.get_object("editMomCauseEntry")
         mom_cause.set_text(occurred_mom.cause)
-        mom_value = self.gui_builder.get_object("addMomValueEntry")
+        mom_value = self.gui_builder.get_object("editMomValueEntry")
         mom_value.set_text(str(occurred_mom.value))
 
-        mom_dialog = self.gui_builder.get_object("momDialog")
+        mom_dialog = self.gui_builder.get_object("momEditDialog")
 
+        self.gui_data.mom = occurred_mom
         mom_dialog.run()
-        mom_dialog.hide()
-
-        date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
-        occurred_mom.update(
-                new_value=float(mom_value.get_text().replace(",", ".")),
-                new_cause=mom_cause.get_text(),
-                new_year=date.year,
-                new_month=date.month,
-                new_day=date.day
-                )
-        self.onDaySelected(None)
+        self.updateMomStoreContent()
 
     def onDayViewSelected(self, button):
         notebook = self.gui_builder.get_object("dateTimeView")
@@ -311,46 +288,57 @@ class Handler:
     def onMonthViewSelected(self, button):
         notebook = self.gui_builder.get_object("dateTimeView")
         notebook.set_current_page(1)
-        calendar = self.bui_builder.get_object("sapyCalendar")
+        calendar = self.gui_builder.get_object("sapyCalendar")
         year_selector = self.gui_builder.get_object("monthViewYearValue")
-        year_selector.set_value(calendar.get_date().year)
-        cal_month = calendar.get_date().month
+        self.gui_data.month = calendar.get_date().month
+        self.gui_data.year = calendar.get_date().year
+        year_selector.set_value(self.gui_data.year)
 
-        if cal_month == 0:
+        if self.gui_data.month == 0:
             monthBtn = self.gui_builder.get_object("GenButton")
-        elif cal_month == 1 :
+        elif self.gui_data.month == 1 :
             monthBtn = self.gui_builder.get_object("FebButton")
-        elif cal_month == 2 :
+        elif self.gui_data.month == 2 :
             monthBtn = self.gui_builder.get_object("MarButton")
-        elif cal_month == 3 :
+        elif self.gui_data.month == 3 :
             monthBtn = self.gui_builder.get_object("AprButton")
-        elif cal_month == 4 :
+        elif self.gui_data.month == 4 :
             monthBtn = self.gui_builder.get_object("MayButton")
-        elif cal_month == 5 :
+        elif self.gui_data.month == 5 :
             monthBtn = self.gui_builder.get_object("JunButton")
-        elif cal_month == 6 :
+        elif self.gui_data.month == 6 :
             monthBtn = self.gui_builder.get_object("JulButton")
-        elif cal_month == 7 :
+        elif self.gui_data.month == 7 :
             monthBtn = self.gui_builder.get_object("AugButton")
-        elif cal_month == 8 :
+        elif self.gui_data.month == 8 :
             monthBtn = self.gui_builder.get_object("SepButton")
-        elif cal_month == 9 :
+        elif self.gui_data.month == 9 :
             monthBtn = self.gui_builder.get_object("OctButton")
-        elif cal_month == 10 :
+        elif self.gui_data.month == 10 :
             monthBtn = self.gui_builder.get_object("NovButton")
-        elif cal_month == 11 :
+        elif self.gui_data.month == 11 :
             monthBtn = self.gui_builder.get_object("DecButton")
         else :
             monthBtn = None
 
         if monthBtn is not None:
             monthBtn.activate()
+            #monthBtn.clicked()
 
     def onYearViewSelected(self, button):
         notebook = self.gui_builder.get_object("dateTimeView")
         notebook.set_current_page(2)
 
-    def updateMomStoreContent(self, start_date:datetime.date, end_date:datetime.date):
+        year_selector = self.gui_builder.get_object("yearViewYearValue")
+        year_selector.set_value(self.gui_data.year)
+        self.gui_data.start_date = datetime(day=1, month=1, year = self.gui_data.year).date()
+        self.gui_data.end_date = datetime(day=31, month=12, year = self.gui_data.year).date()
+        self.updateMomStoreContent()
+
+    def updateMomStoreContent(self):
+        self.updateMomStoreContentInPeriod(self.gui_data.start_date, self.gui_data.end_date)
+
+    def updateMomStoreContentInPeriod(self, start_date:datetime.date, end_date:datetime.date):
         momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
         momOccurredStore.clear()
         for mom in loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME).get_moms(start_date,end_date):
@@ -360,6 +348,35 @@ class Handler:
         momPlannedStore.clear()
         for mom in loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME).get_moms(start_date,end_date):
             momPlannedStore.append([mom.id, mom.cause, mom.value])
+
+    def onMomEditDialogApplayButton(self, button):
+        mom_date = self.gui_builder.get_object("editMomDateEntry")
+        mom_cause = self.gui_builder.get_object("editMomCauseEntry")
+        mom_value = self.gui_builder.get_object("editMomValueEntry")
+        date = datetime.strptime(mom_date.get_text(), '%d / %m / %Y')
+        self.gui_data.mom.update(
+                new_value=float(mom_value.get_text().replace(",", ".")),
+                new_cause=mom_cause.get_text(),
+                new_year=date.year,
+                new_month=date.month,
+                new_day=date.day
+                )
+        mom_dialog = self.gui_builder.get_object("momEditDialog")
+        mom_dialog.hide()
+        self.updateMomStoreContent()
+
+    def onMomEditDialogDeleteButton(self, button):
+        self.gui_data.mom.delete()
+
+        mom_dialog = self.gui_builder.get_object("momEditDialog")
+        mom_dialog.hide()
+        self.updateMomStoreContent()
+        pass
+
+    def onMomEditDialogCancelButton(self, button):
+        mom_dialog = self.gui_builder.get_object("momEditDialog")
+        mom_dialog.hide()
+        pass
 
     #def onToggleChecksoxMom(self, widget, stuff):
     #    pass
