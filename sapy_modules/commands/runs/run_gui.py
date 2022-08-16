@@ -30,6 +30,9 @@ from sapy_modules.utils import values as SapyValues
 from sapy_modules.commands.command import Command
 from sapy_modules.gui.gtk import Main_Window_View
 import calendar as clndr
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
+import matplotlib as mp
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -91,6 +94,14 @@ class RunGui(Command):
         #self.signal_handler.updateMomStoreContent(self.signal_handler.start_date.date(), self.signal_handler.end_date.date())
         self.signal_handler.updateMomStoreContent()
 
+        self.signal_handler.gui_data.fig = Figure(figsize=(5,5), dpi=100)
+        self.signal_handler.gui_data.ax = self.signal_handler.gui_data.fig.add_subplot(111)
+        canvas = FigureCanvas(self.signal_handler.gui_data.fig)
+        canvas.set_size_request(400,400)
+        d_area = self.gui_builder.get_object("GraphTab")
+        d_area.pack_start(canvas, True, True, 10)
+        d_area.show_all()
+
         Gtk.main()
 
 class GuiData():
@@ -103,6 +114,9 @@ class GuiData():
         self.mom = None
         self.start_date = datetime.today().date()
         self.end_date = datetime.today().date()
+        self.ax = None
+        self.fig = None
+        self.set_start_date_flag = True
 
 class Handler:
     def __init__(self, gui_data:GuiData, gui_builder):
@@ -120,19 +134,18 @@ class Handler:
     def onGraphTabSelected(self, button):
         notebook = self.gui_builder.get_object("sapyNotebooks")
         notebook.set_current_page(1)
+        self.updatePlot()
 
     def onDaySelected(self, button):
         calendar = self.gui_builder.get_object("sapyCalendar")
         self.gui_data.start_date = datetime(calendar.get_date().year, calendar.get_date().month+1, calendar.get_date().day)
         self.gui_data.end_date = self.gui_data.start_date #+ timedelta(days=1)
-        #self.updateMomStoreContent(start_date.date(), end_date.date())
         self.updateMomStoreContent()
 
     def onYearMonthViewSelected(self, spinButton):
         self.gui_data.year = int(spinButton.get_value())
         self.gui_data.start_date = datetime(self.gui_data.year, self.gui_data.month, 1)
         self.gui_data.end_date = datetime(self.gui_data.year, self.gui_data.month, clndr.monthrange(self.gui_data.year, self.gui_data.month)[1])
-        #self.updateMomStoreContent(start_date, end_date)
         self.updateMomStoreContent()
 
     def onMonthSelected(self, button):
@@ -224,7 +237,6 @@ class Handler:
             occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
             occurred_lom.add([mom])
             self.updateMomStoreContent()
-        print("closing dialog add occurred mom")
 
     def onMomDialogApplayButton(self, widget):
         self.gui_data.add_mom_flag = True
@@ -371,9 +383,53 @@ class Handler:
         mom_dialog = self.gui_builder.get_object("momEditDialog")
         mom_dialog.hide()
         self.updateMomStoreContent()
-        pass
 
     def onMomEditDialogCancelButton(self, button):
         mom_dialog = self.gui_builder.get_object("momEditDialog")
         mom_dialog.hide()
-        pass
+
+    def updatePlot(self):
+        self.gui_data.ax.clear()
+
+        occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
+        bxd_occurred_lom = occurred_lom.balance_per_day(self.gui_data.start_date, self.gui_data.end_date)
+        self.gui_data.ax.scatter(mp.dates.date2num(bxd_occurred_lom[0]), bxd_occurred_lom[1], label=occurred_lom.name, marker="+", color=occurred_lom.color)
+
+        planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
+        bxd_planned_lom = planned_lom.balance_per_day(self.gui_data.start_date, self.gui_data.end_date)
+        self.gui_data.ax.scatter(mp.dates.date2num(bxd_planned_lom[0]), bxd_planned_lom[1], label=planned_lom.name, marker="+", color=planned_lom.color)
+
+        self.gui_data.ax.set_xlim(self.gui_data.start_date, self.gui_data.end_date)
+
+        self.gui_data.ax.plot()
+        self.gui_data.ax.legend()
+
+        self.gui_data.fig.autofmt_xdate()
+
+    def onGraphSetStartDate(self, button):
+        self.gui_data.set_start_date_flag = True
+        cal_dialog = self.gui_builder.get_object("GtkCalendarDialog")
+        cal_dialog.run()
+        cal_dialog.hide()
+
+    def onGraphSetEndDate(self, button):
+        self.gui_data.set_start_date_flag = False
+        cal_dialog = self.gui_builder.get_object("GtkCalendarDialog")
+        cal_dialog.run()
+        cal_dialog.hide()
+
+    def onGraphSetDateSelected(self, button):
+        cal_dialog = self.gui_builder.get_object("GtkCalendarDialog")
+        cal_dialog.hide()
+        calendar = self.gui_builder.get_object("CalendarDialog")
+
+        if self.gui_data.set_start_date_flag:
+            self.gui_data.start_date = datetime(calendar.get_date().year, calendar.get_date().month+1, calendar.get_date().day)
+        else:
+            self.gui_data.end_date = datetime(calendar.get_date().year, calendar.get_date().month+1, calendar.get_date().day)
+
+        self.updatePlot()
+
+    def onGtkCalendarDialogClose(self, button):
+        cal_dialog = self.gui_builder.get_object("GtkCalendarDialog")
+        cal_dialog.hide()

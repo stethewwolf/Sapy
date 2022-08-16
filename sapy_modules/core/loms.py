@@ -1,16 +1,16 @@
 # Sapy
 # Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -149,8 +149,8 @@ class Lom(object):  # list of movements
         self.id    = None
 
     def get_moms(
-        self, 
-        start_date=datetime.datetime.today().date(), 
+        self,
+        start_date=datetime.datetime.today().date(),
         end_date=datetime.datetime.today().date()
         ):
         mlist = []
@@ -228,16 +228,16 @@ class Lom(object):  # list of movements
                 #    year=raw_year,
                 #    month=raw_month,
                 #    day=raw_day
-                #) 
- 
-                mom_list.append( 
+                #)
+
+                mom_list.append(
                     Mom(
                         cause= raw_mom['cause'],
                         value= raw_mom['value'],
                         year=raw_mom['year'],
                         month=raw_mom['month'],
                         day=raw_mom['day']
-                    ) 
+                    )
                 )
 
         self.add(mom_list)
@@ -247,7 +247,7 @@ class Lom(object):  # list of movements
 
         for m in self.get_moms(start_date=start_date,end_date=end_date):
             balance += m.value
-            
+
         return balance
 
     def balance_per_day(self, start_date=None, end_date=None):
@@ -312,7 +312,7 @@ def get_lom(name=None, id=None):
         cur.execute(GET_LOM_BY_ID,(id,))
     res = cur.fetchone()
     cur.close()
-    return Lom(res[0], res[1])
+    return Lom(res[0], res[1], res[2], res[3])
 
 def get_loms():
     llist=[]
