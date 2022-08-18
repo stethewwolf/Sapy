@@ -23,6 +23,7 @@ from sapy_modules.utils import values as SapyValues
 import sapy_modules.utils.db as db_iface
 import datetime,csv
 from sapy_modules.core.moms import Mom
+import re
 
 CREATE_TABLE_LOM= """
 	CREATE TABLE "loms" (
@@ -201,44 +202,28 @@ class Lom(object):  # list of movements
 
     def csv_import(self,csv_file):
         mom_list = []
-        #m_dialect = csv.Dialect()
-        #m_dialect.delimiter=";"
         with open(str(csv_file.get_path()),'r') as data_file:
             data = csv.DictReader(data_file, fieldnames=[
+                'date',
                 'cause',
-                'value',
-                'day',
-                'month',
-                'year'
-            ])
-            #data = csv.DictReader(data_file, fieldnames=[
-            #    'cause',
-            #    'value',
-            #    'date'
-            #], dialect=m_dialect)
+                'value'
+            ], delimiter=";",quoting=csv.QUOTE_NONE) # TODO : add configuration option for delimiter
 
             for raw_mom in data:
-                #raw_year  = raw_mom['date'].split('.')[2]
-                #raw_month = raw_mom['date'].split('.')[1]
-                #raw_day = raw_mom['date'].split('.')[0]
+                # TODO : add configuration option for manage date formats
+                raw_year  = raw_mom['date'].split('.')[2]
+                raw_month = raw_mom['date'].split('.')[1]
+                raw_day = raw_mom['date'].split('.')[0]
 
-                #mom_list.append( Mom(
-                #    cause= raw_mom['cause'],
-                #    value= raw_mom['value'],
-                #    year=raw_year,
-                #    month=raw_month,
-                #    day=raw_day
-                #)
-
-                mom_list.append(
-                    Mom(
-                        cause= raw_mom['cause'],
-                        value= raw_mom['value'],
-                        year=raw_mom['year'],
-                        month=raw_mom['month'],
-                        day=raw_mom['day']
-                    )
+                mom = Mom(
+                    cause= re.escape( raw_mom['cause']),
+                    value= float(raw_mom['value'].replace(",",".")),
+                    year=raw_year,
+                    month=raw_month,
+                    day=raw_day
                 )
+
+                mom_list.append( mom )
 
         self.add(mom_list)
 

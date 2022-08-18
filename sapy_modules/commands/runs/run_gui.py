@@ -117,6 +117,7 @@ class GuiData():
         self.ax = None
         self.fig = None
         self.set_start_date_flag = True
+        self.is_file_been_imported_flag = True
 
 class Handler:
     def __init__(self, gui_data:GuiData, gui_builder):
@@ -433,3 +434,47 @@ class Handler:
     def onGtkCalendarDialogClose(self, button):
         cal_dialog = self.gui_builder.get_object("GtkCalendarDialog")
         cal_dialog.hide()
+
+    def onMenuButton(self,button):
+        menu = self.gui_builder.get_object("menuPopOver")
+        menu.show_all()
+
+    def onImportButton(self,button):
+        menu = self.gui_builder.get_object("menuPopOver")
+        menu.hide()
+        self.gui_data.is_file_been_imported_flag = True
+        file_dialog = self.gui_builder.get_object("fileChooserDialog")
+        file_dialog.run()
+        file_dialog.hide()
+
+    def onExportButton(self,button):
+        self.gui_data.is_file_been_imported_flag = False
+        menu = self.gui_builder.get_object("menuPopOver")
+        menu.hide()
+        file_dialog = self.gui_builder.get_object("fileChooserDialog")
+        file_dialog.run()
+        file_dialog.hide()
+
+    def onFileChooserCancelButton(self,button):
+        file_dialog = self.gui_builder.get_object("fileChooserDialog")
+        file_dialog.hide()
+
+    def onFileChooserOkButton(self,button):
+        file_dialog = self.gui_builder.get_object("fileChooserDialog")
+        plannedCheckBox =  self.gui_builder.get_object("FileChooserPlannedCheck")
+        occurredCheckBox = self.gui_builder.get_object("FileChooserOccurredCheck")
+        workInProgressMessage = self.gui_builder.get_object("workInProgressMessage")
+        planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
+        occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
+
+        file_dialog.hide()
+        if plannedCheckBox.get_active():
+            workInProgressMessage.show_all()
+            planned_lom.csv_import(file_dialog.get_file())
+            workInProgressMessage.hide()
+
+        if occurredCheckBox.get_active():
+            workInProgressMessage.show_all()
+            occurred_lom.csv_import(file_dialog.get_file())
+            workInProgressMessage.hide()
+
