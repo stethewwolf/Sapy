@@ -13,5 +13,36 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-__all__ = [ "commands", "core", "gui", "sapy"]
+import sqlite3
+from sapy_modules.utils import config as SingleConfig
+
+connession = None
+
+def open():
+    global  connession
+    if not connession :
+        connession = sqlite3.connect( SingleConfig.getConfig()['private']['data'] )
+    pass
+
+def get_cursor():
+    global connession
+
+    if not connession :
+        open()
+
+    return connession.cursor()
+
+def commit():
+    global connession
+
+    if connession :
+        connession.commit()
+
+def close():
+    global connession
+
+    if connession :
+        connession.close()
+

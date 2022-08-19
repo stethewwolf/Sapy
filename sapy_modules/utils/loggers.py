@@ -13,5 +13,34 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-__all__ = [ "commands", "core", "gui", "sapy"]
+import logging, sys
+
+loggerList = []
+logLevel = logging.INFO
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+def getLogger(name):
+    global logLevel
+    global loggerList
+    logger = logging.getLogger(name)
+    logger.setLevel(logLevel)
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logLevel)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    loggerList.append(logger)
+
+    return logger
+
+def setLogFile(file):
+    global logLevel
+    global loggerList
+    handler = logging.StreamHandler(file)
+    handler.setLevel(logLevel)
+    handler.setFormatter(formatter)
+
+    for l in loggerList:
+        l.addHandler(handler)

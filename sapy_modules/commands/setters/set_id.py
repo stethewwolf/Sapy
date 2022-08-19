@@ -13,5 +13,30 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-__all__ = [ "commands", "core", "gui", "sapy"]
+from sapy_modules.utils import loggers as LoggerFactory
+from sapy_modules.utils import config as SingleConfig
+from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.utils import values as SapyValues
+from sapy_modules.commands.command import Command
+
+
+class SetId ( Command ):
+    short_arg = None
+    long_arg = 'id'
+    cmd_help = 'specify id for operation'
+    cmd_type = str
+    cmd_action = None
+
+    def __init__( self, param ):
+        super().__init__()
+        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.id=param
+
+    def run( self ):
+        self.logger.debug("start")
+
+        SapyValues.set_value('id', self.id)
+
+        self.logger.debug("end")

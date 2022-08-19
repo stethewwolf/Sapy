@@ -18,16 +18,26 @@
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.utils import values as SapyValues
+from sapy_modules.commands.command import Command
+import sapy_modules.core.tags as tags
 
-class Command (object):
-    short_arg = SapyConstants.COMMANDS.CMD.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.CMD.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.CMD.HELP
-    cmd_type = SapyConstants.COMMANDS.CMD.TYPE
-    cmd_action = SapyConstants.COMMANDS.CMD.ACTION
+class SetTag ( Command ):
+    short_arg = None
+    long_arg = 'tag'
+    cmd_help = 'set the tag for the mom'
+    cmd_type = str
+    cmd_action = None
 
-    def __init__( self, param = None ):
-        self.cfg = SingleConfig.getConfig()
+    def __init__( self, param ):
+        super().__init__()
+        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.name = param
 
     def run( self ):
-        pass
+        self.logger.debug("start")
+
+        t_id = tags.get_tag(name=self.name).id
+        SapyValues.set_value( 'tag', t_id )
+
+        self.logger.debug("end")

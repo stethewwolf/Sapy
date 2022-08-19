@@ -18,16 +18,23 @@
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.commands.command import Command
+from sapy_modules.utils import values as SapyValues
 
-class Command (object):
-    short_arg = SapyConstants.COMMANDS.CMD.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.CMD.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.CMD.HELP
-    cmd_type = SapyConstants.COMMANDS.CMD.TYPE
-    cmd_action = SapyConstants.COMMANDS.CMD.ACTION
+class SetDaily (Command):
+    short_arg = SapyConstants.COMMANDS.SET_DAILY.SHORT_ARG
+    long_arg = SapyConstants.COMMANDS.SET_DAILY.LONG_ARG
+    cmd_help = SapyConstants.COMMANDS.SET_DAILY.HELP
+    cmd_type = SapyConstants.COMMANDS.SET_DAILY.TYPE
+    cmd_action = SapyConstants.COMMANDS.SET_DAILY.ACTION
 
-    def __init__( self, param = None ):
-        self.cfg = SingleConfig.getConfig()
+    def __init__(self, param):
+        super().__init__()
+        self.logger = LoggerFactory.getLogger(str( self.__class__))
 
-    def run( self ):
-        pass
+    def run(self):
+        self.logger.debug("start")
+
+        SapyValues.set_value('frequency', SapyConstants.FREQUENCY.DAILY)
+
+        self.logger.debug("end")

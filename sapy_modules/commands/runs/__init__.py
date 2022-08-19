@@ -13,5 +13,25 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-__all__ = [ "commands", "core", "gui", "sapy"]
+__all__ = [
+    'RunAdd', 
+    'RunGraph', 
+    'RunGui', 
+    'RunImport', 
+    'RunList', 
+    'RunRemove', 
+    'RunVersion',
+    'RunBalance'
+    ]
+
+# deprecated to keep older scripts who import this from breaking
+from sapy_modules.commands.runs.run_add       import RunAdd
+from sapy_modules.commands.runs.run_graph     import RunGraph
+from sapy_modules.commands.runs.run_gui       import RunGui
+from sapy_modules.commands.runs.run_import    import RunImport
+from sapy_modules.commands.runs.run_list  import RunList
+from sapy_modules.commands.runs.run_remove    import RunRemove
+from sapy_modules.commands.runs.run_version   import RunVersion
+from sapy_modules.commands.runs.run_balance   import RunBalance

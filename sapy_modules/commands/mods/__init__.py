@@ -13,5 +13,17 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-__all__ = [ "commands", "core", "gui", "sapy"]
+__all__ = [
+    'NewYear',
+    'NewMonth',
+    'EndWeek',
+    'EndMonth'
+    ]
+
+# deprecated to keep older scripts who import this from breaking
+from sapy_modules.commands.mods.new_year    import NewYear
+from sapy_modules.commands.mods.new_month   import NewMonth
+from sapy_modules.commands.mods.end_week    import EndWeek
+from sapy_modules.commands.mods.end_month   import EndMonth
