@@ -1,57 +1,61 @@
 # SAPY
 
 The purpose of this softeware is to allow a quick view of your personal budget.
-Is designed to allow the creation of various lists of money moves and to compare
- them graphically.
+The idea behind this software is implement an interface for the Japanese Kakeibo method.
+The word "kakeibo" can be translated as Household ledger and is literally meant
+for household financial management. Kakeibos vary in structure, but the basic
+idea is the same. At the beginning of the month, the kakeibo writes down the
+income and necessary expenses for the beginning month and decides some kind of
+savings target. The user then records their own expenses on a daily basis, which
+are added together first at the end of the week and later at the end of the month.
+At the end of the month, a summary of the month's spending is written in kakeibo.
+In addition to expenses and income, thoughts and observations are written in kakeibo
+with the aim of raising awareness of one's own consumption.
+
+* [references](https://en.wikipedia.org/wiki/Kakeibo)
+
+
+Important acronyms:
+
+* mom : movement of money, it used to represent an  money income or outcome and it is described using date, value and cause
+* lom : list of movements, a bunch of moms
 
 ## Installation
 
-### Prerequisites
-
-#### Fedora
-
-In order to run the application
-
-```sudo dnf install python3-matplotlib python3-matplotlib-gtk3```
-
-#### Ubuntu
-
-In order to run the application
-
-```sudo apt install python3-matplotlib```
-
-
-### Download and Install 
-
-The following commands will 
- * download the application 
+### Manual Installation
+The following commands will
+ * download the application
+    ```
+        $ wget https://github.com/stethewwolf/Sapy/archive/v<version>.tar.gz -O sapy-v<version>.tar.gz
+    ```
  * extract it to ~/.local/Sapy-<version>
+    ```
+        $ tar -xf sapy-<version>.tar.gz -C $HOME/.local/
+    ```
  * create laucher in menu
+    ```
+        $ cd $HOME/.local/Sapy-<version>
+    ```
  * create a link in user PATH ( export PREFIX to define)
-
-```
-    $ wget https://github.com/stethewwolf/Sapy/archive/v<version>.tar.gz -O sapy-v<version>.tar.gz
-
-    $ tar -xf sapy-<version>.tar.gz -C $HOME/.local/
-
-    $ cd $HOME/.local/Sapy-<version>
-
-    $ install.sh -i
-```
+    ```
+        $ install.sh -i
+    ```
 
 ## Usage
 
+The user can run the application in two way:
+* using the command line
+* using a gtk ui
+
 ### Command Line
 
-#### Dsiplay Help
+Application Usage :
+
 ```
-$ sapy -h
-usage: Sapy [-h] [--add ADD] [--graph] [--gui] [--import IMPORT] [--list LIST]
-            [--rm RM] [--version] [--balance] [--daily] [--end-date END_DATE]
-            [--id ID] [--monthly] [--lom LOM] [--start-date START_DATE]
-            [--value VALUE] [--weekly] [--cause CAUSE] [--date DATE]
-            [--name NAME] [--new-year] [--new-month] [--end-week]
-            [--end-month]
+sapy -h
+usage: Sapy [-h] [--add ADD] [--graph] [--gui] [--import IMPORT] [--list LIST] [--rm RM] [--version] [--balance] [--daily]
+            [--end-date END_DATE] [--id ID] [--monthly] [--lom LOM] [--start-date START_DATE] [--value VALUE] [--weekly]
+            [--cause CAUSE] [--date DATE] [--name NAME] [--new-year] [--new-month] [--end-week] [--end-month]
 
 A spending traking tool
 
@@ -86,74 +90,29 @@ optional arguments:
   --end-month           ends the month
 
 ```
-#### Display Version
 
-```
-[stethewwolf@hel ~]$ sapy -V
-Sapy - 1.0.0
-	
-                        Stefano Prina <stethewwolf@gmail.com>
-                         
+### User interface
 
-```
-#### List available list of movements
-```
-$ sapy -l lom
-------------------------------
-	id	|	name	          
-------------------------------
-	1	|	real	
-	2	|	expected	
-------------------------------
-```
+The use interface is implemented using [glade](https://glade.gnome.org/) and [pygtk](https://pygobject.readthedocs.io/en/latest/).
 
-#### List movements on a list
-```
-$ sapy -l mom --lom real
+It is composed by one window, splitted in two panels.
 
-------------------------------
-real
-------------------------------
-	id	|	time	|	value	|	cause	
-	6	|	2010-06-22	|	-8.89	|	Stuff
-------------------------------
- balance : -8.89
-------------------------------
-
-```
+#### LOMS
+In this panel user can add/remove or modify moms.
 
 
-#### Add a Movement
+#### Graph
 
-#### Remove Movement
-
-#### Import From CSV File
-
-### GUI
-
-#### Select A List
-
-#### Add a Movement
-
-#### Remove Movement
-
-#### Import From CSV File
+Here
 
 ## Notes
-
 ### CSV File Format
 
-The CSV file you are importing must have following columns 
+The CSV file you are importing must have following columns
 
-  * cause,
-
-  * value,
-
-  * day,
-
-  * month,
-
-  * year
+    * date (dd.mm.yyyy),
+    * cause,
+    * value,
 
 the delimiter for decimal values is the char '.'
 

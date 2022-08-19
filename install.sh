@@ -1,17 +1,17 @@
 #!/bin/sh
 # Sapy
 # Copyright (C) 2018 stefano prina <stefano-prina@outlook.it>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -21,8 +21,8 @@
 # and copying a desktop file to the user's dir.
 # If called with the "-u" option, it will undo the changes.
 
-# Resource name to use 
-RESOURCE_NAME=sapy-stethewwolf
+# Resource name to use
+RESOURCE_NAME=eu.stethewwolf.sapy
 
 # Get absolute path from which this script file was executed
 # (Could be changed to "pwd -P" to resolve symlinks to their target)
@@ -60,7 +60,7 @@ xdg_install_f() {
       -e "s,<ICON_NAME>,${RESOURCE_NAME},g" "${SCRIPT_PATH}/desktop.template" > "${TMP_DIR}/${RESOURCE_NAME}.desktop"
 
   # Install the icon files using name and resolutions
-  xdg-icon-resource install --context apps --size 32 "${SCRIPT_PATH}/icon/icon.png" $RESOURCE_NAME
+  xdg-icon-resource install --context apps --size 32 "${SCRIPT_PATH}/icon/icon.png" $RESOURCE_NAME.png
 
   # Install the created *.desktop file
   xdg-desktop-menu install "${TMP_DIR}/${RESOURCE_NAME}.desktop"
@@ -106,7 +106,7 @@ simple_install_f() {
 # Uninstall using xdg-utils
 xdg_uninstall_f() {
 
-  # Clean PREFIX 
+  # Clean PREFIX
   if [ -f $PREFIX/sapy ];then
     rm -v $PREFIX/sapy
   fi
@@ -125,7 +125,7 @@ xdg_uninstall_f() {
 
 # Uninstall by simply removing desktop files (fallback), incl. old one
 simple_uninstall_f() {
-  # Clean PREFIX 
+  # Clean PREFIX
   if [ -f $PREFIX/sapy ];then
     rm -v $PREFIX/sapy
   fi
@@ -272,7 +272,7 @@ if xdg_exists_f; then
     simple_uninstall_f
     updatedbs_f
     printf " done!\n"
- 
+
   elif [ ${INSTALL} = true ]; then
     printf "Adding desktop shortcut, menu item for Sapy..."
     xdg_uninstall_f
@@ -280,7 +280,7 @@ if xdg_exists_f; then
     xdg_install_f
     updatedbs_f
     printf " done!\n"
- 
+
   elif [ ${BUILD_INSTALL} = true ]; then
     printf "Building and adding desktop shortcut, menu item for Sapy..."
     xdg_uninstall_f
@@ -289,7 +289,7 @@ if xdg_exists_f; then
     xdg_build_install_f
     updatedbs_f
     printf " done!\n"
- 
+
   else
     display_help_f
   fi
@@ -299,14 +299,14 @@ else
     simple_uninstall_f
     updatedbs_f
     printf " done!\n"
- 
+
   elif [ ${INSTALL} = true ]; then
     printf "Adding desktop shortcut and menu item for Sapy..."
     simple_uninstall_f
     simple_install_f
     updatedbs_f
     printf " done!\n"
- 
+
   elif [ ${BUILD_INSTALL} = true ]; then
     printf "Building and adding desktop shortcut, menu item for Sapy..."
     simple_uninstall_f
