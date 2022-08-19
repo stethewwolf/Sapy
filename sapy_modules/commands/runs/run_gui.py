@@ -352,9 +352,16 @@ class Handler:
     def onYearViewSelected(self, button):
         notebook = self.gui_builder.get_object("dateTimeView")
         notebook.set_current_page(2)
-
         year_selector = self.gui_builder.get_object("yearViewYearValue")
         year_selector.set_value(self.gui_data.year)
+        self.gui_data.start_date = datetime(day=1, month=1, year = self.gui_data.year).date()
+        self.gui_data.end_date = datetime(day=31, month=12, year = self.gui_data.year).date()
+        self.updateMomStoreContent()
+        self.updateTotalLabels()
+
+    def onYearViewYearValueChanged(self, button):
+        year_selector = self.gui_builder.get_object("yearViewYearValue")
+        self.gui_data.year = int(year_selector.get_value())
         self.gui_data.start_date = datetime(day=1, month=1, year = self.gui_data.year).date()
         self.gui_data.end_date = datetime(day=31, month=12, year = self.gui_data.year).date()
         self.updateMomStoreContent()

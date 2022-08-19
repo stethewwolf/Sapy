@@ -1020,6 +1020,7 @@
                             <property name="input-purpose">number</property>
                             <property name="adjustment">yearAdjustment</property>
                             <property name="numeric">True</property>
+                            <signal name="value-changed" handler="onYearViewYearValueChanged" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
