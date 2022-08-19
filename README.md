@@ -21,6 +21,11 @@ Important acronyms:
 * lom : list of movements, a bunch of moms
 
 ## Installation
+### Dependencies
+#### Debian/Ubuntu
+    ```
+    $ sudo apt install python3-matplotlib```
+    ```
 
 ### Manual Installation
 The following commands will
@@ -92,7 +97,6 @@ optional arguments:
 ```
 
 ### User interface
-
 The use interface is implemented using [glade](https://glade.gnome.org/) and [pygtk](https://pygobject.readthedocs.io/en/latest/).
 
 It is composed by one window, splitted in two panels.
@@ -100,10 +104,26 @@ It is composed by one window, splitted in two panels.
 #### LOMS
 In this panel user can add/remove or modify moms.
 
-
 #### Graph
 
-Here
+Here you can see the graphical rapresentation.
+
+#### Gallery
+
+
+![graph](media/sapy_page_graph.png)
+
+
+![day view](media/sapy_lom_page.png)
+
+
+![year view](media/sapy_lom_page_year_view.png)
+
+
+![month view](media/sapy_lom_page_month_view.png)
+
+
+![sapy usage](media/sapy.gif)
 
 ## Notes
 ### CSV File Format
