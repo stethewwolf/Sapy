@@ -22,18 +22,17 @@ from signal import signal
 from traceback import print_tb
 from sapy_modules.core import loms
 from sapy_modules.core.moms import Mom
-from sapy_modules.gui.gtk.dialogs import add_mom_dialog
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
 from sapy_modules.utils import values as SapyValues
 from sapy_modules.commands.command import Command
-from sapy_modules.gui.gtk import Main_Window_View
 import calendar as clndr
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
 import matplotlib as mp
-
+import os
+from pathlib import Path
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -52,7 +51,10 @@ class RunGui(Command):
         self.signal_handler = Handler(GuiData(), self.gui_builder)
 
     def run( self ):
-        self.gui_builder.add_from_file("/home/stethewwolf/Progetti/GtkApplications/Sapy/sapy_modules/gui/gtk/glade/sapy.glade")
+        run_gui_file = Path(__file__)
+        sapy_modules_folder = run_gui_file.parents[2]
+        glade_file = os.path.join(sapy_modules_folder,'gui/gtk/sapy.glade')
+        self.gui_builder.add_from_file(glade_file)
         self.gui_builder.connect_signals(self.signal_handler)
 
         notebook = self.gui_builder.get_object("sapyNotebooks")
