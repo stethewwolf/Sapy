@@ -469,18 +469,18 @@ class Handler:
         file_dialog.hide()
 
     def onExportButton(self,button):
-        self.gui_data.is_file_been_imported_flag = False
         menu = self.gui_builder.get_object("menuPopOver")
         menu.hide()
+        self.gui_data.is_file_been_imported_flag = False
         file_dialog = self.gui_builder.get_object("fileChooserDialog")
         file_dialog.run()
         file_dialog.hide()
 
-    def onFileChooserCancelButton(self,button):
+    def onFileChooserCancelButton(self, button):
         file_dialog = self.gui_builder.get_object("fileChooserDialog")
         file_dialog.hide()
 
-    def onFileChooserOkButton(self,button):
+    def onFileChooserOkButton(self, button):
         file_dialog = self.gui_builder.get_object("fileChooserDialog")
         plannedCheckBox =  self.gui_builder.get_object("FileChooserPlannedCheck")
         occurredCheckBox = self.gui_builder.get_object("FileChooserOccurredCheck")
@@ -491,12 +491,22 @@ class Handler:
         file_dialog.hide()
         if plannedCheckBox.get_active():
             workInProgressMessage.show_all()
-            planned_lom.csv_import(file_dialog.get_file())
+
+            if self.gui_data.is_file_been_imported_flag:
+                planned_lom.csv_import(file_dialog.get_file())
+            else:
+                planned_lom.csv_export(file_dialog.get_file(),self.gui_data.start_date,self.gui_data.end_date)
+
             workInProgressMessage.hide()
 
         if occurredCheckBox.get_active():
             workInProgressMessage.show_all()
-            occurred_lom.csv_import(file_dialog.get_file())
+
+            if self.gui_data.is_file_been_imported_flag:
+                occurred_lom.csv_import(file_dialog.get_file())
+            else:
+                occurred_lom.csv_export(file_dialog.get_file(),self.gui_data.start_date,self.gui_data.end_date)
+
             workInProgressMessage.hide()
 
     def updateTotalLabels(self):

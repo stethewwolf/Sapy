@@ -227,6 +227,13 @@ class Lom(object):  # list of movements
 
         self.add(mom_list)
 
+    def csv_export(self,csv_file, start_date=None, end_date=None):
+        with open(str(csv_file.get_path()),'a') as data_file:
+            mom_list = self.get_moms(start_date,end_date)
+            writer = csv.writer(data_file, quoting=csv.QUOTE_NONNUMERIC)
+            for mom in mom_list:
+                writer.writerow([mom.time, mom.value, mom.cause])
+
     def balance(self, start_date=None, end_date=None):
         balance = 0
 
