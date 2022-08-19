@@ -149,19 +149,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Select CSV File</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -173,7 +161,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">3</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
@@ -213,7 +201,19 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Select CSV File</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -577,20 +577,24 @@
     <columns>
       <!-- column-name id -->
       <column type="gint64"/>
-      <!-- column-name cause -->
+      <!-- column-name date -->
       <column type="gchararray"/>
       <!-- column-name value -->
       <column type="gfloat"/>
+      <!-- column-name cause -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkListStore" id="movementsPlannedStore">
     <columns>
       <!-- column-name id -->
       <column type="gint64"/>
-      <!-- column-name cause -->
+      <!-- column-name date -->
       <column type="gchararray"/>
       <!-- column-name value -->
       <column type="gfloat"/>
+      <!-- column-name cause -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkMessageDialog" id="workInProgressMessage">
@@ -1058,15 +1062,22 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkTreeView" id="movementsPlannedView">
+                          <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="model">movementsPlannedStore</property>
-                            <property name="search-column">0</property>
-                            <property name="enable-grid-lines">horizontal</property>
-                            <signal name="row-activated" handler="onPlannedMomSelected" swapped="no"/>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
+                            <property name="shadow-type">in</property>
+                            <child>
+                              <object class="GtkTreeView" id="movementsPlannedView">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="model">movementsPlannedStore</property>
+                                <property name="search-column">0</property>
+                                <property name="enable-grid-lines">horizontal</property>
+                                <signal name="row-activated" handler="onPlannedMomSelected" swapped="no"/>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                           <packing>
@@ -1102,6 +1113,41 @@
                             <property name="fill">True</property>
                             <property name="pack-type">end</property>
                             <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">total : </property>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="PlannedTotalLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">0</property>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
                           </packing>
                         </child>
                       </object>
@@ -1142,15 +1188,22 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkTreeView" id="movementsOccurredView">
+                          <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="model">movementsOccurredStore</property>
-                            <property name="search-column">0</property>
-                            <property name="enable-grid-lines">horizontal</property>
-                            <signal name="row-activated" handler="onOccurredMomSelected" swapped="no"/>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
+                            <property name="shadow-type">in</property>
+                            <child>
+                              <object class="GtkTreeView" id="movementsOccurredView">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="model">movementsOccurredStore</property>
+                                <property name="search-column">0</property>
+                                <property name="enable-grid-lines">horizontal</property>
+                                <signal name="row-activated" handler="onOccurredMomSelected" swapped="no"/>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                           <packing>
@@ -1187,6 +1240,41 @@
                             <property name="fill">True</property>
                             <property name="pack-type">end</property>
                             <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">total : </property>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="OccurredTotalLabel">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">0</property>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
                           </packing>
                         </child>
                       </object>

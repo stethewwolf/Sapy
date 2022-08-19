@@ -62,22 +62,28 @@ class RunGui(Command):
         momOccurredView.append_column (
             Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
         )
-        momOccurredView.append_column (
-            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=1)
-        )
+        occurred_date_column = Gtk.TreeViewColumn("date",Gtk.CellRendererText(), text=1)
+        occurred_date_column.set_sort_column_id(1)
+        momOccurredView.append_column (occurred_date_column)
         momOccurredView.append_column (
             Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=2)
+        )
+        momOccurredView.append_column (
+            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=3)
         )
 
         momPlannedView = self.gui_builder.get_object("movementsPlannedView")
         momPlannedView.append_column (
             Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
         )
-        momPlannedView.append_column (
-            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=1)
-        )
+        planned_date_column = Gtk.TreeViewColumn("date",Gtk.CellRendererText(), text=1)
+        planned_date_column.set_sort_column_id(1)
+        momPlannedView.append_column (planned_date_column)
         momPlannedView.append_column (
             Gtk.TreeViewColumn("value",Gtk.CellRendererText(), text=2)
+        )
+        momPlannedView.append_column (
+            Gtk.TreeViewColumn("cause",Gtk.CellRendererText(), text=3)
         )
 
         window = self.gui_builder.get_object("sapyWindow")
@@ -142,12 +148,14 @@ class Handler:
         self.gui_data.start_date = datetime(calendar.get_date().year, calendar.get_date().month+1, calendar.get_date().day)
         self.gui_data.end_date = self.gui_data.start_date #+ timedelta(days=1)
         self.updateMomStoreContent()
+        self.updateTotalLabels()
 
     def onYearMonthViewSelected(self, spinButton):
         self.gui_data.year = int(spinButton.get_value())
         self.gui_data.start_date = datetime(self.gui_data.year, self.gui_data.month, 1)
         self.gui_data.end_date = datetime(self.gui_data.year, self.gui_data.month, clndr.monthrange(self.gui_data.year, self.gui_data.month)[1])
         self.updateMomStoreContent()
+        self.updateTotalLabels()
 
     def onMonthSelected(self, button):
         month_name = button.get_label()
@@ -181,6 +189,7 @@ class Handler:
             self.gui_data.start_date = datetime(self.gui_data.year, self.gui_data.month, 1)
             self.gui_data.end_date = datetime(self.gui_data.year, self.gui_data.month, clndr.monthrange(self.gui_data.year, self.gui_data.month)[1])
             self.updateMomStoreContent()
+            self.updateTotalLabels()
 
     def onAddPlannedSelected(self, button):
         mom_dialog = self.gui_builder.get_object("momDialog")
@@ -271,6 +280,7 @@ class Handler:
         self.gui_data.mom = planned_mom
         mom_dialog.run()
         self.updateMomStoreContent()
+        self.updateTotalLabels()
 
     def onOccurredMomSelected(self, column, path, user_data):
         momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
@@ -292,6 +302,7 @@ class Handler:
         self.gui_data.mom = occurred_mom
         mom_dialog.run()
         self.updateMomStoreContent()
+        self.updateTotalLabels()
 
     def onDayViewSelected(self, button):
         notebook = self.gui_builder.get_object("dateTimeView")
@@ -347,6 +358,7 @@ class Handler:
         self.gui_data.start_date = datetime(day=1, month=1, year = self.gui_data.year).date()
         self.gui_data.end_date = datetime(day=31, month=12, year = self.gui_data.year).date()
         self.updateMomStoreContent()
+        self.updateTotalLabels()
 
     def updateMomStoreContent(self):
         self.updateMomStoreContentInPeriod(self.gui_data.start_date, self.gui_data.end_date)
@@ -355,12 +367,12 @@ class Handler:
         momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
         momOccurredStore.clear()
         for mom in loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME).get_moms(start_date,end_date):
-            momOccurredStore.append([mom.id, mom.cause, mom.value])
+            momOccurredStore.append([mom.id, str(mom.time), mom.value, mom.cause])
 
         momPlannedStore = self.gui_builder.get_object("movementsPlannedStore")
         momPlannedStore.clear()
         for mom in loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME).get_moms(start_date,end_date):
-            momPlannedStore.append([mom.id, mom.cause, mom.value])
+            momPlannedStore.append([mom.id, str(mom.time), mom.value, mom.cause])
 
     def onMomEditDialogApplayButton(self, button):
         mom_date = self.gui_builder.get_object("editMomDateEntry")
@@ -377,6 +389,7 @@ class Handler:
         mom_dialog = self.gui_builder.get_object("momEditDialog")
         mom_dialog.hide()
         self.updateMomStoreContent()
+        self.updateTotalLabels()
 
     def onMomEditDialogDeleteButton(self, button):
         self.gui_data.mom.delete()
@@ -384,6 +397,7 @@ class Handler:
         mom_dialog = self.gui_builder.get_object("momEditDialog")
         mom_dialog.hide()
         self.updateMomStoreContent()
+        self.updateTotalLabels()
 
     def onMomEditDialogCancelButton(self, button):
         mom_dialog = self.gui_builder.get_object("momEditDialog")
@@ -478,3 +492,11 @@ class Handler:
             occurred_lom.csv_import(file_dialog.get_file())
             workInProgressMessage.hide()
 
+    def updateTotalLabels(self):
+        occurred_total_label = self.gui_builder.get_object("OccurredTotalLabel")
+        planned_total_label = self.gui_builder.get_object("PlannedTotalLabel")
+        occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
+        planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
+
+        planned_total_label.set_text(str(planned_lom.balance(self.gui_data.start_date, self.gui_data.end_date)))
+        occurred_total_label.set_text(str(occurred_lom.balance(self.gui_data.start_date, self.gui_data.end_date)))
