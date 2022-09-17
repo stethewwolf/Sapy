@@ -24,9 +24,19 @@ Important acronyms:
 ### Dependencies
 #### Debian/Ubuntu
     ```
-    $ sudo apt install python3-matplotlib```
+    $ sudo apt install python3-matplotlib
     ```
 
+#### OpenSuse
+    ```
+    $ sudo zypper in python310-matplotlib-cairo python310-matplotlib-gtk3
+    ```
+
+#### Arch
+    ```
+    $ sudo pacman -S python-matplotlib python-cairo
+    ```
+    
 ### Manual Installation
 The following commands will
  * download the application
