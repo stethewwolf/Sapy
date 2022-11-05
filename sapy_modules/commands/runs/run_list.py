@@ -22,13 +22,14 @@ from sapy_modules.utils import values as SapyValues
 from sapy_modules.commands.command import Command
 import datetime
 import sapy_modules.core.loms as loms
+import sapy_modules.core.profiles as profiles
 import sapy_modules.core.tags as tags
 import sapy_modules.core.objectives as objs
 
 class RunList ( Command ):
     short_arg = 'l'
-    long_arg = 'list' 
-    cmd_help = 'list things, target lom | mom | tag | obj '
+    long_arg = 'list'
+    cmd_help = 'list things, target lom | mom | pro | tag | obj '
     cmd_type = str
     cmd_action = None
 
@@ -44,6 +45,8 @@ class RunList ( Command ):
             self.list_mom()
         elif self.target == 'lom':
             self.list_lom()
+        elif self.target == 'pro':
+            self.list_profiles()
         elif self.target == 'obj':
             self.list_obj()
         elif self.target == 'tag':
@@ -60,9 +63,9 @@ class RunList ( Command ):
         if sd == ed : 
             sd = datetime.datetime.today().date() - datetime.timedelta(days=15)
             ed = datetime.datetime.today().date() + datetime.timedelta(days=15)
-        
+
         l = SapyValues.get_value('lom')
-        
+
         print('------------------------------')
         print(l.name)
         print('------------------------------')
@@ -72,6 +75,15 @@ class RunList ( Command ):
         print('------------------------------')
         print(' balance : ' + str( l.balance(sd,ed)) )
         print('------------------------------')
+
+    def list_profiles(self):
+        print('------------------------------')
+        print('\tid\t|\tname\t')
+        print('------------------------------')
+        for l in profiles.get_profiles():
+            print('\t{}\t|\t{}\t'.format(l.id,l.name))
+        print('------------------------------')
+        return loms.get_loms()
 
     def list_lom(self):
         print('------------------------------')

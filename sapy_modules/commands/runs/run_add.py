@@ -14,25 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
-
+#
 
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
 from sapy_modules.commands.command import Command
 import sapy_modules.utils.values as SapyValues
+import sapy_modules.core.profiles as profiles
 import sapy_modules.core.loms as loms
 import sapy_modules.core.moms as moms
 import sapy_modules.core.tags as tags
 import sapy_modules.core.objectives as objs
 import datetime
 
-
 class RunAdd(Command):
     short_arg   = 'a'
     long_arg    = 'add'
-    cmd_help    = 'add new item, takes : mom | lom | obj | tag'
+    cmd_help    = 'add new item, takes : mom | lom | pro | obj | tag'
     cmd_type    = str
     cmd_action  = None
 
@@ -41,7 +40,6 @@ class RunAdd(Command):
         self.logger = LoggerFactory.getLogger( str( self.__class__ ))
         self.target = param
 
-    
     def run(self):
         self.logger.debug('start')
 
@@ -49,6 +47,8 @@ class RunAdd(Command):
             self.add_mom()
         elif self.target == 'lom':
             self.add_lom()
+        elif self.target == 'pro':
+            self.add_profile()
         elif self.target == 'obj':
             self.add_obj()
         elif self.target == 'tag':
@@ -75,11 +75,11 @@ class RunAdd(Command):
 
             if f == SapyConstants.FREQUENCY.MONTHLY:
                 step = datetime.timedelta(days=30)
-            
+
             itr = datetime.timedelta(days=0)
 
             while itr + sd <= ed :
-                mlist.append( moms.Mom ( 
+                mlist.append( moms.Mom (
                     value = SapyValues.get_value( 'value' ),
                     cause = SapyValues.get_value( 'cause' ),
                     year  = (sd + itr).year,
@@ -91,13 +91,13 @@ class RunAdd(Command):
                 itr += step
 
         else:
-            mlist.append( moms.Mom ( 
+            mlist.append( moms.Mom (
                 value = SapyValues.get_value( 'value' ),
                 cause = SapyValues.get_value( 'cause' ),
                 year  = sd.year,
                 month = sd.month,
                 day   = sd.day
-                )        
+                )
             )
 
         l.add(mlist)
@@ -113,26 +113,34 @@ class RunAdd(Command):
         for m in mlist:
             print ('|\t{}\t|\t{}\t|\t{}\t|\t{}\t|'.format(m.id,m.value,m.cause,m.time))
         print('------------------------------')
-    
+
     def add_lom(self):
-        l = loms.Lom(name=SapyValues.get_value('name')) 
+        l = loms.Lom(name=SapyValues.get_value('name'))
         print ('New Lom')
         print('------------------------------')
         print ('|\tid\t|\tname\t|')
         print('|\t{}\t|\t{}\t|'.format(l.id,l.name))
         print('------------------------------')
 
+    def add_profile(self):
+        p = profiles.Profile(name=SapyValues.get_value('name'))
+        print ('New Profile')
+        print('------------------------------')
+        print ('|\tid\t|\tname\t|')
+        print('|\t{}\t|\t{}\t|'.format(p.id,p.name))
+        print('------------------------------')
+
     def add_obj(self):
         ed = SapyValues.get_value('end_date')
-        o = objs.Objective(description=SapyValues.get_value('cause'),duedate=ed) 
+        o = objs.Objective(description=SapyValues.get_value('cause'),duedate=ed)
         print ('New Objective')
         print('------------------------------')
         print ('|\tid\t|\tdescription\t\t|\tdue date\t|')
         print('|\t{}\t|\t{}\t|\t{}\t|'.format(o.id,o.description,o.duedate))
         print('------------------------------')
-    
+
     def add_tag(self):
-        l = tags.Tag(name=SapyValues.get_value('name')) 
+        l = tags.Tag(name=SapyValues.get_value('name'))
         print ('New Tag')
         print('------------------------------')
         print ('|\tid\t|\tname\t|')

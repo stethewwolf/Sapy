@@ -26,7 +26,8 @@ CREATE_TABLE = """
         "date"  TEXT NOT NULL
     );"""
 DELETE_MOM = "DELETE FROM moms WHERE id = ?;"
-DELETE_MOM_LINK = "DELETE FROM mom_in_lom WHERE mom_id = ?;"
+DELETE_MOM_IN_LOM_LINK = "DELETE FROM mom_in_lom WHERE mom_id = ?;"
+DELETE_MOM_IN_PROFILE_LINK = "DELETE FROM mom_in_profile WHERE mom_id = ?;"
 INSERT_MOM = "INSERT INTO moms (value,cause,date) VALUES ( ?, ?, ?);"
 GET_LAST_MOM = "SELECT id FROM moms ORDER BY id DESC ;"
 UPDATE_MOM_VALUE = "UPDATE moms SET value=? WHERE id=?;"
@@ -131,13 +132,15 @@ class Mom(object):  # movement of money
     def delete(self):
         cur = db_iface.get_cursor()
         cur.execute(DELETE_MOM, (self.id, ))
-        cur.execute(DELETE_MOM_LINK, (self.id, ))
+        cur.execute(DELETE_MOM_IN_LOM_LINK, (self.id, ))
+        cur.execute(DELETE_MOM_IN_PROFILE_LINK, (self.id, ))
         db_iface.commit()
         cur.close()
         self.value = None
         self.cause = None
         self.time  = None
         self.id    = None
+        self = None
 
     def update(
             self,

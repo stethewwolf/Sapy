@@ -21,9 +21,10 @@ import sapy_modules.utils.db as db_iface
 from sapy_modules.utils import constants as SapyConstants
 from sapy_modules.commands.command import Command
 from sapy_modules.utils import values as SapyValues
-from sapy_modules.core import loms 
-from sapy_modules.core import moms 
-from sapy_modules.core import tags 
+from sapy_modules.core import loms
+from sapy_modules.core import moms
+from sapy_modules.core import tags
+from sapy_modules.core import profiles
 from sapy_modules.core import objectives as objs
 import os, sqlite3
 
@@ -66,6 +67,7 @@ class SetEnv( Command ):
             loms.create_tables()
             tags.create_tables()
             objs.create_tables()
+            profiles.create_tables()
         else:
             db_iface.open()
 
