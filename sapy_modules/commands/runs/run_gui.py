@@ -103,7 +103,6 @@ class RunGui(Command):
         calendar.select_month(self.signal_handler.start_date.month-1, self.signal_handler.start_date.year)
         self.signal_handler.end_date = self.signal_handler.start_date # + timedelta(days=1)
         #self.signal_handler.updateMomStoreContent(self.signal_handler.start_date.date(), self.signal_handler.end_date.date())
-        self.signal_handler.updateMomStoreContent()
 
         self.signal_handler.gui_data.fig = Figure(figsize=(5,5), dpi=100)
         self.signal_handler.gui_data.ax = self.signal_handler.gui_data.fig.add_subplot(111)
@@ -120,8 +119,9 @@ class RunGui(Command):
 
         active_profile_label = self.gui_builder.get_object("ActiveProfileLabel")
         default_profile_id = profiles.get_default_profile_id()
+        self.signal_handler.gui_data.active_profile = profiles.get_profile(id=default_profile_id)
 
-        active_profile_label.set_text(profiles.get_profile(id=default_profile_id).name)
+        active_profile_label.set_text(self.signal_handler.gui_data.active_profile.name)
 
         profilesListView = self.gui_builder.get_object("profilesListView")
         profilesListView.append_column (
@@ -140,6 +140,8 @@ class RunGui(Command):
                 active_profile_label.set_label(profile.name)
 
             profiles_button_box.pack_start(profile_button, False, False, 2)
+
+        self.signal_handler.updateMomStoreContent()
 
         profiles_button_box.show_all()
 

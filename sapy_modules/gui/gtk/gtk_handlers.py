@@ -51,6 +51,7 @@ class GuiData():
         self.fig = None
         self.set_start_date_flag = True
         self.is_file_been_imported_flag = True
+        self.active_profile = None
 
 class Handler:
     def __init__(self, gui_data:GuiData, gui_builder):
@@ -141,8 +142,9 @@ class Handler:
                 day=date.day
                 )
 
-            planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
-            planned_lom.add([mom])
+            #planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
+            #planned_lom.add([mom])
+            self.gui_data.active_profile.add_planned_mom([mom])
 
             self.updateMomStoreContent()
         print("closing dialog add occurred mom")
@@ -171,8 +173,9 @@ class Handler:
                 day=date.day
                 )
 
-            occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
-            occurred_lom.add([mom])
+            #occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
+            #occurred_lom.add([mom])
+            self.gui_data.active_profile.add_occurred_mom([mom])
             self.updateMomStoreContent()
 
     def onMomDialogApplayButton(self, widget):
@@ -300,12 +303,12 @@ class Handler:
     def updateMomStoreContentInPeriod(self, start_date:datetime.date, end_date:datetime.date):
         momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
         momOccurredStore.clear()
-        for mom in loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME).get_moms(start_date,end_date):
+        for mom in self.gui_data.active_profile.get_occurred_moms(start_date,end_date):
             momOccurredStore.append([mom.id, str(mom.time), mom.value, mom.cause])
 
         momPlannedStore = self.gui_builder.get_object("movementsPlannedStore")
         momPlannedStore.clear()
-        for mom in loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME).get_moms(start_date,end_date):
+        for mom in self.gui_data.active_profile.get_planned_moms(start_date,end_date):
             momPlannedStore.append([mom.id, str(mom.time), mom.value, mom.cause])
 
     def onMomEditDialogApplayButton(self, button):
@@ -439,12 +442,9 @@ class Handler:
     def updateTotalLabels(self):
         occurred_total_label = self.gui_builder.get_object("OccurredTotalLabel")
         planned_total_label = self.gui_builder.get_object("PlannedTotalLabel")
-        occurred_lom = loms.get_lom(name=SapyConstants.DB.OCCURRED_LIST_NAME)
-        planned_lom = loms.get_lom(name=SapyConstants.DB.PLANNED_LIST_NAME)
 
-        planned_total_label.set_text(str(planned_lom.balance(self.gui_data.start_date, self.gui_data.end_date)))
-        occurred_total_label.set_text(str(occurred_lom.balance(self.gui_data.start_date, self.gui_data.end_date)))
-
+        planned_total_label.set_text(str(self.gui_data.active_profile.get_planned_balance(self.gui_data.start_date,self.gui_data.end_date)))
+        occurred_total_label.set_text(str(self.gui_data.active_profile.get_occurred_balance(self.gui_data.start_date,self.gui_data.end_date)))
 
     def onProfilesDialogManagementButton(self, button):
         profilesManagementDialog = self.gui_builder.get_object("profilesManagementDialog")
@@ -459,6 +459,4 @@ class Handler:
     def onButtonCancelProfilesManagementDialog(self, button):
         profilesManagementDialog = self.gui_builder.get_object("profilesManagementDialog")
         profilesManagementDialog.hide()
-
-
 
