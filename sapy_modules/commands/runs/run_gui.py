@@ -98,9 +98,9 @@ class RunGui(Command):
         self.signal_handler.gui_data.day = self.signal_handler.start_date.day
         self.signal_handler.gui_data.month = self.signal_handler.start_date.month
         self.signal_handler.gui_data.year = self.signal_handler.start_date.year
-        calendar = self.gui_builder.get_object("sapyCalendar")
-        calendar.select_day(self.signal_handler.start_date.day)
-        calendar.select_month(self.signal_handler.start_date.month-1, self.signal_handler.start_date.year)
+        #calendar = self.gui_builder.get_object("sapyCalendar")
+        #calendar.select_day(self.signal_handler.start_date.day)
+        #calendar.select_month(self.signal_handler.start_date.month-1, self.signal_handler.start_date.year)
         self.signal_handler.end_date = self.signal_handler.start_date # + timedelta(days=1)
         #self.signal_handler.updateMomStoreContent(self.signal_handler.start_date.date(), self.signal_handler.end_date.date())
 
@@ -112,11 +112,6 @@ class RunGui(Command):
         d_area.pack_start(canvas, True, True, 10)
         d_area.show_all()
 
-        profiles_button_box = self.gui_builder.get_object("ProfilesButtonBox")
-        active_profile_label = self.gui_builder.get_object("ActiveProfileLabel")
-        for child in profiles_button_box.get_children():
-            child.destroy()
-
         active_profile_label = self.gui_builder.get_object("ActiveProfileLabel")
         default_profile_id = profiles.get_default_profile_id()
         self.signal_handler.gui_data.active_profile = profiles.get_profile(id=default_profile_id)
@@ -125,24 +120,18 @@ class RunGui(Command):
 
         profilesListView = self.gui_builder.get_object("profilesListView")
         profilesListView.append_column (
-            Gtk.TreeViewColumn("name",Gtk.CellRendererText(), text=0)
+            Gtk.TreeViewColumn("id",Gtk.CellRendererText(), text=0)
+        )
+        profilesListView.append_column (
+            Gtk.TreeViewColumn("name",Gtk.CellRendererText(), text=1)
         )
 
-        profiles_list_store = self.gui_builder.get_object("ProfilesListStore")
-        profiles_list = profiles.get_profiles()
-        for profile in profiles_list:
-            profiles_list_store.append([profile.name])
-            profile_button = Gtk.CheckButton()
-            profile_button.set_label(profile.name)
-
-            if int(profile.id) == int(default_profile_id) :
-                profile_button.set_active(True)
-                active_profile_label.set_label(profile.name)
-
-            profiles_button_box.pack_start(profile_button, False, False, 2)
+        self.signal_handler.updateProfilesPopUpMenu()
 
         self.signal_handler.updateMomStoreContent()
 
-        profiles_button_box.show_all()
+        calendar = self.gui_builder.get_object("sapyCalendar")
+        calendar.select_day(self.signal_handler.start_date.day)
+        calendar.select_month(self.signal_handler.start_date.month-1, self.signal_handler.start_date.year)
 
         Gtk.main()

@@ -22,6 +22,7 @@ from signal import signal
 from traceback import print_tb
 from sapy_modules.core import loms
 from sapy_modules.core.moms import Mom
+import sapy_modules.core.profiles as profiles
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
@@ -147,7 +148,6 @@ class Handler:
             self.gui_data.active_profile.add_planned_mom([mom])
 
             self.updateMomStoreContent()
-        print("closing dialog add occurred mom")
 
     def onAddOccurredSelected(self, button):
         self.gui_data.add_mom_flag = False
@@ -303,6 +303,7 @@ class Handler:
     def updateMomStoreContentInPeriod(self, start_date:datetime.date, end_date:datetime.date):
         momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
         momOccurredStore.clear()
+        print("using profile id : {}".format(self.gui_data.active_profile.id))
         for mom in self.gui_data.active_profile.get_occurred_moms(start_date,end_date):
             momOccurredStore.append([mom.id, str(mom.time), mom.value, mom.cause])
 
@@ -459,4 +460,96 @@ class Handler:
     def onButtonCancelProfilesManagementDialog(self, button):
         profilesManagementDialog = self.gui_builder.get_object("profilesManagementDialog")
         profilesManagementDialog.hide()
+
+    def onAboutButton(self, button):
+        about_dialog = self.gui_builder.get_object("aboutDialog")
+        about_dialog.show_all()
+
+    def onProfileClickedButton(self, tree_view, tree_path, tree_view_column):
+        edit_profile_dialog_id = self.gui_builder.get_object("editProfileDialogId")
+        edit_profile_dialog_name = self.gui_builder.get_object("editProfileDialogName")
+
+        profiles_store = self.gui_builder.get_object("ProfilesListStore")
+
+        edit_profile_dialog_id.set_text(str(profiles_store[int(tree_path.to_string())][0]))
+        edit_profile_dialog_name.set_text(str(profiles_store[int(tree_path.to_string())][1]))
+
+        edit_profile_dialog = self.gui_builder.get_object("EditProfileDialog")
+        edit_profile_dialog.show_all()
+
+    def onDeleteProfileButton(self, button):
+        profiles_view = self.gui_builder.get_object("profilesListView")
+        selected_rows = profiles_view.get_selection().get_selected_rows()
+
+        profiles_store = selected_rows[0]
+        selected_paths = selected_rows[1]
+
+        for selected_item in selected_paths:
+            profile_id = profiles_store[int(selected_item.to_string())][0]
+            profile = profiles.get_profile(id=profile_id)
+
+            profiles_store.remove(
+                profiles_store[int(selected_item.to_string())].iter
+            )
+            profile.remove_profile()
+
+        self.updateProfilesPopUpMenu()
+
+    def onAddNewProfileButton(self, button):
+        profilesListView = self.gui_builder.get_object("profilesListView")
+        profiles_store = self.gui_builder.get_object("ProfilesListStore")
+        new_profile = profiles.Profile(name="New Profile")
+        profiles_store.append([new_profile.id, new_profile.name])
+        self.updateProfilesPopUpMenu()
+
+    def onButtonCancelEditProfilesDialog(self, button):
+        edit_profile_dialog = self.gui_builder.get_object("EditProfileDialog")
+        edit_profile_dialog.hide()
+
+    def onButtonSaveProfile(self, button):
+        edit_profile_dialog_id = self.gui_builder.get_object("editProfileDialogId")
+        edit_profile_dialog_name = self.gui_builder.get_object("editProfileDialogName")
+        profile_id = edit_profile_dialog_id.get_text()
+        new_profile_name = edit_profile_dialog_name.get_text()
+        profile = profiles.get_profile(id=profile_id)
+        profile.update_name(name=new_profile_name)
+        edit_profile_dialog = self.gui_builder.get_object("EditProfileDialog")
+        edit_profile_dialog.hide()
+        self.updateProfilesPopUpMenu()
+
+    def updateProfilesPopUpMenu(self):
+        profiles_button_box = self.gui_builder.get_object("ProfilesButtonBox")
+        active_profile_label = self.gui_builder.get_object("ActiveProfileLabel")
+        default_profile_id = profiles.get_default_profile_id()
+
+        for child in profiles_button_box.get_children():
+            child.destroy()
+
+        profiles_list_store = self.gui_builder.get_object("ProfilesListStore")
+        profiles_list_store.clear()
+
+        profiles_list = profiles.get_profiles()
+        for profile in profiles_list:
+            profiles_list_store.append([profile.id, profile.name])
+            profile_button = Gtk.Button()
+            profile_button.connect("clicked", self.onSelectProfileCheckClicked)
+            profile_button.set_label("{} - {}".format(profile.id, profile.name))
+
+            if int(profile.id) == int(default_profile_id) :
+                self.gui_data.active_profile = profile
+                active_profile_label.set_label("{} - {}".format(profile.id, profile.name))
+
+            profiles_button_box.pack_start(profile_button, False, False, 2)
+        profiles_button_box.show_all()
+
+    def onSelectProfileCheckClicked(self, button):
+        profiles_menu = self.gui_builder.get_object("ProfilesPopMenu")
+        profile_id = int(button.get_label().split("-")[0])
+        profiles.set_default_profile_id(profile_id)
+        self.updateProfilesPopUpMenu()
+        profiles_menu.hide()
+        self.updateTotalLabels()
+        self.updateMomStoreContent()
+
+
 

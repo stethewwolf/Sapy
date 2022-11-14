@@ -23,7 +23,7 @@ import datetime
 CREATE_TABLE_PROFILES= """
 	CREATE TABLE "profiles" (
        "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-       "name"	TEXT NOT NULL UNIQUE,
+       "name"	TEXT NOT NULL,
         "color" TEXT NOT NULL DEFAULT "blue"
     ) """
 
@@ -49,9 +49,9 @@ CREATE_DEFAULT_PROFILE = """
     INSERT INTO "profiles"
     ("id","name","color") VALUES (1,"Default","blue");
     """
+UPDATE_DEFAULT_PROFILE_ID ="""UPDATE app_meta SET value=? WHERE key='default_profile_id'"""
 SET_DEFAULT_PROFILE_ID = """INSERT INTO "app_meta" ("key","value") VALUES ('default_profile_id',?) """
 GET_DEFAULT_PROFILE_ID = """SELECT value from "app_meta" where `key` == 'default_profile_id' """
-UPDATE_DEFAULT_PROFILE_ID = """UPDATE "app_meta" set "value" = ? `key` == 'default_profile_id'"""
 
 TAB_VERSION = 1
 
@@ -90,6 +90,14 @@ def get_default_profile_id():
     res = cur.fetchone()
     cur.close()
     return res[0]
+
+def set_default_profile_id(profile_id=None):
+    if profile_id is not None:
+        cur = db_iface.get_cursor()
+        cur.execute(UPDATE_DEFAULT_PROFILE_ID,(profile_id,))
+        db_iface.commit()
+        cur.close()
+
 
 class Profile(object):  # list of movements
     def __init__(
@@ -138,6 +146,14 @@ class Profile(object):  # list of movements
     def remove_profile(self):
         for mom in self.get_moms():
             mom.delete()
+
+        cur = db_iface.get_cursor()
+        cur.execute(DELETE_PROFILE, (self.id, ))
+        db_iface.commit()
+        cur.close()
+        self.name = None
+        self.color = None
+        self.id = None
 
     def get_moms(self):
         mom_ids = []
