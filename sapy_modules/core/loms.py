@@ -46,29 +46,29 @@ GET_MOMS_0 = """
         SELECT * FROM (
             SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
-            )
-        where lom_id = ?
+            ) INNER join mom_in_profile on id = mom_id
+        where lom_id = ? and profile_id = ?
         """
 GET_MOMS_1 = """
         SELECT * FROM (
             SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
-            )
-        where lom_id = ? and  date <= ?
+            ) INNER join mom_in_profile on id = mom_id
+        where lom_id = ? and profile_id = ? and  date <= ?
         """
 GET_MOMS_2 = """
         SELECT * FROM (
             SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
-            )
-        where lom_id = ? and date >= ?
+            ) INNER join mom_in_profile on id = mom_id
+        where lom_id = ? and profile_id = ? and date >= ?
         """
 GET_MOMS_3 = """
         SELECT * FROM (
             SELECT id,value,cause,date,lom_id
                 FROM moms INNER join mom_in_lom on moms.id = mom_in_lom.mom_id
-            )
-        where lom_id = ? and date >= ? and date <= ?
+            ) INNER join mom_in_profile on id = mom_id
+        where lom_id = ? and profile_id = ? and date >= ? and date <= ?
         """
 GET_MOM = "SELECT * from moms where moms.id = ? ;"
 GET_LOM_BY_NAME = 'select * from loms where `name` == ? '
@@ -151,6 +151,7 @@ class Lom(object):  # list of movements
 
     def get_moms(
         self,
+        profile_id,
         start_date=datetime.datetime.today().date(),
         end_date=datetime.datetime.today().date()
         ):
@@ -174,13 +175,13 @@ class Lom(object):  # list of movements
 
 
         if _start_date is None and _end_date is None:
-            cur.execute(GET_MOMS_0, (self.id, ) )
+            cur.execute(GET_MOMS_0, (self.id, profile_id, ) )
         elif start_date is None and _end_date is not None:
-            cur.execute(GET_MOMS_1, (self.id,_end_date) )
+            cur.execute(GET_MOMS_1, (self.id, profile_id, _end_date) )
         elif start_date is not None and _end_date is None:
-            cur.execute(GET_MOMS_2, (self.id, _start_date) )
+            cur.execute(GET_MOMS_2, (self.id, profile_id, _start_date) )
         elif start_date is not None and end_date is not None:
-            cur.execute(GET_MOMS_3, (self.id, _start_date, _end_date) )
+            cur.execute(GET_MOMS_3, (self.id, profile_id, _start_date, _end_date) )
 
         for raw in cur.fetchall():
             raw_year = raw[3].split('-')[0]
@@ -227,24 +228,24 @@ class Lom(object):  # list of movements
 
         self.add(mom_list)
 
-    def csv_export(self,csv_file, start_date=None, end_date=None):
+    def csv_export(self, profile_id, csv_file, start_date=None, end_date=None):
         with open(str(csv_file.get_path()),'a') as data_file:
-            mom_list = self.get_moms(start_date,end_date)
+            mom_list = self.get_moms(profile_id, start_date, end_date)
             writer = csv.writer(data_file, quoting=csv.QUOTE_NONNUMERIC)
             for mom in mom_list:
                 writer.writerow([mom.time, mom.value, mom.cause])
 
-    def balance(self, start_date=None, end_date=None):
+    def balance(self, profile_id, start_date=None, end_date=None):
         balance = 0
 
-        for m in self.get_moms(start_date=start_date,end_date=end_date):
+        for m in self.get_moms(profile_id, start_date=start_date, end_date=end_date):
             balance += m.value
 
         return balance
 
-    def balance_per_day(self, start_date=None, end_date=None):
+    def balance_per_day(self, profile_id, start_date=None, end_date=None):
         base_balance = self.balance(end_date=start_date)
-        moms = self.get_moms(start_date=start_date,end_date=end_date)
+        moms = self.get_moms(profile_id, start_date=start_date, end_date=end_date)
 
         dates = []
         values = []
@@ -264,7 +265,7 @@ class Lom(object):  # list of movements
         while min_date <= max_date:
             day_balance = base_balance
 
-            for mom in self.get_moms(start_date=min_date,end_date=min_date):
+            for mom in self.get_moms(profile_id, start_date=min_date, end_date=min_date):
                 day_balance += mom.value
 
             dates.append(min_date)

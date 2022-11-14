@@ -19,7 +19,7 @@ from calendar import calendar
 from datetime import date, datetime, timedelta
 from distutils.command.build import build
 from signal import signal
-from traceback import print_tb
+#from traceback import print_tb
 from sapy_modules.core import loms
 from sapy_modules.core.moms import Mom
 import sapy_modules.core.profiles as profiles
@@ -303,7 +303,6 @@ class Handler:
     def updateMomStoreContentInPeriod(self, start_date:datetime.date, end_date:datetime.date):
         momOccurredStore = self.gui_builder.get_object("movementsOccurredStore")
         momOccurredStore.clear()
-        print("using profile id : {}".format(self.gui_data.active_profile.id))
         for mom in self.gui_data.active_profile.get_occurred_moms(start_date,end_date):
             momOccurredStore.append([mom.id, str(mom.time), mom.value, mom.cause])
 
@@ -499,7 +498,7 @@ class Handler:
         profilesListView = self.gui_builder.get_object("profilesListView")
         profiles_store = self.gui_builder.get_object("ProfilesListStore")
         new_profile = profiles.Profile(name="New Profile")
-        profiles_store.append([new_profile.id, new_profile.name])
+        profiles_store.append([new_profile.profile_id, new_profile.name])
         self.updateProfilesPopUpMenu()
 
     def onButtonCancelEditProfilesDialog(self, button):
@@ -530,14 +529,14 @@ class Handler:
 
         profiles_list = profiles.get_profiles()
         for profile in profiles_list:
-            profiles_list_store.append([profile.id, profile.name])
+            profiles_list_store.append([profile.profile_id, profile.name])
             profile_button = Gtk.Button()
             profile_button.connect("clicked", self.onSelectProfileCheckClicked)
-            profile_button.set_label("{} - {}".format(profile.id, profile.name))
+            profile_button.set_label("{} - {}".format(profile.profile_id, profile.name))
 
-            if int(profile.id) == int(default_profile_id) :
+            if int(profile.profile_id) == int(default_profile_id) :
                 self.gui_data.active_profile = profile
-                active_profile_label.set_label("{} - {}".format(profile.id, profile.name))
+                active_profile_label.set_label("{} - {}".format(profile.profile_id, profile.name))
 
             profiles_button_box.pack_start(profile_button, False, False, 2)
         profiles_button_box.show_all()

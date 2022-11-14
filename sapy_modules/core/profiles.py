@@ -114,14 +114,14 @@ class Profile(object):  # list of movements
             cur.execute(INSERT_PROFILE,(name,color))
 
             cur.execute(GET_PROFILE_IDS)
-            self.id = cur.fetchone()[0]
+            self.profile_id = cur.fetchone()[0]
 
             db_iface.commit()
             cur.close()
         else:
-            self.id = id
+            self.profile_id = id
             cur = db_iface.get_cursor()
-            cur.execute(GET_PROFILE_BY_ID, (self.id,))
+            cur.execute(GET_PROFILE_BY_ID, (self.profile_id,))
             raw_line = cur.fetchone()
             self.name =  raw_line[1]
             self.color = raw_line[2]
@@ -132,14 +132,14 @@ class Profile(object):  # list of movements
     def update_name(self, name:str="profile"):
         self.name = name
         cur = db_iface.get_cursor()
-        cur.execute(UPDATE_PROFILE_NAME,(name,self.id))
+        cur.execute(UPDATE_PROFILE_NAME,(name,self.profile_id))
         db_iface.commit()
         cur.close()
 
     def update_color(self, color:str="green"):
         self.color = color
         cur = db_iface.get_cursor()
-        cur.execute(UPDATE_PROFILE_COLOR,(color,self.id))
+        cur.execute(UPDATE_PROFILE_COLOR,(color,self.profile_id))
         db_iface.commit()
         cur.close()
 
@@ -148,26 +148,26 @@ class Profile(object):  # list of movements
             mom.delete()
 
         cur = db_iface.get_cursor()
-        cur.execute(DELETE_PROFILE, (self.id, ))
+        cur.execute(DELETE_PROFILE, (self.profile_id, ))
         db_iface.commit()
         cur.close()
         self.name = None
         self.color = None
-        self.id = None
+        self.profile_id = None
 
     def get_moms(self):
         mom_ids = []
         cur = db_iface.get_cursor()
-        cur.execute(GET_MOM_IDS_IN_PROFILE,(self.id, ))
+        cur.execute(GET_MOM_IDS_IN_PROFILE,(self.profile_id, ))
         mom_ids = cur.fetchall()
         cur.close()
         return  [Mom(mom_id[0]) for mom_id in mom_ids]
 
     def get_planned_moms(self, start_date:datetime.date=None, end_date:datetime.date=None):
-        return self.planned_lom.get_moms(start_date,end_date)
+        return self.planned_lom.get_moms(self.profile_id, start_date, end_date)
 
     def get_occurred_moms(self, start_date:datetime.date=None, end_date:datetime.date=None):
-        return self.occurred_lom.get_moms(start_date,end_date)
+        return self.occurred_lom.get_moms(self.profile_id, start_date, end_date)
 
     def add_planned_mom(self, mom_list:list):
         self.planned_lom.add(mom_list)
@@ -186,13 +186,13 @@ class Profile(object):  # list of movements
         cur.close()
 
     def get_planned_balance(self, start_date:datetime.date=None, end_date:datetime.date=None):
-        return self.planned_lom.balance(start_date, end_date)
+        return self.planned_lom.balance(self.profile_id, start_date, end_date)
 
     def get_occurred_balance(self, start_date:datetime.date=None, end_date:datetime.date=None):
-        return self.occurred_lom.balance(start_date, end_date)
+        return self.occurred_lom.balance(self.profile_id, start_date, end_date)
 
     def get_planned_balance_per_day(self, start_date:datetime.date=None, end_date:datetime.date=None):
-        return self.planned_lom.balance_per_day(start_date, end_date)
+        return self.planned_lom.balance_per_day(self.profile_id, start_date, end_date)
 
     def get_occurred_balance_per_day(self, start_date:datetime.date=None, end_date:datetime.date=None):
-        return self.occurred_lom.balance_per_day(start_date, end_date)
+        return self.occurred_lom.balance_per_day(self.profile_id, start_date, end_date)
