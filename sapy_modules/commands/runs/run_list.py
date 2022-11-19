@@ -29,7 +29,7 @@ import sapy_modules.core.objectives as objs
 class RunList ( Command ):
     short_arg = 'l'
     long_arg = 'list'
-    cmd_help = 'list things, target lom | mom | pro | tag | obj '
+    cmd_help = 'list things, target pro | lom | mom | pro | tag | obj '
     cmd_type = str
     cmd_action = None
 
@@ -80,8 +80,8 @@ class RunList ( Command ):
         print('------------------------------')
         print('\tid\t|\tname\t')
         print('------------------------------')
-        for l in profiles.get_profiles():
-            print('\t{}\t|\t{}\t'.format(l.id,l.name))
+        for pro in profiles.get_profiles():
+            print('\t{}\t|\t{}\t'.format(pro.profile_id,pro.name))
         print('------------------------------')
         return loms.get_loms()
 

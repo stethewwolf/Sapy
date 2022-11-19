@@ -45,8 +45,6 @@ class RunAdd(Command):
 
         if self.target == 'mom' :
             self.add_mom()
-        elif self.target == 'lom':
-            self.add_lom()
         elif self.target == 'pro':
             self.add_profile()
         elif self.target == 'obj':
@@ -112,14 +110,6 @@ class RunAdd(Command):
         print ('|\tid\t|\tvalue\t|\tcause\t|\tdate\t|')
         for m in mlist:
             print ('|\t{}\t|\t{}\t|\t{}\t|\t{}\t|'.format(m.id,m.value,m.cause,m.time))
-        print('------------------------------')
-
-    def add_lom(self):
-        l = loms.Lom(name=SapyValues.get_value('name'))
-        print ('New Lom')
-        print('------------------------------')
-        print ('|\tid\t|\tname\t|')
-        print('|\t{}\t|\t{}\t|'.format(l.id,l.name))
         print('------------------------------')
 
     def add_profile(self):
