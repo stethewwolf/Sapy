@@ -127,3 +127,6 @@ sapy_lib/views
 
 #vim swap files
 *.swp
+
+.kdev4 
+Sapy.kdev4

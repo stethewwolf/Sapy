@@ -15,14 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-
 import argparse
 import importlib
-from sapy_modules.core import LoggerFactory
-from sapy_modules.core import SapyConstants
-from sapy_modules.commands.run import *
-from sapy_modules.commands.setter import *
-from sapy_modules.commands.tasks import *
+from sapy_modules.utils import loggers as LoggerFactory
+from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.commands.runs import *
+from sapy_modules.commands.setters import *
+from sapy_modules.commands.mods import *
 
 class CommandLine_Parser( object ):
     def __init__( self ):
@@ -30,8 +29,8 @@ class CommandLine_Parser( object ):
 
         self.parser = argparse.ArgumentParser( prog=SapyConstants.APP.NAME, description=SapyConstants.APP.DESCRIPTION )
 
-        self.rcl = [ 
-            RunAdd, 
+        self.rcl = [
+            RunAdd,
             RunGraph,
             RunGui,
             RunImport,
@@ -41,7 +40,7 @@ class CommandLine_Parser( object ):
             RunBalance
             ]
 
-        self.scl = [ 
+        self.scl = [
             SetDaily,
             SetEnd,
             SetId,
@@ -55,24 +54,24 @@ class CommandLine_Parser( object ):
             SetName
             ]
 
-        self.tcl = [ 
+        self.tcl = [
             NewYear,
             NewMonth,
             EndWeek,
             EndMonth
         ]
-        
+
         for cmd in self.rcl + self.scl + self.tcl:
             if cmd.short_arg:
                 if cmd.cmd_type:
-                    self.parser.add_argument(  
+                    self.parser.add_argument(
                         "--"+cmd.long_arg,
                         "-"+cmd.short_arg,
                         type = cmd.cmd_type,
                         help = cmd.cmd_help
                     )
                 else:
-                    self.parser.add_argument(  
+                    self.parser.add_argument(
                         "--"+cmd.long_arg,
                         "-"+cmd.short_arg,
                         action = cmd.cmd_action,
@@ -80,13 +79,13 @@ class CommandLine_Parser( object ):
                     )
             elif cmd.long_arg:
                 if cmd.cmd_type:
-                    self.parser.add_argument(  
+                    self.parser.add_argument(
                         "--"+cmd.long_arg,
                         type = cmd.cmd_type,
                         help = cmd.cmd_help
                     )
                 else:
-                    self.parser.add_argument(  
+                    self.parser.add_argument(
                         "--"+cmd.long_arg,
                         action = cmd.cmd_action,
                         help = cmd.cmd_help
@@ -105,11 +104,13 @@ class CommandLine_Parser( object ):
         for cmd in self.scl:
             if getattr( args, cmd.long_arg.replace("-","_") ) :
                 self.logger.debug("passed option --" + cmd.long_arg)
+                print("passed option --" + cmd.long_arg)
                 command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
 
         for cmd in self.rcl:
             if getattr( args, cmd.long_arg.replace("-","_") ) :
                 self.logger.debug("passed option --" + cmd.long_arg)
+                print("passed option --" + cmd.long_arg)
                 command_list.append( cmd( getattr( args, cmd.long_arg.replace("-","_") ) ) )
 
         count = 0

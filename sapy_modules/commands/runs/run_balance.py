@@ -18,16 +18,32 @@
 from sapy_modules.utils import loggers as LoggerFactory
 from sapy_modules.utils import config as SingleConfig
 from sapy_modules.utils import constants as SapyConstants
+from sapy_modules.utils import values as SapyValues
+from sapy_modules.commands.command import Command
+import datetime
+import sapy_modules.core.loms as loms
 
-class Command (object):
-    short_arg = SapyConstants.COMMANDS.CMD.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.CMD.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.CMD.HELP
-    cmd_type = SapyConstants.COMMANDS.CMD.TYPE
-    cmd_action = SapyConstants.COMMANDS.CMD.ACTION
+class RunBalance ( Command ):
+    short_arg = "b"
+    long_arg = "balance"
+    cmd_help = "print the actual balance of the list"
+    cmd_type = None
+    cmd_action = "store_true"
 
-    def __init__( self, param = None ):
-        self.cfg = SingleConfig.getConfig()
+    def __init__( self, param ):
+        super().__init__()
+        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
 
     def run( self ):
-        pass
+        self.logger.debug("start")
+
+        l = SapyValues.get_value('lom') 
+
+        ed = SapyValues.get_value('end_date')
+        
+        print('------------------------------')
+        print(l.name)
+        print('------------------------------')
+        print(' balance : ' + str( l.balance(end_date=ed)) )
+        print('------------------------------')
+        self.logger.debug("end")
