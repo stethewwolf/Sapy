@@ -81,7 +81,9 @@ celerybeat-schedule
 # virtualenv
 venv/
 ENV/
+env
 
+# 
 # Spyder project settings
 .spyderproject
 
@@ -128,5 +130,11 @@ sapy_lib/views
 #vim swap files
 *.swp
 
+# kdevelop
 .kdev4 
 Sapy.kdev4
+
+# mkdocs
+site
+
+

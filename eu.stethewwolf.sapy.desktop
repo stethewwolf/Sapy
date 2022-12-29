@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Name=Sapy
+Comment=App implementing the Japanese Kakeibo method
+Icon=eu.stethewwolf.sapy
+Exec=sapy --gui
+Terminal=false
+Type=Application
+MimeType=application/x-glade;
+Categories=Accessories;
+

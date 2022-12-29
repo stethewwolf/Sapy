@@ -35,13 +35,18 @@ Important acronyms:
 ### Dependencies
 #### Debian/Ubuntu
 
-        $ sudo apt install python3-matplotlib
+        $ sudo apt install python3-matplotlib 
+        
+If you are going to use a virtualenv env consider to install
+        $ sudo apt install libgirepository1.0-dev
 
 #### Archlinux
 
         $ sudo pacman -S python-matplotlib python-cairo
 
 ### Manual Installation
+
+
 The following commands will
 
  * download the application
