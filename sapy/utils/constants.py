@@ -56,12 +56,10 @@ __glade_files_path__ = [
     os.path.join(
         os.environ["HOME"], 
         '.local', 'share', 'sapy', 'sapy.glade'),
-    os.path.join(
-        os.environ["VIRTUAL_ENV"],
-        'share', 'sapy', 'sapy.glade'),
     '/app/share/sapy/sapy.glade',
     'sapy/gtk/sapy.glade',
-    os.path.join(Path(__file__).parents[2], 'gtk', 'sapy.glade')
+    os.path.join(Path(__file__).parents[2], 'gtk', 'sapy.glade'),
+    os.path.join(Path(__file__).parents[1], 'gtk', 'sapy.glade')
 ]
 
 

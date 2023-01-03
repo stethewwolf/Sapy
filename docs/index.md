@@ -50,38 +50,27 @@ You can follow those steps:
 ```
 
 ## Installation
-### Dependencies
-#### Debian/Ubuntu
-
-        $ sudo apt install python3-matplotlib 
-        
-
-
-#### Archlinux
-
-        $ sudo pacman -S python-matplotlib python-cairo
-
 ### Manual Installation
+#### Dependencies
+##### Debian/Ubuntu
+```
+    $ sudo apt install python3-matplotlib libgirepository1.0-dev
+```
 
+##### Archlinux
+```
+    $ sudo pacman -S python-matplotlib python-cairo
+```
 
-The following commands will
+#### Procedure
 
- * download the application
-    
-        $ wget https://github.com/stethewwolf/Sapy/archive/v<version>.tar.gz -O sapy-v<version>.tar.gz
+You can install sapy application using the following method
 
- * extract it to ~/.local/Sapy-<version>
+* download the code
+* open the console inside the source folder
+* run the `install.sh` script
+* optionally: delete the source code folder
 
-        $ tar -xf sapy-<version>.tar.gz -C $HOME/.local/
-    
- * create laucher in menu
-    
-        $ cd $HOME/.local/Sapy-<version>
-    
- * create a link in user PATH ( export PREFIX to define)
-    
-        $ install.sh -i
-    
 ## Usage
 
 The user can run the application in two way:
