@@ -17,6 +17,7 @@ from sapy.core.moms import Mom
 from sapy.core import loms
 import sapy.utils.db as db_iface
 import datetime
+import sapy.utils.constants 
 
 CREATE_TABLE_PROFILES = """
     CREATE TABLE "profiles" (
@@ -59,6 +60,8 @@ GET_DEFAULT_PROFILE_ID = """
 
 TAB_VERSION = 1
 
+__default_profile_id__ = 1
+
 
 def create_tables():
     cur = db_iface.get_cursor()
@@ -66,7 +69,8 @@ def create_tables():
     cur.execute(CREATE_TABLE_MOM_IN_PROFILE)
     cur.execute(CREATE_DEFAULT_PROFILE)
     cur.execute(SET_TAB_VERSION, (TAB_VERSION, ))
-    cur.execute(SET_DEFAULT_PROFILE_ID, (1, ))
+    cur.execute(sapy.utils.constants.__db_create_app_meta__)
+    cur.execute(SET_DEFAULT_PROFILE_ID, (__default_profile_id__, ))
     db_iface.commit()
     cur.close()
 
@@ -97,6 +101,9 @@ def get_default_profile_id():
     cur.execute(GET_DEFAULT_PROFILE_ID)
     res = cur.fetchone()
     cur.close()
+    if res is None:
+        set_default_profile_id(__default_profile_id__)
+        return __default_profile_id__
     return res[0]
 
 

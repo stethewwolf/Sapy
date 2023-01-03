@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+
 
 from calendar import calendar
 from datetime import date, datetime, timedelta
@@ -24,9 +24,7 @@ from sapy.core import loms
 from sapy.core.moms import Mom
 from sapy.core import profiles
 from sapy.utils import loggers as LoggerFactory
-from sapy.utils import config as SingleConfig
-from sapy.utils import constants as SapyConstants
-from sapy.utils import values as SapyValues
+import sapy.utils.constants
 from sapy.commands.command import Command
 from sapy.gtk.gtk_handlers import GuiData
 from sapy.gtk.gtk_handlers import Handler
@@ -56,20 +54,7 @@ class RunGui(Command):
         self.signal_handler = Handler(GuiData(), self.gui_builder)
 
     def run(self):
-
-        glade_files_path = [
-            os.path.join(
-                os.environ["HOME"], 
-                '.local', 'share', 'sapy', 'sapy.glade'),
-            os.path.join(
-                os.environ["VIRTUAL_ENV"],
-                'share', 'sapy', 'sapy.glade'),
-            '/app/share/sapy/sapy.glade',
-            'sapy/gtk/sapy.glade',
-            os.path.join(Path(__file__).parents[2], 'gtk', 'sapy.glade')
-        ]
-        
-        for glade_file in glade_files_path:
+        for glade_file in sapy.utils.constants.__glade_files_path__:
             if os.path.exists(glade_file):
                 self.gui_builder.add_from_file(glade_file)
                 break

@@ -13,7 +13,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
 
 from calendar import calendar
 from datetime import date, datetime, timedelta
@@ -85,7 +84,7 @@ class Handler:
     def onYearMonthViewSelected(self, spinButton):
         self.gui_data.year = int(spinButton.get_value())
         self.gui_data.start_date = datetime(
-            self.gui_data.year, self.gui_data.month, 1)
+            self.gui_data.year, self.gui_data.month-1, 1)
         self.gui_data.end_date = datetime(
             self.gui_data.year,
             self.gui_data.month,

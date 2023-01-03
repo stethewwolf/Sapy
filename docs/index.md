@@ -21,15 +21,33 @@ with the aim of raising awareness of one's own consumption.
 
 * [references](https://en.wikipedia.org/wiki/Kakeibo)
 
-
 The code is available on [github](https://github.com/stethewwolf/Sapy/tree/devel)
-
-
 
 Important acronyms:
 
 * mom : movement of money, it used to represent an  money income or outcome and it is described using date, value and cause
 * lom : list of movements, a bunch of moms
+
+## Development
+
+Install the libgirepository dev pkg in order to install requirements into the virtualenv
+
+```
+    $ sudo apt install libgirepository1.0-dev
+```
+
+You can follow those steps:
+
+```
+    $ git clone https://github.com/stethewwolf/Sapy.git         # get the code
+    $ cd Sapy                                                                          # enter the code volder
+    $ virtualenv venv                                                              # create the virtualenv
+    $ source venv/bin/activate                                                # load the virtualenv
+    $ pip install -r requirements                                              # install requirements into the venv
+    $ python setup.py install                                                   # install sapy into the venv
+    $ export  SAPY_HOME=~/.sapy-test                                  # set custom app folder 
+    $ sapy --gui                                                                        # start the app
+```
 
 ## Installation
 ### Dependencies
@@ -37,8 +55,7 @@ Important acronyms:
 
         $ sudo apt install python3-matplotlib 
         
-If you are going to use a virtualenv env consider to install
-        $ sudo apt install libgirepository1.0-dev
+
 
 #### Archlinux
 
