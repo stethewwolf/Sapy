@@ -22,7 +22,7 @@ from pathlib import Path
 # app values
 __app_name__ = 'sapy'
 __app_description__ = 'App implementing the Japanese Kakeibo method'
-__version__ = '2.3.0'
+__version__ = '2.3.1'
 __author__ = 'Stefano Prina'
 __author_email__ = 'stethewwolf@posteo.net'
 __app_url__ = 'https://sapy.stethewwolf.eu'

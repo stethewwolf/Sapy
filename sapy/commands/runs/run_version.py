@@ -33,8 +33,6 @@ class RunVersion (Command):
     def run(self):
         self.logger.debug("start")
 
-        print(sapy.utils.constants.__app_name__ + " - " +
-              sapy.utils.constants.__version__)
-        print("\t" + sapy.utils.constants.__author__)
+        print(sapy.utils.constants.__version__)
 
         self.logger.debug("end")
