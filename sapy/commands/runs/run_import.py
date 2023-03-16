@@ -16,9 +16,9 @@
 #
 
 from sapy.utils import loggers as LoggerFactory
+from sapy.utils import dates
 from sapy.commands.command import Command
 import sapy.core.moms as moms
-from sapy.commands.setters import set_end as se
 import csv
 import pathlib
 import sapy.core.loms as loms
@@ -53,9 +53,9 @@ class RunImport (Command):
 
             for raw in data:
                 mlist.append(moms.Mom(
-                    day=se.parse_date(raw['date'], self.logger).day,
-                    month=se.parse_date(raw['date'], self.logger).month,
-                    year=se.parse_date(raw['date'], self.logger).year,
+                    day=dates.parse_date(raw['date'], self.logger).day,
+                    month=dates.parse_date(raw['date'], self.logger).month,
+                    year=dates.parse_date(raw['date'], self.logger).year,
                     cause=raw['cause'],
                     value=float(raw['value'])))
 

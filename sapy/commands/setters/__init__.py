@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
+# Copyright (C) 2018 stefano prina <stethewwolf@posteo.net>
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,13 +16,13 @@
 #
 
 __all__ = [
-    'SetDaily', 
-    'SetEnd', 
-    'SetEnv', 
-    'SetId', 
-    'SetMonthly', 
+    'SetDaily',
+    'SetEndDate',
+    'SetEnv',
+    'SetId',
+    'SetMonthly',
     'SetLom',
-    'SetStart',
+    'SetStartDate',
     'SetValue',
     'SetWeekly',
     'SetCause',
@@ -31,15 +31,15 @@ __all__ = [
     ]
 
 # deprecated to keep older scripts who import this from breaking
-from  sapy.commands.setters.set_daily     import SetDaily
-from  sapy.commands.setters.set_end       import SetEnd
-from  sapy.commands.setters.set_env       import SetEnv
-from  sapy.commands.setters.set_lom       import SetLom
-from  sapy.commands.setters.set_monthly   import SetMonthly
-from  sapy.commands.setters.set_id        import SetId
-from  sapy.commands.setters.set_start     import SetStart
-from  sapy.commands.setters.set_value     import SetValue
-from  sapy.commands.setters.set_weekly    import SetWeekly
-from  sapy.commands.setters.set_cause     import SetCause
-from  sapy.commands.setters.set_date      import SetDate
-from  sapy.commands.setters.set_name      import SetName
+from sapy.commands.setters.set_daily import SetDaily
+from sapy.commands.setters.set_end_date import SetEndDate
+from sapy.commands.setters.set_env import SetEnv
+from sapy.commands.setters.set_lom import SetLom
+from sapy.commands.setters.set_monthly import SetMonthly
+from sapy.commands.setters.set_id import SetId
+from sapy.commands.setters.set_start_date import SetStartDate
+from sapy.commands.setters.set_value import SetValue
+from sapy.commands.setters.set_weekly import SetWeekly
+from sapy.commands.setters.set_cause import SetCause
+from sapy.commands.setters.set_date import SetDate
+from sapy.commands.setters.set_name import SetName

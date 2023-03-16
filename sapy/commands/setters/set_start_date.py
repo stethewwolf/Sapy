@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stefano-prina@outlook.it> <stethewwolf@gmail.com>
+# Copyright (C) 2018 stefano prina <stethewwolf@posteo.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,33 +16,29 @@
 #
 import sapy.utils.loggers
 import sapy.utils.values as sapy_values
-from sapy.commands.command import Command
-import sapy.commands.setters.set_end_date as sed
-import sapy.commands.setters.set_start_date as ssd
 import sapy.utils.dates as dts
+from sapy.commands.command import Command
 
-__date_tag__ = 'date'
+__start_date_tag__ = 'start-date'
 
-class SetDate (Command):
-    short_arg = "d"
-    long_arg = "date"
-    cmd_help = "set the date for the operation"
+
+class SetStartDate (Command):
+    short_arg = None
+    long_arg = 'start-date'
+    cmd_help = 'set start date'
     cmd_type = str
     cmd_action = None
 
     def __init__(self, param):
         super().__init__()
-        self.logger = sapy.utils.loggers.getLogger(str(self.__class__))
+        self.logger = LoggerFactory.getLogger(str(self.__class__))
         self.__param = param
 
     def run(self):
         self.logger.debug("start")
 
-        sapy_values.set_value(
-            __date_tag__, dts.parse_date(self.__param, self.logger))
-        sapy_values.set_value(
-            ssd.__start_date_tag__, se.parse_date(self.__param, self.logger))
-        sapy_values.set_value(
-            sed.__end_date_tag__, se.parse_date(self.__param, self.logger))
+        SapyValues.set_value(
+            __start_date_tag__,
+            dts.parse_date(self.__param, self.logger))
 
         self.logger.debug("end")

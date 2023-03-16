@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime, copy
-from  sapy.commands.setters import set_end as se
+#from  sapy.commands.setters import set_end as se
 import  sapy.utils.db as db_iface
 
 CREATE_TABLE_OBJECTIVES = """

@@ -17,7 +17,7 @@
 
 from  sapy.commands.command import Command
 import  sapy.utils.loggers as LoggerFactory
-from  sapy.commands.setters import SetCause, SetValue, SetLom, SetDate, SetStart, SetEnd
+from  sapy.commands.setters import SetCause, SetValue, SetLom, SetDate, SetStartDate, SetEndDate
 from  sapy.commands.runs import RunAdd, RunList
 import  sapy.core.objectives as objs
 import  sapy.core.loms as loms

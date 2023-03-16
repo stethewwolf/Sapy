@@ -45,11 +45,11 @@ class CommandLine_Parser(object):
 
         self.scl = [
             SetDaily,
-            SetEnd,
+            SetEndDate,
             SetId,
             SetMonthly,
             SetLom,
-            SetStart,
+            SetStartDate,
             SetValue,
             SetWeekly,
             SetCause,
@@ -68,28 +68,28 @@ class CommandLine_Parser(object):
             if cmd.short_arg:
                 if cmd.cmd_type:
                     self.parser.add_argument(
-                        "--"+cmd.long_arg,
-                        "-"+cmd.short_arg,
+                        '--{}'.format(cmd.long_arg),
+                        '-{}'.format(cmd.short_arg),
                         type=cmd.cmd_type,
                         help=cmd.cmd_help
                     )
                 else:
                     self.parser.add_argument(
-                        "--"+cmd.long_arg,
-                        "-"+cmd.short_arg,
+                        '--{}'.format(cmd.long_arg),
+                        '-{}'.format(cmd.short_arg),
                         action=cmd.cmd_action,
                         help=cmd.cmd_help
                     )
             elif cmd.long_arg:
                 if cmd.cmd_type:
                     self.parser.add_argument(
-                        "--"+cmd.long_arg,
+                        '--{}'.format(cmd.long_arg),
                         type=cmd.cmd_type,
                         help=cmd.cmd_help
                     )
                 else:
                     self.parser.add_argument(
-                        "--"+cmd.long_arg,
+                        "--{}".format(cmd.long_arg),
                         action=cmd.cmd_action,
                         help=cmd.cmd_help
                     )

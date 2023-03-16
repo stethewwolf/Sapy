@@ -62,16 +62,16 @@ __glade_files_path__ = [
     os.path.join(Path(__file__).parents[1], 'gtk', 'sapy.glade')
 ]
 
-
-class DATE:
-    FORMATS = [ 
+# dates
+__date_formats__ = [
             '%d-%m-%Y',
             '%Y-%m-%d',
             '%d-%m-%y',
             '%y-%m-%d',
             '%c'
             ]
-    SEPARATORS = [ 
+
+__date_separators__ = [
         '-',
         ' ',
         '/',
@@ -90,26 +90,12 @@ class COMMANDS:
         TYPE = None
         ACTION = 'store_true'
 
-    class SET_END:
-        SHORT_ARG = None
-        LONG_ARG = "end-date"
-        HELP = "set end date"
-        TYPE = str
-        ACTION = None
-
     class SET_MONTHLY:
         SHORT_ARG = None
         LONG_ARG = "monthly"
         HELP = "set monthly occurrance"
         TYPE = None
         ACTION = 'store_true'
-
-    class SET_START:
-        SHORT_ARG = None
-        LONG_ARG = "start-date"
-        HELP = "set start date"
-        TYPE = str
-        ACTION = None
 
     class SET_VALUE:
         SHORT_ARG = "v"

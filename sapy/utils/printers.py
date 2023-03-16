@@ -1,5 +1,5 @@
 # Sapy
-# Copyright (C) 2018 stefano prina <stethewwolf@posteo.net>
+# Copyright (C) 2022 stefano prina <stethewwolf@posteo.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,26 +13,22 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-from sapy.utils import loggers as LoggerFactory
-from sapy.commands.command import Command
-import sapy.utils.constants
+def print_list(title: str = None, entries: list = []):
+    print('--------------------------------')
+    print(title)
+    print('--------------------------------')
+    for entry in entries:
+        print(' * {}'.format(entry))
 
+
+def print_table(title: str = None, header: list = [], entries: list = []):
+    print('--------------------------------')
+    print(title)
+    print('--------------------------------')
+    print(header)
+    print('--------------------------------')
+    for entry in entries:
+        print('{}'.format(entry))
     
-class RunVersion (Command):
-    short_arg = 'V'
-    long_arg = 'version'
-    cmd_help = 'print the version'
-    cmd_type = None
-    cmd_action = 'store_true'
-
-    def __init__(self, param):
-        super().__init__()
-        self.logger = LoggerFactory.getLogger(str(self.__class__))
-
-    def run(self):
-        self.logger.debug("start")
-
-        print(sapy.utils.constants.__version__)
-
-        self.logger.debug("end")
