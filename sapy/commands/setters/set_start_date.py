@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-import sapy.utils.loggers
+import sapy.utils.loggers as logger_factory
 import sapy.utils.values as sapy_values
 import sapy.utils.dates as dts
 from sapy.commands.command import Command
@@ -31,13 +31,13 @@ class SetStartDate (Command):
 
     def __init__(self, param):
         super().__init__()
-        self.logger = LoggerFactory.getLogger(str(self.__class__))
+        self.logger = logger_factory.getLogger(str(self.__class__))
         self.__param = param
 
     def run(self):
         self.logger.debug("start")
 
-        SapyValues.set_value(
+        sapy_values.set_value(
             __start_date_tag__,
             dts.parse_date(self.__param, self.logger))
 
