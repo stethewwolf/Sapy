@@ -15,12 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import datetime
+from datetime import datetime
 import sapy.utils.constants as sapy_constants
 
 
 def parse_date(param, mlogger):
-    date = datetime.datetime.today().date()
+    date = datetime.today().date()
     parsed = False
     count_frm = 0
     while count_frm < len(sapy_constants.__date_formats__) and not parsed:
@@ -34,17 +34,18 @@ def parse_date(param, mlogger):
                 date = datetime.strptime(param, l_date_fomrat).date()
                 parsed = True
                 mlogger.debug("parsed whit : " + l_date_fomrat)
-            except:
-                mlogger.debug("failed parsing whit : " + l_date_fomrat)
+            except Exception as ex:
+                mlogger.debug("failed parsing whit : " + l_date_fomrat + " reason: " + str(ex))
+
             count_sep += 1
 
-        count_frm = +1
+        count_frm += 1
+        
+    if parsed:
+        mlogger.debug("parsed")
+    elif count_frm >= len(sapy_constants.__date_separators__):
+        mlogger.debug("checked all date separators")
     else:
-        if parsed:
-            mlogger.debug("parsed")
-        elif count_frm >= len(sapy_constants.__date_separators__):
-            mlogger.debug("checked all date separators")
-        else:
-            mlogger.error("failed to parse " + param)
+        mlogger.error("failed to parse " + param)
 
     return date
