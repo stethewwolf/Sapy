@@ -351,5 +351,3 @@ def get_loms():
     cur.close()
     return llist
 
-
-

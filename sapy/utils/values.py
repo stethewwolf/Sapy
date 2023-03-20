@@ -47,7 +47,7 @@ def init():
 
 def has_value(key):
     global __store
-    return __store.has_key(key)
+    return key in __store
 
 
 def get_value(key):

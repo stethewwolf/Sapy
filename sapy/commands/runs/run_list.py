@@ -20,6 +20,7 @@ import sapy.utils.printers as prntrs
 import sapy.utils.loggers
 from sapy.commands.command import Command
 import sapy.commands.setters.set_end_date as sed
+import sapy.commands.setters.set_start_date as ssd
 import datetime
 import sapy.core.loms as loms
 import sapy.core.profiles as profiles
@@ -62,10 +63,10 @@ def list_moms():
     if sapy_values.has_value(sed.__end_date_tag__):
         end_date = sapy_values.get_value(sed.__end_date_tag__)
         
-    if sapy_values.has_value(sed.__start_date_tag__):
-        star_date = sapy_values.get_value(sed.__start_date_tag__)
+    if sapy_values.has_value(ssd.__start_date_tag__):
+        start_date = sapy_values.get_value(ssd.__start_date_tag__)
     
-    lom = 'planned'
+    lom = 'occurred'
     
     moms = []
     if lom == 'occurred':
@@ -85,14 +86,11 @@ def list_moms():
         'Moms from {} list {}'.format(profile.name, lom),
         headers, moms_str_list)
 
-
 def list_loms():
     loms_str_list = []
     for lom in loms.get_loms():
         loms_str_list.append('[ {} ] {}'.format(lom.id, lom.name))
     prntrs.print_list('[ Id ] Loms', loms_str_list)
-    pass
-
 
 def list_profiles():
     profiles_str_list = []

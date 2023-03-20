@@ -23,7 +23,8 @@ CREATE_TABLE_PROFILES = """
     CREATE TABLE "profiles" (
         "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         "name"	TEXT NOT NULL,
-        "color" TEXT NOT NULL DEFAULT "blue"
+        "color" TEXT NOT NULL DEFAULT "blue",
+	    "default_lom_id" INTEGER NOT NULL DEFAULT 1
     ) """
 
 CREATE_TABLE_MOM_IN_PROFILE = """
@@ -57,6 +58,7 @@ SET_DEFAULT_PROFILE_ID = """
     INSERT INTO "app_meta" ("key","value") VALUES ('default_profile_id',?) """
 GET_DEFAULT_PROFILE_ID = """
     SELECT value from "app_meta" where `key` == 'default_profile_id' """
+GET_DEFAULT_LOM_ID_PER_PROFILE = """SELECT default_lom_id  FROM profiles  WHERE id=?"""
 
 TAB_VERSION = 1
 
@@ -120,7 +122,8 @@ class Profile(object):  # list of movements
         self,
         id=None,
         name="profile",
-        color="blue"
+        color="blue",
+        default_lom=None
     ):
         if id is None:
             self.name = name
@@ -132,6 +135,10 @@ class Profile(object):  # list of movements
             cur.execute(GET_PROFILE_IDS)
             self.profile_id = cur.fetchone()[0]
 
+            cur.execute(GET_DEFAULT_LOM_ID_PER_PROFILE,(self.profile_id,))
+            raw_line = cur.fetchone()
+            self.defalut_lom = raw_line[0]
+
             db_iface.commit()
             cur.close()
         else:
@@ -141,6 +148,11 @@ class Profile(object):  # list of movements
             raw_line = cur.fetchone()
             self.name = raw_line[1]
             self.color = raw_line[2]
+
+            cur.execute(GET_DEFAULT_LOM_ID_PER_PROFILE,(self.profile_id,))
+            raw_line = cur.fetchone()
+            self.defalut_lom = raw_line[0]
+
             cur.close()
         self.planned_lom = loms.get_lom(name=loms.PLANNED_LIST_NAME)
         self.occurred_lom = loms.get_lom(name=loms.OCCURRED_LIST_NAME)
