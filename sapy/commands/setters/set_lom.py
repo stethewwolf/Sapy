@@ -15,12 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from  sapy.utils import loggers as LoggerFactory
-from  sapy.utils import config as SingleConfig
-from  sapy.utils import constants as SapyConstants
-from  sapy.utils import values as SapyValues
+from  sapy.utils import loggers as logger_factory
+from  sapy.utils import config 
+from  sapy.utils import constants 
+from  sapy.utils import values as sapy_values
 from  sapy.commands.command import Command
 from  sapy.core import loms 
+
+__lom_tag__ = "lom"
 
 class SetLom ( Command ):
     short_arg = None
@@ -31,15 +33,26 @@ class SetLom ( Command ):
 
     def __init__(self, param):
         super().__init__( )
-        self.logger = LoggerFactory.getLogger(str( self.__class__ ))
-        self.name=param
+        self.logger = logger_factory.getLogger(str( self.__class__ ))
+        self.lom_value=param
 
     def run(self):
         self.logger.debug("start")
 
-        l = loms.get_lom(name=self.name)
+        lom = None
+        lom_id = None
 
-        if l:
-            SapyValues.set_value('lom', l)
+        try:
+            lom_id = int(self.lom_value)
+        except Exception as ex:
+            self.logger.debug("lom value is not integer: "+str(ex))
+
+        if lom_id:
+            lom = loms.get_lom(id=lom_id)
+        else:
+            lom = loms.get_lom(name=self.lom_value)
+
+        if lom:
+            sapy_values.set_value(__lom_tag__, lom)
 
         self.logger.debug("end")
