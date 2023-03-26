@@ -16,15 +16,13 @@
 #
 
 from  sapy.utils import loggers 
-from  sapy.utils import config 
-from  sapy.utils import constants 
 from  sapy.utils import values 
 from  sapy.commands.command import Command
 
 __name_tag__ = 'name_tag'
 
 class SetName ( Command ):
-    short_arg = None
+    short_arg = 'n'
     long_arg = 'name'
     cmd_help = 'set the name'
     cmd_type = str
@@ -34,6 +32,7 @@ class SetName ( Command ):
         super().__init__()
         self.logger = loggers.getLogger( str( self.__class__ ))
         self.__param = param
+        self.logger.error("set name " + param)
 
     def run( self ):
         self.logger.error("start")

@@ -70,28 +70,28 @@ class CommandLine_Parser(object):
                     self.parser.add_argument(
                         '--{}'.format(cmd.long_arg),
                         '-{}'.format(cmd.short_arg),
-                        type=cmd.cmd_type,
-                        help=cmd.cmd_help
+                        type = cmd.cmd_type,
+                        help = cmd.cmd_help
                     )
                 else:
                     self.parser.add_argument(
                         '--{}'.format(cmd.long_arg),
                         '-{}'.format(cmd.short_arg),
-                        action=cmd.cmd_action,
-                        help=cmd.cmd_help
+                        action = cmd.cmd_action,
+                        help   = cmd.cmd_help
                     )
             elif cmd.long_arg:
                 if cmd.cmd_type:
                     self.parser.add_argument(
                         '--{}'.format(cmd.long_arg),
-                        type=cmd.cmd_type,
-                        help=cmd.cmd_help
+                        type = cmd.cmd_type,
+                        help = cmd.cmd_help
                     )
                 else:
                     self.parser.add_argument(
                         "--{}".format(cmd.long_arg),
-                        action=cmd.cmd_action,
-                        help=cmd.cmd_help
+                        action = cmd.cmd_action,
+                        help   = cmd.cmd_help
                     )
 
     def parse(self):
@@ -118,15 +118,15 @@ class CommandLine_Parser(object):
 
         count = 0
         for cmd in self.tcl:
+            if count > 0:
+                self.logger.warn("it is possible use only one task")
+                break
+
             if getattr(args, cmd.long_arg.replace("-", "_")):
                 self.logger.debug("passed option --" + cmd.long_arg)
                 command_list.append(
                     cmd(getattr(args, cmd.long_arg.replace("-", "_"))))
                 count += 1
-
-            if count > 1:
-                self.logger.warn("it is possible use only one task")
-                break
 
         self.logger.debug('parse ends')
 
