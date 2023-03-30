@@ -15,26 +15,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from  sapy.utils import loggers as LoggerFactory
-from  sapy.utils import config as SingleConfig
-from  sapy.utils import constants as SapyConstants
-from  sapy.utils import values as SapyValues
+from  sapy.utils import loggers
+from  sapy.utils import constants 
+from  sapy.utils import values
 from  sapy.commands.command import Command
 
 class SetWeekly ( Command ):
-    short_arg = SapyConstants.COMMANDS.SET_WEEKLY.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.SET_WEEKLY.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.SET_WEEKLY.HELP
-    cmd_type = SapyConstants.COMMANDS.SET_WEEKLY.TYPE
-    cmd_action = SapyConstants.COMMANDS.SET_WEEKLY.ACTION
+    short_arg  = 'w' 
+    long_arg   = 'weekly' 
+    cmd_help   = 'set weekly occurrance' 
+    cmd_type   = None 
+    cmd_action = 'store_true' 
 
     def __init__( self, param = None):
         super().__init__()
-        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.logger = loggers.getLogger( str( self.__class__ ))
 
     def run( self ):
-        self.logger.debug("start")
-
-        SapyValues.set_value( 'frequency', SapyConstants.FREQUENCY.WEEKLY )
-
-        self.logger.debug("end")
+        values.set_value( 'frequency', constants.FREQUENCY.WEEKLY )
