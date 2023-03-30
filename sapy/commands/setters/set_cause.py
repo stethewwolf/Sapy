@@ -15,27 +15,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from  sapy.utils import loggers as LoggerFactory
-from  sapy.utils import config as SingleConfig
-from  sapy.utils import constants as SapyConstants
-from  sapy.utils import values as SapyValues
+from  sapy.utils import loggers 
+from  sapy.utils import values
 from  sapy.commands.command import Command
 
+__cause_tag__ = 'cause_tag'
+
 class SetCause ( Command ):
-    short_arg = SapyConstants.COMMANDS.SET_CAUSE.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.SET_CAUSE.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.SET_CAUSE.HELP
-    cmd_type = SapyConstants.COMMANDS.SET_CAUSE.TYPE
-    cmd_action = SapyConstants.COMMANDS.SET_CAUSE.ACTION
+    short_arg = "c"
+    long_arg = "cause"
+    cmd_help = "set cause"
+    cmd_type = str
+    cmd_action = None
+
 
     def __init__(self, param):
         super().__init__()
-        self.logger = LoggerFactory.getLogger(str(self.__class__))
+        self.logger = loggers.getLogger(str(self.__class__))
         self.__param = param
 
     def run(self):
-        self.logger.debug("start")
-
-        SapyValues.set_value('cause', self.__param)
-
-        self.logger.debug("end")
+        values.set_value(__cause_tag__, self.__param)
