@@ -15,27 +15,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from  sapy.utils import loggers as LoggerFactory
-from  sapy.utils import config as SingleConfig
-from  sapy.utils import constants as SapyConstants
-from  sapy.utils import values as SapyValues
+from  sapy.utils import loggers
+from  sapy.utils import values
 from  sapy.commands.command import Command
 
-class SetValue ( Command ):
-    short_arg = SapyConstants.COMMANDS.SET_VALUE.SHORT_ARG
-    long_arg = SapyConstants.COMMANDS.SET_VALUE.LONG_ARG
-    cmd_help = SapyConstants.COMMANDS.SET_VALUE.HELP
-    cmd_type = SapyConstants.COMMANDS.SET_VALUE.TYPE
-    cmd_action = SapyConstants.COMMANDS.SET_VALUE.ACTION
+__value_tag__ = 'value'
 
-    def __init__( self, param = 0):
+class SetValue ( Command ):
+    short_arg = 'v'
+    long_arg = 'value'
+    cmd_help = 'set mom value'
+    cmd_type = float 
+    cmd_action = None
+
+
+    def __init__(self, param = 0):
         super().__init__()
-        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.logger = loggers.getLogger( str( self.__class__ ))
         self.__param = param
 
-    def run( self ):
-        self.logger.debug("start")
-
-        SapyValues.set_value( 'value', self.__param )
-
-        self.logger.debug("end")
+    def run(self):
+        values.set_value(__value_tag__, self.__param )
