@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sapy.utils import loggers as LoggerFactory
+from sapy.utils import loggers
 from sapy.commands.command import Command
-import sapy.utils.constants
+from sapy.utils import constants
 
     
 class RunVersion (Command):
@@ -28,11 +28,7 @@ class RunVersion (Command):
 
     def __init__(self, param):
         super().__init__()
-        self.logger = LoggerFactory.getLogger(str(self.__class__))
+        self.logger = loggers.getLogger(str(self.__class__))
 
     def run(self):
-        self.logger.debug("start")
-
-        print(sapy.utils.constants.__version__)
-
-        self.logger.debug("end")
+        print(constants.__version__)
