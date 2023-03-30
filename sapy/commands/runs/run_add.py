@@ -20,7 +20,7 @@ from sapy.utils import values
 from sapy.utils import printers
 import sapy.utils.constants
 from sapy.commands.command import Command
-from sapy.commands.setters import set_name 
+from sapy.commands.setters import set_name, set_start_date, set_end_date, set_lom, set_cause, set_value, set_daily, set_monthly, set_weekly, set_date
 import sapy.core.profiles as profiles
 import sapy.core.loms as loms
 import sapy.core.moms as moms
@@ -51,12 +51,41 @@ class RunAdd(Command):
 
         self.logger.debug("end")
 
+
 def add_mom():
+    profile_id = profiles.get_default_profile_id()
+    profile = profiles.get_profile(id=profile_id)
+    lom = loms.get_lom(name='Occurred')
     mlist = []
-    lom_name = values.get_value('lom')
-    start_date = values.get_value('start_date')
-    end_date = values.get_value('end_date')
-    freq = values.get_value('frequency')
+    start_date = None
+    end_date = None
+    date = None
+    mom_date = None
+    freq = None
+    mom_cause = 'cause'
+    mom_value = 0.5
+
+    if values.has_value(set_lom.__lom_tag__):
+       lom = values.get_value(set_lom.__lom_tag__)
+   
+    if values.has_value(set_date.__date_tag__):
+       date = values.get_value(set_date.__date_tag__)
+
+    if not date:
+        if values.has_value(set_start_date.__start_date_tag__):
+            start_date = values.get_value(set_start_date.__start_date_tag__)
+
+        if values.has_value(set_end_date.__end_date_tag__):
+            end_date = values.get_value(set_end_date.__end_date_tag__)
+
+    if values.has_value(set_cause.__cause_tag__):
+        mom_cause = values.get_value(set_cause.__cause_tag__)
+    else:
+        if values.has_value(set_name.__name_tag__):
+            mom_cause = values.get_value(set_name.__name_tag__)
+   
+    if values.has_value(set_value.__value_tag__):
+        mom_value = values.get_value(set_value.__value_tag__)
 
     if start_date != end_date and end_date > start_date and freq:
         if freq == sapy.utils.constants.__frequency_daily__:
@@ -72,28 +101,37 @@ def add_mom():
 
         while itr + start_date <= end_date:
             mlist.append(moms.Mom(
-                value=values.get_value('value'),
-                cause=values.get_value('cause'),
-                year=(start_date + itr).year,
-                month=(start_date + itr).month,
-                day=(start_date + itr).day
+                value = mom_value,
+                cause = mom_cause,
+                year = (start_date + itr).year,
+                month = (start_date + itr).month,
+                day = (start_date + itr).day
                 )
             )
 
             itr += step
 
     else:
-        mlist.append(moms.Mom(
-            value = values.get_value('value'),
-            cause = values.get_value('cause'),
-            year = start_date.year,
-            month = start_date.month,
-            day = start_date.day
+        if mom_date: 
+            mlist.append(moms.Mom(
+                value = mom_value,
+                cause = mom_cause,
+                year = start_date.year,
+                month = start_date.month,
+                day = start_date.day
+                )
             )
-        )
+        else:
+            mlist.append(moms.Mom(
+                value = mom_value,
+                cause = mom_cause,
+                )
+            )
     
-    lom = loms.get_lom(name=lom_name)
-    lom.add(mlist)
+    if lom.name == 'Occurred':
+        profile.add_occurred_mom(mlist)
+    elif lom.name == 'Planned':
+        profile.add_planned_mom(mlist)
 
 
 def add_profile():
