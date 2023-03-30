@@ -15,65 +15,39 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from sapy.utils import loggers as LoggerFactory
+from sapy.utils import loggers
+from sapy.utils import values
 from sapy.commands.command import Command
-import datetime
-import sapy.core.loms
-import sapy.core.tags as tags
-import sapy.core.objectives as objs
-
+from sapy.commands.setters import set_id
+from sapy.core import profiles, moms
 
 class RunRemove (Command):
     short_arg = 'r'
     long_arg = 'rm'
-    cmd_help = 'remove target : lom | mom | tag | obj'
+    cmd_help = 'remove target : mom | profile'
     cmd_type = str
     cmd_action = None
 
     def __init__(self, param):
         super().__init__()
-        self.logger = LoggerFactory.getLogger( str( self.__class__ ))
+        self.logger = loggers.getLogger(str(self.__class__))
         self.target = param
 
     def run(self):
-        self.logger.debug("start")
-        
-        self.id2rm = SapyValues.get_value('id')
+        id_to_remove = values.get_value(set_id.__id_tag__)
 
         if self.target == 'mom':
-            self.rm_mom()
-        elif self.target == 'lom':
-            self.rm_lom()
-        elif self.target == 'obj':
-            self.rm_obj()
-        elif self.target == 'tag':
-            self.rm_tag()
+            rm_mom(id_to_remove)
+        elif self.target == 'profile':
+            rm_profile(id_to_remove)
         else:
             print('invalid targget :{}'.format(self.target))
 
-        self.logger.debug("end")
 
-    def rm_mom(self):
-        lom = self.values.get_value('lom')
-        mlist = lom.get_moms(id=self.id2rm)
-        mlist[0].delete()
+def rm_mom(target_id):
+    moms.delete_mom(target_id)
 
-    def rm_lom(self):
-        lom = loms.get_lom(id=self.id2rm )
-
-        mlist = l.get_moms()
-
-        for m in  mlist :
-            m.delete()
-
-        l.delete()
-
-    def rm_tag(self):
-        t = tags.get_tag(id=self.id2rm)
-        t.delete()
-        pass
-
-    def rm_obj(self):
-        o = objs.get_obj(self.id2rm, self.logger)
-        o.delete()
-        pass
+def rm_profile(target_id):
+    profile = profiles.get_profile(id=target_id)
+    if profile:
+        profile.remove_profile()

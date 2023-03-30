@@ -171,4 +171,11 @@ class Mom(object):  # movement of money
 def date_key(mom):
     return int('{}{}{}'.format(mom.time.year,mom.time.month,mom.time.day))
 
-
+def delete_mom(mom_id):
+    cur = db_iface.get_cursor()
+    cur.execute(DELETE_MOM, (mom_id, ))
+    cur.execute(DELETE_MOM_IN_LOM_LINK, (mom_id, ))
+    cur.execute(DELETE_MOM_IN_PROFILE_LINK, (mom_id, ))
+    db_iface.commit()
+    cur.close()
+ 
