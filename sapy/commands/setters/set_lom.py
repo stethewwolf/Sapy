@@ -25,7 +25,7 @@ from  sapy.core import loms
 __lom_tag__ = "lom"
 
 class SetLom ( Command ):
-    short_arg = None
+    short_arg = 'L'
     long_arg = 'lom'
     cmd_help = 'specify the list of money ( lom )'
     cmd_type = str
@@ -37,8 +37,6 @@ class SetLom ( Command ):
         self.lom_value=param
 
     def run(self):
-        self.logger.debug("start")
-
         lom = None
         lom_id = None
 
@@ -54,5 +52,3 @@ class SetLom ( Command ):
 
         if lom:
             sapy_values.set_value(__lom_tag__, lom)
-
-        self.logger.debug("end")
