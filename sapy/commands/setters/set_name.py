@@ -32,11 +32,6 @@ class SetName ( Command ):
         super().__init__()
         self.logger = loggers.getLogger( str( self.__class__ ))
         self.__param = param
-        self.logger.error("set name " + param)
 
     def run( self ):
-        self.logger.error("start")
-
         values.set_value(__name_tag__, self.__param)
-
-        self.logger.error("end")
