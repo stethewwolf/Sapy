@@ -18,7 +18,7 @@
 from sapy.utils import loggers as logger_factory
 from sapy.utils import values
 from sapy.utils import printers
-import sapy.utils.constants
+from sapy.utils import constants
 from sapy.commands.command import Command
 from sapy.commands.setters import set_name, set_start_date, set_end_date, set_lom, set_cause, set_value, set_daily, set_monthly, set_weekly, set_date
 import sapy.core.profiles as profiles
@@ -61,7 +61,7 @@ def add_mom():
     end_date = None
     date = None
     mom_date = None
-    freq = None
+    freq = constants.__frequency_none__
     mom_cause = 'cause'
     mom_value = 0.5
 
@@ -87,14 +87,17 @@ def add_mom():
     if values.has_value(set_value.__value_tag__):
         mom_value = values.get_value(set_value.__value_tag__)
 
+    if values.has_value(constants.__frequency_tag__):
+        freq = values.get_value(constants.__frequency_tag__)
+
     if start_date != end_date and end_date > start_date and freq:
-        if freq == sapy.utils.constants.__frequency_daily__:
+        if freq == constants.__frequency_daily__:
             step = datetime.timedelta(days=1)
 
-        if freq == sapy.utils.constants.__frequency_weekly__:
+        if freq == constants.__frequency_weekly__:
             step = datetime.timedelta(days=7)
 
-        if freq == sapy.utils.constants.__frequency_monthly__:
+        if freq == constants.__frequency_monthly__:
             step = datetime.timedelta(days=30)
 
         itr = datetime.timedelta(days=0)

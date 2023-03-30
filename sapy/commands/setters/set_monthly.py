@@ -30,7 +30,7 @@ class SetMonthly ( Command ):
 
     def __init__( self, param ):
         super().__init__()
-        self.logger = loggers.getLogger(str( self.__class__ ))
+        self.logger = loggers.getLogger(str(self.__class__))
 
     def run( self ):
-        values.set_value('frequency', constants.FREQUENCY.MONTHLY)
+        values.set_value(constants.__frequency_tag__, constants.__frequency_monthly__)

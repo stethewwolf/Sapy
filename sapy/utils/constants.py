@@ -46,10 +46,11 @@ __db__populate_app_meta__ = """
     """
 
 # frequencies
-___frequency_daily__ = 'daily'
-___frequency_monthly__ = 'monthly'
-___frequency_weekly__ = 'weekly'
-___frequency_none__ = None
+__frequency_tag__ = 'frequency'
+__frequency_daily__ = 'daily'
+__frequency_monthly__ = 'monthly'
+__frequency_weekly__ = 'weekly'
+__frequency_none__ = None
 
 # gui
 __glade_files_path__ = [
@@ -79,30 +80,3 @@ __date_separators__ = [
         ':',
         '.'
         ]
-
-
-class COMMANDS:
-
-    class SET_DAILY:
-        SHORT_ARG = "D"
-        LONG_ARG = "daily"
-        HELP = "set daily occurance"
-        TYPE = None
-        ACTION = 'store_true'
-
-    class SET_MONTHLY:
-        SHORT_ARG = None
-        LONG_ARG = "monthly"
-        HELP = "set monthly occurrance"
-        TYPE = None
-        ACTION = 'store_true'
-
-    class SET_WEEKLY:
-        SHORT_ARG = None
-        LONG_ARG = "weekly"
-        HELP = "set weekly occurrance"
-        TYPE = None
-        ACTION = 'store_true'
-
-
-

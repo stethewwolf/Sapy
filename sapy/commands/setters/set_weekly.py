@@ -32,4 +32,4 @@ class SetWeekly ( Command ):
         self.logger = loggers.getLogger( str( self.__class__ ))
 
     def run( self ):
-        values.set_value( 'frequency', constants.FREQUENCY.WEEKLY )
+        values.set_value(constants.__frequency_tag__, constants.__frequency_weekly__)
