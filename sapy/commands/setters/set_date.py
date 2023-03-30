@@ -36,13 +36,10 @@ class SetDate (Command):
         self.__param = param
 
     def run(self):
-        self.logger.debug("start")
-
         sapy_values.set_value(
             __date_tag__, dts.parse_date(self.__param, self.logger))
         sapy_values.set_value(
-            ssd.__start_date_tag__, se.parse_date(self.__param, self.logger))
+            ssd.__start_date_tag__, dts.parse_date(self.__param, self.logger))
         sapy_values.set_value(
-            sed.__end_date_tag__, se.parse_date(self.__param, self.logger))
+            sed.__end_date_tag__, dts.parse_date(self.__param, self.logger))
 
-        self.logger.debug("end")
