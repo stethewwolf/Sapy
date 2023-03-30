@@ -97,26 +97,12 @@ class COMMANDS:
         TYPE = None
         ACTION = 'store_true'
 
-    class SET_VALUE:
-        SHORT_ARG = "v"
-        LONG_ARG = "value"
-        HELP = "set value"
-        TYPE = float
-        ACTION = None
-
     class SET_WEEKLY:
         SHORT_ARG = None
         LONG_ARG = "weekly"
         HELP = "set weekly occurrance"
         TYPE = None
         ACTION = 'store_true'
-
-    class SET_CAUSE:
-        SHORT_ARG = "c"
-        LONG_ARG = "cause"
-        HELP = "set cause"
-        TYPE = str
-        ACTION = None
 
 
 
