@@ -367,18 +367,20 @@ class Handler:
     def updatePlot(self):
         self.gui_data.ax.clear()
 
-        occurred_lom = loms.get_lom(name=loms.OCCURRED_LIST_NAME)
-        bxd_occurred_lom = occurred_lom.balance_per_day(
+        bxd_occurred_lom = self.gui_data.active_profile.get_occurred_balance_per_day(
             self.gui_data.start_date, self.gui_data.end_date)
+
+        occurred_lom = loms.get_lom(name=loms.OCCURRED_LIST_NAME)
         self.gui_data.ax.scatter(
             mp.dates.date2num(bxd_occurred_lom[0]),
             bxd_occurred_lom[1],
             label=occurred_lom.name, marker="+",
             color=occurred_lom.color)
 
-        planned_lom = loms.get_lom(name=loms.PLANNED_LIST_NAME)
-        bxd_planned_lom = planned_lom.balance_per_day(
+        bxd_planned_lom =  self.gui_data.active_profile.get_planned_balance_per_day(
             self.gui_data.start_date, self.gui_data.end_date)
+
+        planned_lom = loms.get_lom(name=loms.PLANNED_LIST_NAME)
         self.gui_data.ax.scatter(
             mp.dates.date2num(bxd_planned_lom[0]), bxd_planned_lom[1],
             label=planned_lom.name,
