@@ -30,7 +30,7 @@ import datetime
 class RunAdd(Command):
     short_arg = 'a'
     long_arg = 'add'
-    cmd_help = 'add new item, takes : mom | | pro '
+    cmd_help = 'add new item, takes : mom | pro '
     cmd_type = str
     cmd_action = None
 

@@ -21,7 +21,6 @@ import sapy.utils.constants
 from sapy.utils import loggers as LoggerFactory
 from sapy.commands.runs import *
 from sapy.commands.setters import *
-from sapy.commands.mods import *
 
 
 class CommandLine_Parser(object):
@@ -57,14 +56,7 @@ class CommandLine_Parser(object):
             SetName
             ]
 
-        self.tcl = [
-            NewYear,
-            NewMonth,
-            EndWeek,
-            EndMonth
-        ]
-
-        for cmd in self.rcl + self.scl + self.tcl:
+        for cmd in self.rcl + self.scl:
             if cmd.short_arg:
                 if cmd.cmd_type:
                     self.parser.add_argument(
@@ -115,18 +107,6 @@ class CommandLine_Parser(object):
                 self.logger.debug("passed option --" + cmd.long_arg)
                 command_list.append(
                     cmd(getattr(args, cmd.long_arg.replace("-", "_"))))
-
-        count = 0
-        for cmd in self.tcl:
-            if count > 0:
-                self.logger.warn("it is possible use only one task")
-                break
-
-            if getattr(args, cmd.long_arg.replace("-", "_")):
-                self.logger.debug("passed option --" + cmd.long_arg)
-                command_list.append(
-                    cmd(getattr(args, cmd.long_arg.replace("-", "_"))))
-                count += 1
 
         self.logger.debug('parse ends')
 
