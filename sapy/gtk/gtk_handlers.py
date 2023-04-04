@@ -27,6 +27,7 @@ from sapy.utils import values as SapyValues
 from sapy.commands.command import Command
 import calendar as clndr
 from matplotlib.figure import Figure
+import matplotlib.lines as mlines
 from matplotlib.backends.backend_gtk3cairo import FigureCanvasGTK3Cairo as FigureCanvas
 import matplotlib as mp
 import os
@@ -371,21 +372,36 @@ class Handler:
             self.gui_data.start_date, self.gui_data.end_date)
 
         occurred_lom = loms.get_lom(name=loms.OCCURRED_LIST_NAME)
-        self.gui_data.ax.scatter(
+        occurred_line = mlines.Line2D(
             mp.dates.date2num(bxd_occurred_lom[0]),
             bxd_occurred_lom[1],
-            label=occurred_lom.name, marker="+",
-            color=occurred_lom.color)
+            label=occurred_lom.name,
+            color=occurred_lom.color
+        )
+        self.gui_data.ax.add_line(occurred_line)
+
+        ## self.gui_data.ax.scatter(
+        ##     mp.dates.date2num(bxd_occurred_lom[0]),
+        ##     bxd_occurred_lom[1],
+        ##     label=occurred_lom.name, marker="+",
+        ##     color=occurred_lom.color)
 
         bxd_planned_lom =  self.gui_data.active_profile.get_planned_balance_per_day(
             self.gui_data.start_date, self.gui_data.end_date)
 
         planned_lom = loms.get_lom(name=loms.PLANNED_LIST_NAME)
-        self.gui_data.ax.scatter(
+        planned_line = mlines.Line2D(
             mp.dates.date2num(bxd_planned_lom[0]), bxd_planned_lom[1],
             label=planned_lom.name,
-            marker="+",
             color=planned_lom.color)
+
+        self.gui_data.ax.add_line(planned_line)
+
+        #self.gui_data.ax.scatter(
+        #    mp.dates.date2num(bxd_planned_lom[0]), bxd_planned_lom[1],
+        #    label=planned_lom.name,
+        #    marker="+",
+        #    color=planned_lom.color)
 
         self.gui_data.ax.set_xlim(
             self.gui_data.start_date, self.gui_data.end_date)
