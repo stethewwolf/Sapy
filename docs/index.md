@@ -49,6 +49,17 @@ You can follow those steps:
     $ sapy --gui                                                                        # start the app
 ```
 
+To generare the documentation you need to install the doc generator:
+
+```pip install mkdocs mkdocs-windmill```
+
+and run:
+```mkdock build``` 
+
+or:
+
+```mkdock serve``` 
+
 ## Installation
 ### Manual Installation
 #### Dependencies
