@@ -91,43 +91,40 @@ The user can run the application in two way:
 ### Command Line
 
 Application Usage :
+```
+stethewwolf@blilla:~/Devel/Applications/sapy$ sapy -h
+usage: sapy [-h] [--add ADD] [--graph] [--gui] [--import IMPORT] [--list LIST] [--rm RM] [--version] [--balance] [--daily] [--end-date END_DATE] [--id ID]
+            [--monthly] [--lom LOM] [--start-date START_DATE] [--value VALUE] [--weekly] [--cause CAUSE] [--date DATE] [--name NAME]
 
-        sapy -h
-        usage: Sapy [-h] [--add ADD] [--graph] [--gui] [--import IMPORT] [--list LIST] [--rm RM] [--version] [--balance] [--daily]
-                    [--end-date END_DATE] [--id ID] [--monthly] [--lom LOM] [--start-date START_DATE] [--value VALUE] [--weekly]
-                    [--cause CAUSE] [--date DATE] [--name NAME] [--new-year] [--new-month] [--end-week] [--end-month]
+App implementing the Japanese Kakeibo method
 
-        A spending traking tool
+options:
+  -h, --help            show this help message and exit
+  --add ADD, -a ADD     add new item, takes : mom | pro
+  --graph, -g           print the graph
+  --gui                 run the application in grafical mode
+  --import IMPORT, -i IMPORT
+                        import data from csv file
+  --list LIST, -l LIST  list items, possibles values are moms | loms | profiles
+  --rm RM, -r RM        remove target : mom | profile
+  --version, -V         print the version
+  --balance, -b         print the actual balance
+  --daily, -D           set daily occurrance [default]
+  --end-date END_DATE   set end date
+  --id ID               specify id for operation
+  --monthly, -m         set monthly occurrance
+  --lom LOM, -L LOM     specify the list of money ( lom )
+  --start-date START_DATE
+                        set start date
+  --value VALUE, -v VALUE
+                        set mom value
+  --weekly, -w          set weekly occurrance
+  --cause CAUSE, -c CAUSE
+                        set cause
+  --date DATE, -d DATE  set the date for the operation
+  --name NAME, -n NAME  set the name
+```
 
-        optional arguments:
-        -h, --help            show this help message and exit
-        --add ADD, -a ADD     add new item, takes : mom | lom | obj | tag
-        --graph, -g           print the graph
-        --gui                 run the application in grafical mode
-        --import IMPORT, -i IMPORT
-                                import data from csv file
-        --list LIST, -l LIST  list things, target lom | mom | tag | obj
-        --rm RM, -r RM        remove target : lom | mom | tag | obj
-        --version, -V         print the version
-        --balance, -b         print the actual balance of the list
-        --daily, -D           set daily occurance
-        --end-date END_DATE   set end date
-        --id ID               specify id for operation
-        --monthly             set monthly occurrance
-        --lom LOM             specify the list of money ( lom )
-        --start-date START_DATE
-                                set start date
-        --value VALUE, -v VALUE
-                                set value
-        --weekly              set weekly occurrance
-        --cause CAUSE, -c CAUSE
-                                set cause
-        --date DATE, -d DATE  set the date for the operation
-        --name NAME           set the name
-        --new-year            start a new year
-        --new-month           start a new month
-        --end-week            ends the week, and insert real movement
-        --end-month           ends the month
 
 
 ### User interface
