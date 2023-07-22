@@ -33,7 +33,7 @@ Important acronyms:
 Install the libgirepository dev pkg in order to install requirements into the virtualenv
 
 ```
-    $ sudo apt install libgirepository1.0-dev
+    $ sudo apt install libgirepository1.0-dev pkg-config libcairo2-dev libjpeg-dev libgif-dev
 ```
 
 You can follow those steps:
