@@ -33,8 +33,8 @@ jobs:
           flags: '-avzr --delete'
           options: ''
           ssh_options: ''
-          src: '/site'
-          dest: 'sapy@sapy.stethewwolf.eu:html'
+          src: '/site/*'
+          dest: 'sapy@sapy.stethewwolf.eu:html/'
       - name: Display status from deploy
         run: echo "${{ steps.deploy.outputs.status }}"
 
