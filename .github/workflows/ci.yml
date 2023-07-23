@@ -22,7 +22,8 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material mkdocs-windmill
-      - run:
+      - run: mkdocs build
+      - run: ls -la
       - name: Deploy to server
  	id: deploy
   	uses: Pendect/action-rsyncer@v2.0.0
