@@ -25,6 +25,3 @@ jobs:
       - run: mkdocs build
       - run: ls -la
 
-
-- name: Display status from deploy
-  run: echo "${{ steps.deploy.outputs.status }}"
