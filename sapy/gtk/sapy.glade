@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.22"/>
   <object class="GtkDialog" id="EditProfileDialog">
@@ -425,9 +425,9 @@
     <property name="can-focus">False</property>
     <property name="type-hint">dialog</property>
     <property name="program-name">sapy</property>
-    <property name="copyright" translatable="yes">stefano prina &lt;stethewwolf@gmail.com&gt; </property>
+    <property name="copyright" translatable="yes">stefano prina &lt;stethewwolf@posteo.net&gt;</property>
     <property name="website">https://sapy.stethewwolf.eu</property>
-    <property name="authors">stefano prina &lt;stethewwolf@posteo.net&gt; </property>
+    <property name="authors">stefano prina &lt;stethewwolf@posteo.net&gt;</property>
     <property name="logo-icon-name">image-missing</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
