@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from calendar import calendar
 from datetime import date, datetime, timedelta
 from distutils.command.build import build
@@ -130,14 +129,14 @@ class RunGui(Command):
             Gtk.TreeViewColumn("name", Gtk.CellRendererText(), text=1)
         )
 
-        self.signal_handler.updateProfilesPopUpMenu()
+        self.signal_handler.update_profiles_popup_menu()
 
-        self.signal_handler.updateMomStoreContent()
+        #self.signal_handler.updateMomStoreContent()
 
         calendar = self.gui_builder.get_object("sapyCalendar")
-        calendar.select_day(self.signal_handler.start_date.day)
-        calendar.select_month(
-            self.signal_handler.start_date.month-1,
-            self.signal_handler.start_date.year)
+        #calendar.select_day(self.signal_handler.start_date.day)
+        #calendar.select_month(
+        #    self.signal_handler.start_date.month-1,
+        #    self.signal_handler.start_date.year)
 
         Gtk.main()

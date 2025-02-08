@@ -69,7 +69,7 @@ class Handler:
     # Profile menu Handlers
     def update_profiles_popup_menu(self):
         profiles_button_box = self.gui_builder.get_object(
-            "ProfilesButtonBox")
+            "ProfilesListButtonBox")
         active_profile_label = self.gui_builder.get_object(
             "ActiveProfileLabel")
         default_profile_id = profiles.get_default_profile_id()
@@ -84,7 +84,7 @@ class Handler:
         for profile in profiles_list:
             profiles_list_store.append([profile.profile_id, profile.name])
             profile_button = Gtk.Button()
-            profile_button.connect("clicked", self.onSelectProfileCheckClicked)
+            profile_button.connect("clicked", self.on_select_profile_check_clicked)
             profile_button.set_label(
                 "{} - {}".format(profile.profile_id, profile.name))
 
@@ -106,16 +106,16 @@ class Handler:
     #        #    calendar.get_date().month+1,
     #        #    calendar.get_date().day)
     #        #self.gui_data.end_date = self.gui_data.start_date
-    #        self.updateMomStoreContent()
-    #        self.updateTotalLabels()
+    #        self.update_mom_store_content()
+    #        self.update_total_labels()
     #
     #    def onYearMonthViewSelected(self, spinButton):
     #        self.gui_data.year = int(spinButton.get_value())
     #        #self.gui_data.start_date.year = spinButton.get_value() 
     #        #self.gui_data.end_date.year = spinButton.get_value() 
-    #        self.updateMomStoreContent()
-    #        self.updateMomStoreContent()
-    #        self.updateTotalLabels()
+    #        self.update_mom_store_content()
+    #        self.update_mom_store_content()
+    #        self.update_total_labels()
     #
     #    def onMonthSelected(self, button):
     #        month_name = button.get_label()
@@ -146,8 +146,8 @@ class Handler:
     #            month_id = 12
     #
     #        self.gui_data.month = month_id
-    #        self.updateTotalLabels()
-    #        self.updateMomStoreContent()
+    #        self.update_total_labels()
+    #        self.update_mom_store_content()
 
     # def onAddPlannedSelected(self, button):
     #     mom_dialog = self.gui_builder.get_object("momDialog")
@@ -177,7 +177,7 @@ class Handler:
 
     #         self.gui_data.active_profile.add_planned_mom([mom])
 
-    #         self.updateMomStoreContent()
+    #         self.update_mom_store_content()
 
     # def onAddOccurredSelected(self, button):
     #     self.gui_data.add_mom_flag = False
@@ -207,7 +207,7 @@ class Handler:
     #             )
 
     #         self.gui_data.active_profile.add_occurred_mom([mom])
-    #         self.updateMomStoreContent()
+    #         self.update_mom_store_content()
 
     # def onMomDialogApplayButton(self, widget):
     #     self.gui_data.add_mom_flag = True
@@ -240,8 +240,8 @@ class Handler:
 
     #     self.gui_data.mom = planned_mom
     #     mom_dialog.run()
-    #     self.updateMomStoreContent()
-    #     self.updateTotalLabels()
+    #     self.update_mom_store_content()
+    #     self.update_total_labels()
 
     # def onOccurredMomSelected(self, column, path, user_data):
     #     momOccurredStore = self.gui_builder.get_object(
@@ -263,8 +263,8 @@ class Handler:
 
     #     self.gui_data.mom = occurred_mom
     #     mom_dialog.run()
-    #     self.updateMomStoreContent()
-    #     self.updateTotalLabels()
+    #     self.update_mom_store_content()
+    #     self.update_total_labels()
 
     # def onDayViewSelected(self, button):
     #     notebook = self.gui_builder.get_object("dateTimeView")
@@ -319,8 +319,8 @@ class Handler:
     #     #    day=1, month=1, year=self.gui_data.year).date()
     #     #self.gui_data.end_date = datetime(
     #     #    day=31, month=12, year=self.gui_data.year).date()
-    #     self.updateMomStoreContent()
-    #     self.updateTotalLabels()
+    #     self.update_mom_store_content()
+    #     self.update_total_labels()
 
     # def onYearViewYearValueChanged(self, button):
     #     year_selector = self.gui_builder.get_object("yearViewYearValue")
@@ -329,30 +329,30 @@ class Handler:
     #         day=1, month=1, year=self.gui_data.year).date()
     #     self.gui_data.end_date = datetime(
     #         day=31, month=12, year=self.gui_data.year).date()
-    #     self.updateMomStoreContent()
-    #     self.updateTotalLabels()
+    #     self.update_mom_store_content()
+    #     self.update_total_labels()
 
-    # def updateMomStoreContent(self):
-    #     self.updateMomStoreContentInPeriod(
-    #         self.gui_data.start_date, self.gui_data.end_date)
+    def update_mom_store_content(self):
+        self.update_mom_store_content_in_period(
+            self.gui_data.start_date, self.gui_data.end_date)
 
-    # def updateMomStoreContentInPeriod(self, start_date:datetime.date, end_date:datetime.date):
-    #     momOccurredStore = self.gui_builder.get_object(
-    #         "movementsOccurredStore")
-    #     momOccurredStore.clear()
-    #     moms = self.gui_data.active_profile.get_occurred_moms(
-    #         start_date, end_date)
-    #     for mom in moms:
-    #         momOccurredStore.append(
-    #             [mom.id, str(mom.time), mom.value, mom.cause])
+    def update_mom_store_content_in_period(self, start_date:datetime.date, end_date:datetime.date):
+        momOccurredStore = self.gui_builder.get_object(
+            "movementsOccurredStore")
+        momOccurredStore.clear()
+        moms = self.gui_data.active_profile.get_occurred_moms(
+            start_date, end_date)
+        for mom in moms:
+            momOccurredStore.append(
+                [mom.id, str(mom.time), mom.value, mom.cause])
 
-    #     momPlannedStore = self.gui_builder.get_object("movementsPlannedStore")
-    #     momPlannedStore.clear()
-    #     moms = self.gui_data.active_profile.get_planned_moms(
-    #         start_date, end_date)
-    #     for mom in moms:
-    #         momPlannedStore.append(
-    #             [mom.id, str(mom.time), mom.value, mom.cause])
+        momPlannedStore = self.gui_builder.get_object("movementsPlannedStore")
+        momPlannedStore.clear()
+        moms = self.gui_data.active_profile.get_planned_moms(
+            start_date, end_date)
+        for mom in moms:
+            momPlannedStore.append(
+                [mom.id, str(mom.time), mom.value, mom.cause])
 
     # def onMomEditDialogApplayButton(self, button):
     #     mom_date = self.gui_builder.get_object("editMomDateEntry")
@@ -368,16 +368,16 @@ class Handler:
     #             )
     #     mom_dialog = self.gui_builder.get_object("momEditDialog")
     #     mom_dialog.hide()
-    #     self.updateMomStoreContent()
-    #     self.updateTotalLabels()
+    #     self.update_mom_store_content()
+    #     self.update_total_labels()
 
     # def onMomEditDialogDeleteButton(self, button):
     #     self.gui_data.mom.delete()
 
     #     mom_dialog = self.gui_builder.get_object("momEditDialog")
     #     mom_dialog.hide()
-    #     self.updateMomStoreContent()
-    #     self.updateTotalLabels()
+    #     self.update_mom_store_content()
+    #     self.update_total_labels()
 
     # def onMomEditDialogCancelButton(self, button):
     #     mom_dialog = self.gui_builder.get_object("momEditDialog")
@@ -525,27 +525,27 @@ class Handler:
 
     #         workInProgressMessage.hide()
 
-    # def updateTotalLabels(self):
-    #     occurred_total_label = self.gui_builder.get_object(
-    #         "OccurredTotalLabel")
-    #     planned_total_label = self.gui_builder.get_object(
-    #         "PlannedTotalLabel")
+    def update_total_labels(self):
+        occurred_total_label = self.gui_builder.get_object(
+            "OccurredTotalLabel")
+        planned_total_label = self.gui_builder.get_object(
+            "PlannedTotalLabel")
 
-    #     planned_total_label.set_text(
-    #         str(self.gui_data.active_profile.get_planned_balance(
-    #             self.gui_data.start_date,
-    #             self.gui_data.end_date)))
-    #     occurred_total_label.set_text(
-    #         str(self.gui_data.active_profile.get_occurred_balance(
-    #             self.gui_data.start_date,
-    #             self.gui_data.end_date)))
+        planned_total_label.set_text(
+            str(self.gui_data.active_profile.get_planned_balance(
+                self.gui_data.start_date,
+                self.gui_data.end_date)))
+        occurred_total_label.set_text(
+            str(self.gui_data.active_profile.get_occurred_balance(
+                self.gui_data.start_date,
+                self.gui_data.end_date)))
 
-    # def onProfilesDialogManagementButton(self, button):
-    #     profilesManagementDialog = self.gui_builder.get_object(
-    #         "profilesManagementDialog")
-    #     menuPopOver = self.gui_builder.get_object("ProfilesPopMenu")
-    #     profilesManagementDialog.show_all()
-    #     menuPopOver.hide()
+    #def onProfilesDialogManagementButton(self, button):
+    #    profilesManagementDialog = self.gui_builder.get_object(
+    #        "profilesManagementDialog")
+    #    menuPopOver = self.gui_builder.get_object("ProfilesPopMenu")
+    #    profilesManagementDialog.show_all()
+    #    menuPopOver.hide()
 
     # def onCloseProfilesManagementDialog(self, button, stuff):
     #     profilesManagementDialog = self.gui_builder.get_object(
@@ -621,14 +621,14 @@ class Handler:
 
 
 
-    # def onSelectProfileCheckClicked(self, button):
-    #     profiles_menu = self.gui_builder.get_object("ProfilesPopMenu")
-    #     profile_id = int(button.get_label().split("-")[0])
-    #     profiles.set_default_profile_id(profile_id)
-    #     self.updateProfilesPopUpMenu()
-    #     profiles_menu.hide()
-    #     self.updateTotalLabels()
-    #     self.updateMomStoreContent()
+    def on_select_profile_check_clicked(self, button):
+        profiles_menu = self.gui_builder.get_object("ProfilesPopMenu")
+        profile_id = int(button.get_label().split("-")[0])
+        profiles.set_default_profile_id(profile_id)
+        self.update_profiles_popup_menu()
+        profiles_menu.hide()
+        self.update_total_labels()
+        self.update_mom_store_content()
 
 
 
