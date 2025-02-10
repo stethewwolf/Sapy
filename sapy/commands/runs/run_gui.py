@@ -106,6 +106,7 @@ class RunGui(Command):
         self.signal_handler.gui_data.fig = Figure(figsize=(5, 5), dpi=100)
         self.signal_handler.gui_data.ax = \
             self.signal_handler.gui_data.fig.add_subplot(111)
+
         canvas = FigureCanvas(self.signal_handler.gui_data.fig)
         canvas.set_size_request(400, 400)
         d_area = self.gui_builder.get_object("GraphTab")
